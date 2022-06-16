@@ -1,3 +1,8 @@
+<%@page import="java.util.Arrays"%>
+<%@page import="util.StringUtil"%>
+<%@page import="dao.CartItemDao"%>
+<%@page import="vo.CartItem"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -8,18 +13,22 @@
 <title>marketbooks</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-    .cartlist div { text-align: left; padding: 3px 7px; }
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 	input { width: 80%; }
+	.text-middle-center {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	}
 </style>
 </head>
 <body>
 <!-- common 파일 import (nav, footer) -->
 <!-- 사용자 상호작용 관련 작업 
-	 1. 체크박스 토글 
-	 2. 수량 버튼 클릭 시 장바구니 아이템 수량변경, 주문 정보 변경
-	 3. 삭제 버튼 클릭 시 체크된 장바구니 아이템 삭제, 장바구니 정보 변경
-	 3. 배송지 입력 - api창 구현
+	 1. 체크박스 토글 (재요청시에도 상태 유지)
+	 2. 수량 버튼 클릭 시 modify.jsp 요청 -> list.jsp 재요청받음
+	 3. 삭제 버튼 클릭 시 delete.jsp 요청 -> list.jsp 재요청받음
+	 3. 배송지 입력 클릭시 address/list.jsp를 요청 -> 팝업으로 해당 사용자의 배송지 리스트를 조회하는 새 페이지가 뜬다.
 	 4. 카트리스트 정보, 수량 반영해서 결제금액 정보 띄우기
 	 4. 주문 버튼 클릭하면 입력값 + order.jsp 요청
  -->
@@ -30,6 +39,8 @@
 	 	List<CartItemDto> cartList = cartItemDto.getCartListByUser(int userNo) 
 	 3. cartList.isEmpty() 가 true이면 "장바구니에 담긴 상품이 없습니다."
 	 4. false이면 for문으로 뿌리기
+	 5. 장바구니 아이템 수량변경
+	 6. 장바구니 아이템 한 개 삭제, 여러 개 삭제 (deleted가 아니고 아예 삭제하기? 기록이 남을 필요가 없어보인다.)
 	 -->
 <div class="contatiner">
    	<div class="row">
@@ -42,30 +53,47 @@
    	<div class="row">
 		<div class="col">
 			<h1 class="fs-4 p-2 mb-3 text-center">장바구니</h1>
-		</div>
+		</div>  
 	</div>
-	<!-- submitOrderForm() 함수가 false를 반환하면 form태그 값의 입력값이 order.jsp로 전달되지 않는다. -->
-	<form method="post" action="order.jsp" onsubmit="return submitOrderForm()">
-		<input type="hidden" >
+	<%
+		// TO DO: 로그인된 사용자 정보 조회
+		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
+		int userNo = 110;
+		
+		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
+		CartItemDao cartItemDao = CartItemDao.getInstance();
+		List<CartItem> cartItemList = cartItemDao.getCartItemsByUser(userNo);
+		int cartItemListSize = cartItemList.size();
+		
+		String[] itemNos = request.getParameterValues("itemNo");
+	%>
+	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
+		onsubmit="return submitOrderForm();" : 폼 제출시 submitOrderForm()의 반환값이 false이면 제출되지 않는다. -->
+	<form id="cart-form" method="get" action="" >
 		<div class="row">
 			<div class="col-9 mb-3 pb-3 border-bottom border-dark">
 				<div class="row">
 					<div class="col-1">
-						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox();"/>
+						<!-- TO DO : 카트아이템 dao 작업으로 인한 재요청 시 checked 상태 유지 구현하기 -->
+						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 					</div>
 					<div class="col-5">
-						<!-- 카트 전체 수량, 선택한 카트 수량 반영 -->
-						<span class="border-end me-3 pe-3">전체선택(3/3)</span>
-						<a class="link-dark text-decoration-none" href="javascript:removeCheckedItem()">선택삭제</a>
-					</div>
-					<div class="col-6">
+						<span class="border-end me-3 pe-3" id="checked-number">전체선택(0/<%=cartItemListSize %>)</span>
+						<a class="link-dark text-decoration-none" href="javascript:submitOrderForm('delete.jsp')">선택삭제</a>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<!-- 장바구니 리스트 조회, 변경, 삭제 -->
-			<div class="col-9">
+			<div class="col-9 <%=cartItemList.isEmpty()? "text-middle-center" : "" %>">
+			<%
+				if (cartItemList.isEmpty()) {
+			%>
+				<span class="align-middle">장바구니에 담긴 상품이 없습니다.</span>
+			<%
+				} else {
+			%>
 				<table class="table">
 					<colgroup>
 						<col width="5%">
@@ -78,135 +106,76 @@
 						<col width="8%">
 					</colgroup>
 					<tbody>
+					<%
+						for (CartItem item : cartItemList) {
+					%>	
 						<!-- tr태그의 id는 "item-row-카트아이템번호" 이다. -->
-						<tr id="item-row-1001">
+						<tr id="item-row-<%=item.getNo() %>">
 							<td class="align-middle">
-								<input type="checkbox" name="book-checkbox" value="1001" onchange="changeCheckbox();"/>
+							<!-- TO DO: 수량 변경, 개별 삭제 클릭 시 체크상태 유지 구현 - name을 식별가능하게 만들고(개별 변경은 updateItem, 개별 삭제는 deleteItem) form으로 보내기 -->
+								<input type="checkbox" class="book-checkbox" 
+									<%=itemNos == null || Arrays.binarySearch(itemNos, String.valueOf(item.getNo())) == -1 ? "" : "checked" %>
+									name="itemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 							</td>
 							<td  class="align-middle">
-								<!-- 커버이미지 파일은 sample-책번호 포맷으로 저장해두고 가져온다. cartItem.getBookNo() -->
-								<img alt="cover image" src="../image/sample-24.jpg" class="rounded coverimage"/>
+								<!-- 커버이미지 파일은 sample-책번호.jpg 포맷으로 저장해두고 가져온다. -->
+								<img alt="cover image" src="../image/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
-								<span id="item-title-1001">세상의 마지막 기차역</span>
+								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
 							</td>
 							<td class="align-middle">
-								<span id="item-author-1001">무라세 다케시</span>
+								<span id="item-author-<%=item.getNo() %>"><%=item.getBook().getAuthor() %></span>
 							</td>
 							<td class="align-middle">
-								<span id="item-publisher-1001">모모</span>
+								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
 							<td  class="align-middle">
-								<input type="number" class="form-control w-100 mb-3" min="1" value="1" id="item-quantity-1001" onchange="changeQuantity(1001);"/>
+								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="changeQuantity(<%=item.getNo() %>);"/>
 							</td>
 							<td  class="align-middle">
-								<!-- hidden 태그에 들어있는 값은 한권에 대한 금액, 할인된 한 권에 대한 금액이다. 
-									할인가격 item-total-discount-price:(한 권에 대한 할인된 금액)*수량
-									일반가격 item-total-price: (한 권에 대한 금액)*수량
-									할인가격과 일반가격이 같을 경우, 할인가격만 표시
-									할인가격과 일반가격이 다를 경우, 할인가격 표시, 일반가격 취소선으로 표시 -->
-								<input type="hidden" name="item-price-1001" value="14000" />
-								<input type="hidden" name="item-discount-price-1001" value="12600" />
-								<strong id="item-total-discount-price-1001">12,600</strong> 원<br/>
-								<small class="text-decoration-line-through"><span id="item-total-price-1001">14,000</span>원</small>
+							<%
+								int totalDiscountPrice = item.getBook().getDiscountPrice() * item.getQuantity();
+								int totalPrice = item.getBook().getPrice() * item.getQuantity();
+							%>
+								<strong id="item-total-discount-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalDiscountPrice) %></strong>원<br/>
+								<small class="text-decoration-line-through" style="<%=totalPrice == totalDiscountPrice ? "display:none" : "" %>">
+									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
+								</small>
 							</td>
 							<td  class="align-middle">
-								<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeItem(1001);">삭제</button>
+								<a href="delete.jsp?deleteItemNo=<%=item.getNo() %>" class="btn btn-outline-danger btn-sm">삭제</a>
 							</td>
 						</tr>
-						<tr id="item-row-1002">
-							<td class="align-middle">
-								<input type="checkbox" name="book-checkbox" value="1002" onchange="changeCheckbox();"/>
-							</td>
-							<td  class="align-middle">
-								<!-- 커버이미지 파일은 sample-책번호 포맷으로 저장해두고 가져온다. cartItem.getBookNo() -->
-								<img alt="cover image" src="../image/sample-1.jpg" class="rounded coverimage"/>
-							</td>
-							<td class="align-middle">
-								<span id="item-title-1002">높은 자존감의 사랑법</span>
-							</td>
-							<td class="align-middle">
-								<span id="item-author-1002">정아은</span>
-							</td>
-							<td class="align-middle">
-								<span id="item-publisher-1002">마름모</span>
-							</td>
-							<td  class="align-middle">
-								<input type="number" class="form-control w-100 mb-3" min="1" value="1" id="item-quantity-1002" onchange="changeQuantity(1002);"/>
-							</td>
-							<td  class="align-middle">
-								<!-- hidden 태그에 들어있는 값은 한권에 대한 금액, 할인된 한 권에 대한 금액이다. 
-									할인가격 item-total-discount-price:(한 권에 대한 할인된 금액)*수량
-									일반가격 item-total-price: (한 권에 대한 금액)*수량
-									할인가격과 일반가격이 같을 경우, 할인가격만 표시
-									할인가격과 일반가격이 다를 경우, 할인가격 표시, 일반가격 취소선으로 표시 -->
-								<input type="hidden" name="item-price-1002" value="16000" />
-								<input type="hidden" name="item-discount-price-1002" value="14400" />
-								<strong id="item-total-discount-price-1002">14,400</strong> 원<br/>
-								<small class="text-decoration-line-through"><span id="item-total-price-1002">16,000</span>원</small>
-							</td>
-							<td  class="align-middle">
-								<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeItem(1002);">삭제</button>
-							</td>
-						</tr>
-						<tr id="item-row-1003">
-							<td class="align-middle">
-								<input type="checkbox" name="book-checkbox" value="1003" onchange="changeCheckbox();"/>
-							</td>
-							<td  class="align-middle">
-								<!-- 커버이미지 파일은 sample-책번호 포맷으로 저장해두고 가져온다. cartItem.getBookNo() -->
-								<img alt="cover image" src="../image/sample-2.jpg" class="rounded coverimage"/>
-							</td>
-							<td class="align-middle">
-								<span id="item-title-1003">크게 그린 사람</span>
-							</td>
-							<td class="align-middle">
-								<span id="item-author-1003">은유</span>
-							</td>
-							<td class="align-middle">
-								<span id="item-publisher-1003">한겨레출판</span>
-							</td>
-							<td  class="align-middle">
-								<input type="number" class="form-control w-100 mb-3" min="1" value="1" id="item-quantity-1003" onchange="changeQuantity(1003);"/>
-							</td>
-							<td  class="align-middle">
-								<!-- hidden 태그에 들어있는 값은 한권에 대한 금액, 할인된 한 권에 대한 금액이다. 
-									할인가격 item-total-discount-price:(한 권에 대한 할인된 금액)*수량
-									일반가격 item-total-price: (한 권에 대한 금액)*수량
-									할인가격과 일반가격이 같을 경우, 할인가격만 표시
-									할인가격과 일반가격이 다를 경우, 할인가격 표시, 일반가격 취소선으로 표시 -->
-								<input type="hidden" name="item-price-1003" value="16000" />
-								<input type="hidden" name="item-discount-price-1003" value="14400" />
-								<strong id="item-total-discount-price-1003">14,400</strong> 원<br/>
-								<small class="text-decoration-line-through"><span id="item-total-price-1003">16,000</span>원</small>
-							</td>
-							<td  class="align-middle">
-								<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeItem(1003);">삭제</button>
-							</td>
-						</tr>
+					<%
+						}
+					%>
 					</tbody>
 				</table>
+			<%
+				}
+			%>
 			</div>
 			<!--  배송지 입력, 총 금액 조회, 주문 버튼 -->
 			<div class="col-3">
 				<div class="card mb-3">
 					<div class="card-body">
-					<!-- 배송지 변경은 adress를 저장하고, user에 반영시킨다. -->
+					<!-- 배송지 변경은 address를 저장하고, user에 반영시킨다. -->
 						<h6 class="card-title">배송지</h6>
 						<p>사용자가 선택한 배송지 주소가 이곳에 출력됩니다.</p>
 						<div class="d-grid gap-2">
-							<a href="#" class="btn btn-outline-secondary btn-sm">배송지 변경</a>
+							<a href="#" target="_blank" class="btn btn-outline-secondary btn-sm">배송지 변경</a>
 						</div>
 					</div>
 					<div class="card-footer text-muted">
-						<div class="row mt-3 mb-3"><div class="col">주문금액</div><div class="col"><strong id="order-total-price">35,000</strong>원</div></div>
+						<div class="row mt-3 mb-3"><div class="col">주문금액</div><div class="col"><strong id="order-total-price">0</strong>원</div></div>
 						<div class="row mb-3"><div class="col">주문할인금액</div><div class="col"><strong id="order-discount-amount">0</strong>원</div></div>
 						<div class="row mb-3 pb-3 border-bottom"><div class="col">배송비</div><div class="col"><strong id="item-ship-price">0</strong>원</div></div>
-						<div class="row mb-3"><div class="col">결제예정금액</div><div class="col"><strong id="order-pay-price">35,000</strong>원</div></div>
+						<div class="row mb-3"><div class="col">결제예정금액</div><div class="col"><strong id="order-pay-price">0</strong>원</div></div>
 					</div>
 				</div>
 				<div class="d-grid gap-2">
-				    <button type="submit" class="btn btn-primary">주문하기</button>
+				    <button type="button" class="btn btn-primary" onclick="submitOrderForm('orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -220,14 +189,13 @@
 	*/
 	function toggleCheckbox() {
 		let allToggleCheckboxCheckedStatus = document.getElementById("all-toggle-checkbox").checked;
-		let bookCheckboxList = document.querySelectorAll("input[name='book-checkbox']");
+		let bookCheckboxList = document.querySelectorAll(".book-checkbox");
 		
 		// bookCheckboxList의 모든 체크박스 상태를 allToggleCheckbox와 같게 만든다.
 		for (let checkbox of bookCheckboxList) {
 			checkbox.checked = allToggleCheckboxCheckedStatus;
 		}
 		
-		//TO DO : 구매정보 갱신하기
 		changeOrderInfo();
 	}
 	
@@ -237,8 +205,8 @@
 	function changeCheckbox() {
 		// 체크된 체크박스의 개수가 전체 체크박스의 개수와 같으면 전체 토글 체크박스의 상태를 변경
 		let allToggleCheckboxElement = document.getElementById("all-toggle-checkbox");
-		let bookCheckboxsLength = document.querySelectorAll("input[name='book-checkbox']").length;
-		let checkedBookCheckboxsLength = document.querySelectorAll("input[name='book-checkbox']:checked").length;
+		let bookCheckboxsLength = document.querySelectorAll(".book-checkbox").length;
+		let checkedBookCheckboxsLength = document.querySelectorAll(".book-checkbox:checked").length;
 
 		if (bookCheckboxsLength === checkedBookCheckboxsLength) {
 			allToggleCheckboxElement.checked = true;
@@ -246,8 +214,6 @@
 			allToggleCheckboxElement.checked = false;
 		}
 		
-		//TO DO : 구매정보 갱신하기
-		console.log("changeCheckbox() 테스트")
 		changeOrderInfo();
 	}
 	
@@ -256,18 +222,39 @@
 		체크박스 선택, 카트아이템 삭제, 수량 변경 시 각각 해당하는 이벤트핸들러함수 내에서 이 함수를 실행시킨다.
 	*/
 	function changeOrderInfo() {
-		console.log("changeOrderInfo() 테스트");
-		// 출력할 DOM객체
+		// 내용을 출력할 DOM객체
 		let totalPriceElement = document.getElementById("order-total-price"); 
 		let discountAmountElement = document.getElementById("order-discount-amount"); 
 		let payPriceElement = document.getElementById("order-pay-price"); 
 		
-		// 체크박스가 checked 상태인 전체 카트아이템을 획득 후, for문으로 전체 계산
+		// 체크박스가 checked 상태인 카트아이템의 번호를 모두 획득 후, for문으로 전체 계산
+		let checkedBookCheckboxList = document.querySelectorAll(".book-checkbox:checked");
+		let totalPrice = 0;
+		let payPrice = 0;
+		for (let bookCheckbox of checkedBookCheckboxList) {
+			let itemNo = bookCheckbox.value;
 		// 일반 금액 합계
-		// 할인된 금액 합계
-		// 할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계
-		// 결제 예정 금액: 일반 금액 합계 - 할인받는 금액 합계
+			totalPrice += parseInt(document.getElementById("item-total-price-" + itemNo).textContent.replaceAll(",",""));
+		// 할인된 금액 합계 (결제예정금액)
+			payPrice += parseInt(document.getElementById("item-total-discount-price-" + itemNo).textContent.replaceAll(",",""));
+		}
 		
+		// 할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계
+		totalPriceElement.textContent = totalPrice.toLocaleString();
+		discountAmountElement.textContent = (totalPrice - payPrice).toLocaleString();
+		payPriceElement.textContent = payPrice.toLocaleString(); // 현재는 배송비, 쿠폰, 적립금 등 적용이 없어 주문할인금액 = 결제 예정 금액이다.
+	}
+	
+	/*
+		체크박스 선택 상태가 달라질 때마다 선택된 개수를 변경한다.
+	*/
+	function changeCheckBoxNumber(cartItemListSize) {
+		// 내용을 출력할 DOM객체
+		let checkBoxNumberElement = document.getElementById("checked-number");
+		// 체크된 체크박스의 개수
+		let checkedCheckBoxNumber = document.querySelectorAll(".book-checkbox:checked").length;
+		// DOM객체 컨텐츠 변경
+		checkBoxNumberElement.textContent = "전체선택(" + checkedCheckBoxNumber + "/" + cartItemListSize + ")";
 	}
 	
 	/*
@@ -275,80 +262,29 @@
 	*/
 	function changeQuantity(itemNo) {
 		// td 태그에 표시된 금액 정보를 변경한다.
-		// dao 작업: ajax로 update.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
-		// changeOrderInfo 함수 실행 : dao작업과 별개로 화면에 표시된 전체 주문정보를 갱신한다. 화면 표시용으로 가격, 구매수량을 조회해서 계산된 값을 DOM객체에 넣는다. 
-		console.log("changeQuantity() 테스트");
-		// 변경할 DOM객체 획득
-		let totalBookPriceElement = document.getElementById("item-total-price-" + itemNo);
-		let totalBookDiscountPriceElement = document.getElementById("item-total-discount-price-" + itemNo);
-		
-		// 한 권에 대한 금액정보 획득
-		let bookPrice = document.querySelector("input[name='item-price-" + itemNo + "']").value;
-		let bookDiscountPrice = document.querySelector("input[name='item-discount-price-" + itemNo + "']").value;
-		// 수량 획득
-		let changedQuantity = document.getElementById("item-quantity-" + itemNo).value;
-				
-		// 한 권에 대한 금액정보, 수량을 이용하여 금액 계산 후 DOM 객체에 반영
-		totalBookPriceElement.textContent = (bookPrice*changedQuantity).toLocaleString();
-		totalBookDiscountPriceElement.textContent = (bookDiscountPrice*changedQuantity).toLocaleString();
-		
-		// TO DO: ajax로 dao작업
-		
-		changeOrderInfo();
+		// dao 작업: modify.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.	
+		let quantity = document.getElementById("item-quantity-" + itemNo).value;
+		// location.href로 URL을 변경한다.
+		location.href = "modify.jsp?updateItemNo=" + itemNo + "&quantity=" + quantity;
 	}
 	
 	/*
-		개별 카트아이템을 버튼 클릭하여 삭제할 때마다 실행되는 이벤트핸들러 함수
+		form 입력값에 대하여 지정된 URL로 form 요청을 보내는 이벤트핸들러 함수
+		선택삭제버튼 클릭: delete.jsp, 주문하기 버튼: orderform.jsp로 요청을 보낸다.
 	*/
-	function removeItem(itemNo) {
-		// 화면에 표시된 카트아이템 엘리먼트를 지운다.
-		// dao 작업: ajax로 delete.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
-		// changeOrderInfo 함수 실행 : dao작업과 별개로 화면에 표시된 전체 주문정보를 갱신한다. 화면 표시용으로 가격, 구매수량을 조회해서 계산된 값을 DOM객체에 넣는다. 
-		console.log("removeItem() 테스트");
-		// 삭제할 DOM 객체 획득
-		let cartItemElement = document.getElementById("item-row-" + itemNo);
-		cartItemElement.remove();
+	function submitOrderForm(requestURL) {
+		let form = document.getElementById("cart-form");
+		form.setAttribute("action", requestURL);
 		
-		// TO DO: ajax로 dao작업
-		
-		changeOrderInfo();
-	}
-	
-	/*
-		선택삭제 버튼을 클릭할 때마다 실행되는, checkbox가 checked 상태인 카트아이템을 모두 삭제시키는 이벤트핸들러 함수
-	*/
-	function removeCheckedItem() {
-		// 화면에 표시된 카트아이템 엘리먼트를 지운다.
-		// dao 작업: ajax로 delete.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
-		// changeOrderInfo 함수 실행 : dao작업과 별개로 화면에 표시된 전체 주문정보를 갱신한다. 화면 표시용으로 가격, 구매수량을 조회해서 계산된 값을 DOM객체에 넣는다. 
-		console.log("removeCheckedItem() 테스트");
-		
-		// 체크된 input엘리먼트를 획득하여 삭제하려는 아이템번호를 획득해 list로 담는다.
-		let inputItemElements = document.querySelectorAll("input[name='book-checkbox']:checked");
-		let itemNos = [];
-		for (let input of inputItemElements) {
-			itemNos.push(input.value);
-		}
-		
-		// for문에서 아이템번호 순으로 tr엘리먼트 획득해서 remove()로 지운다.
-		for (let itemNo of itemNos) {
-			let cartItemElement = document.getElementById("item-row-" + itemNo);
-			cartItemElement.remove();
-		}
-		
-		// TO DO: ajax로 dao작업
-
-		changeOrderInfo();
+		// form태그의 submit으로 서버에 제출하면, name=value 쌍으로 존재하는 입력값을 요청파라미터로 전달된다.
+		// 체크 박스의 경우 checked 상태인 값만 전달된다.
+		// 요청 URL: delete.jsp?no=1001&no=1003 (checked 상태인 값들만)
+		//			order.jsp?no=1001&no=1003 (checked 상태인 값들만)
+		form.submit();
+		// 요청페이지에서 dao 작업 후, 재요청으로 다시 list.jsp를 불러온다.	
 	}
 	
 	
-	/*
-		주문 폼 제출하는 onsubmit 이벤트 발생 시, 일부 조건을 만족하지 못하면 false를, 정상적인 주문 폼이면 true를 반환하는 함수
-		주문 폼으로 전달해야 할 입력값: 폼에서 checked 상태인 cartNo 리스트 (cartNo의 userNo, bookNo를 참조해 상세 정보를 확인할 수 있다) 
-	*/
-	function submitOrderForm() {
-
-	}
 </script>
 </body>
 </html>
