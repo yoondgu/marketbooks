@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
+    
+    <!-- 관리자만 접속할 수 있게 합니다. -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +59,7 @@
    			</tr>
    		</thead>
    		<tbody class="table-group-divider text-center">
-   			<tr>
+   			<tr class="text-center">
    				<th>1</th>
    				<th>예술/대중문화</th>
    				<!-- 도서명을 클릭하면 해당 도서페이지로 넘어가도록 링크를 설정한다. -->
@@ -82,8 +84,10 @@
    				<th>9999</th>
    				<th class="align-middle"><strong>12,600</strong>원 (14,000원)</th>
    				<th>
-   					<a href="modifyform.jsp" class="btn btn-outline-info btn-sm">수정</a>
- 					<a href="userdelete.jsp" class="btn btn-outline-danger btn-sm">삭제</a>
+   					<div class="d-flex flex-nowrap">
+	   					<a href="modifyform.jsp" class="btn btn-outline-info btn-sm">수정</a>
+	 					<a href="userdelete.jsp" class="btn btn-outline-danger btn-sm">삭제</a>
+ 					</div>
    				</th>
    			</tr>
    		</tbody>

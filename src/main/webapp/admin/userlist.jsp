@@ -1,5 +1,12 @@
+<%@page import="vo.Pagination"%>
+<%@page import="util.StringUtil"%>
+<%@page import="dao.UserDao"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
+    
+    <!-- 관리자만 접속할 수 있게 합니다. -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +27,7 @@
 <div class="row gx-5 mx-auto" style="width: 1050px">
 <aside class="col-2">
 	<h2 style="width: 200px">관리자메뉴</h2>
-	<ul class="list-group text-center">
+	<ul class="list-group">
 		<!-- 마우스 커서가 올라가면 active + 글자 strong -->
 		<li class="list-group-item"><a href="userlist.jsp">회원관리</a></li>
 		<li class="list-group-item"><a href="booklist.jsp">도서관리</a></li>
@@ -30,6 +37,20 @@
 </aside>
 <form class="col-10">
    <h2 style="width: 820px">전체회원관리</h2>
+   
+   <%
+   
+   int currentPage = StringUtil.stringToInt(request.getParameter("page"),1);
+   
+   UserDao userDao = UserDao.getInstance();
+   
+   int totalRows = userDao.getTotalRows();
+   
+   Pagination pagination = new Pagination(totalRows, currentPage);
+   
+   List<User> users = userDao.getUsers(pagination.getBeginIndex(), pagination.getEndIndex());
+  
+   %>
    
    <table class="table">
    		<colgroup>
@@ -53,20 +74,26 @@
    			</tr>
    		</thead>
    		<tbody class="table-group-divider">
+   		<%
+   			for(User user : users) {
+   		%>
    			<tr>
-   				<th>1</th>
-   				<th>홍길동</th>
-   				<th>hong@gmail.com</th>
-   				<th>010-1234-5678</th>
-   				<th>2022-06-13</th>
-   				<th>2022-06-13</th>
+   				<th><%=user.getNo() %></th>
+   				<th><%=user.getName() %></th>
+   				<th><%=user.getEmail() %></th>
+   				<th><%=user.getTel() %></th>
+   				<th><%=user.getCreatedDate() %></th>
+   				<th><%=user.getUpdatedDate() %></th>
    				<th>
    					<div class="d-flex flex-nowrap">
-   						<a href="userorder.jsp" class="btn btn-outline-info btn-sm">주문정보</a>
+   						<a href="user.jsp?userNo=<%=user.getNo() %>" class="btn btn-outline-info btn-sm">주문정보</a>
    						<a href="userdelete.jsp" class="btn btn-primary btn-sm">삭제</a>
    					</div>
    				</th>
    			</tr>
+   		<%
+			}
+		%>
    		</tbody>
    </table>
    
@@ -80,13 +107,19 @@
        <nav>
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
-						<a class="page-link" href="">이전</a>
-						<li class="page-item"><a class="page-link" href="">1</a></li>
-						<li class="page-item"><a class="page-link" href="">2</a></li>
-						<li class="page-item"><a class="page-link" href="">3</a></li>
-						<li class="page-item"><a class="page-link" href="">4</a></li>
-						<li class="page-item"><a class="page-link" href="">5</a></li>
-						<a class="page-link" href="">다음</a>
+						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="userlist.jsp?page=<%=pagination.getCurrentPage() -1%>">이전</a>
+					</li>
+					<%
+					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
+					%>
+					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
+						<a class="page-link" href="userlist.jsp?page=<%=num %>"><%=num %></a>
+					</li>
+					<%
+					}
+					%>
+					<li>	
+						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="userlist.jsp?page=<%=pagination.getCurrentPage() +1%>">다음</a>
 					</li>
 				</ul>
 	   </nav>
