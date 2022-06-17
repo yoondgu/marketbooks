@@ -28,22 +28,30 @@ public class CartItemDao {
 	 * @return cartItem 장바구니아이템, 만약 해당하는 장바구니아이템이 없으면 null을 반환한다.
 	 */
 	public CartItem getCartItemByNo(int itemNo) throws SQLException {
-		String sql = "SELECT * "
-				+ "FROM HTA_CART_ITEMS "
-				+ "WHERE CART_ITEM_NO = ? ";
+		String sql = "SELECT C.CART_ITEM_NO, C.USER_NO, B.BOOK_NO, B.BOOK_TITLE, B.BOOK_AUTHOR, B.BOOK_PUBLISHER, "
+				+ "B.BOOK_PRICE, B.BOOK_DISCOUNT_PRICE, B.BOOK_STOCK, C.CART_ITEM_QUANTITY, C.CART_ITEM_CREATED_DATE "
+				+ "FROM HTA_CART_ITEMS C, HTA_BOOKS B "
+				+ "WHERE C.BOOK_NO = B.BOOK_NO "
+				+ "AND C.CART_ITEM_NO = ? ";
 		
 		return helper.selectOne(sql, rs -> {
 			CartItem cartItem = new CartItem();
 			cartItem.setNo(rs.getInt("cart_item_no"));
 			cartItem.setUserNo(rs.getInt("user_no"));
 			
+			// 장바구니 변경 시 재고 체크해야 하므로 book의 값도 NOT NULL 모두 받아오기
 			Book book = new Book();
 			book.setNo(rs.getInt("book_no"));
+			book.setTitle(rs.getString("book_title"));
+			book.setAuthor(rs.getString("book_author"));
+			book.setPublisher(rs.getString("book_publisher"));
+			book.setPrice(rs.getInt("book_price"));
+			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setStock(rs.getInt("book_stock"));
 			
 			cartItem.setBook(book);
 			cartItem.setQuantity(rs.getInt("cart_item_quantity"));
 			cartItem.setCreatedDate(rs.getDate("cart_item_created_date"));
-			cartItem.setUpdatedDate(rs.getDate("cart_item_updated_date"));
 
 			return cartItem;
 		}, itemNo);
@@ -56,8 +64,8 @@ public class CartItemDao {
 	 * @throws SQLException
 	 */
 	public List<CartItem> getCartItemsByUser(int userNo) throws SQLException {
-		String sql = "SELECT C.CART_ITEM_NO, B.BOOK_NO, B.BOOK_TITLE, B.BOOK_AUTHOR, B.BOOK_PUBLISHER, "
-				+ "B.BOOK_PRICE, B.BOOK_DISCOUNT_PRICE, C.CART_ITEM_QUANTITY, C.CART_ITEM_CREATED_DATE "
+		String sql = "SELECT C.CART_ITEM_NO, C.USER_NO, B.BOOK_NO, B.BOOK_TITLE, B.BOOK_AUTHOR, B.BOOK_PUBLISHER, "
+				+ "B.BOOK_PRICE, B.BOOK_DISCOUNT_PRICE, B.BOOK_STOCK, C.CART_ITEM_QUANTITY, C.CART_ITEM_CREATED_DATE "
 				+ "FROM HTA_CART_ITEMS C, HTA_BOOKS B "
 				+ "WHERE C.BOOK_NO = B.BOOK_NO "
 				+ "AND C.USER_NO = ? "
@@ -66,7 +74,7 @@ public class CartItemDao {
 		return helper.selectList(sql, rs -> {
 			CartItem cartItem = new CartItem();
 			cartItem.setNo(rs.getInt("cart_item_no"));
-			cartItem.setUserNo(userNo);
+			cartItem.setUserNo(rs.getInt("user_no"));
 			
 			Book book = new Book();
 			book.setNo(rs.getInt("book_no"));
@@ -75,9 +83,11 @@ public class CartItemDao {
 			book.setPublisher(rs.getString("book_publisher"));
 			book.setPrice(rs.getInt("book_price"));
 			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setStock(rs.getInt("book_stock"));
 			
 			cartItem.setBook(book);
 			cartItem.setQuantity(rs.getInt("cart_item_quantity"));
+			cartItem.setCreatedDate(rs.getDate("cart_item_created_date"));
 			
 			return cartItem;
 		}, userNo);	

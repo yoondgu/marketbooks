@@ -2,12 +2,12 @@
 <%@page import="dao.CartItemDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <%
 	CartItemDao cartItemDao = CartItemDao.getInstance();
 
 	// TO DO: 로그인된 사용자 정보 조회
-	//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
+	//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 로그인페이지로 이동하고 아래 코드는 실행하지 않는다.
 	
 	// 개별 삭제, 체크된 아이템 모두 삭제인지 판정한다.
 	String job = request.getParameter("job");
@@ -20,8 +20,7 @@
 		CartItem cartItem = cartItemDao.getCartItemByNo(itemNo);
 		// 존재하지 않는 아이템일 경우 list.jsp로 재요청, fail=invalid 값을 전달한다.
 		if (cartItem == null) {
-			response.sendRedirect("list.jsp?fail=invalid");
-			return;
+			throw new RuntimeException("장바구니 정보가 존재하지 않습니다.");
 		}
 		
 		// Dao객체에서 해당 번호의 cartItem 객체를 삭제한다.
@@ -39,8 +38,7 @@
 			CartItem cartItem = cartItemDao.getCartItemByNo(deleteItemNo);
 			// 존재하지 않는 아이템일 경우 list.jsp로 재요청, fail=invalid 값을 전달한다.
 			if (cartItem == null) {
-				response.sendRedirect("list.jsp?fail=invalid");
-				return;
+				throw new RuntimeException("장바구니아이템 정보가 존재하지 않습니다.");
 			}
 			
 			// Dao객체에서 해당 번호의 cartItem 객체를 삭제한다.

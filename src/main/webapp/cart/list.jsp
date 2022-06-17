@@ -5,7 +5,7 @@
 <%@page import="vo.CartItem"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,11 +37,10 @@
 	 1. 세션에서 사용자정보 획득, 로그인 체크
 		User user = (User) session.getAttribute("LOGINED_USER");
 	 2. 카트아이템 정보 List<CartItemDto> 획득하기
-	 	List<CartItemDto> cartList = cartItemDto.getCartListByUser(int userNo) 
 	 3. cartList.isEmpty() 가 true이면 "장바구니에 담긴 상품이 없습니다."
 	 4. false이면 for문으로 뿌리기
 	 5. 장바구니 아이템 수량변경
-	 6. 장바구니 아이템 한 개 삭제, 여러 개 삭제 (deleted가 아니고 아예 삭제하기? 기록이 남을 필요가 없어보인다.)
+	 6. 장바구니 아이템 한 개 삭제, 여러 개 삭제
 	 -->
 <div class="contatiner">
    	<div class="row">
@@ -71,6 +70,25 @@
 		// null일 경우 빈 list 객체를 대입한다.
 		List<String> checkedItemNos = checkedValues == null ? new ArrayList<>() : Arrays.asList(checkedValues);
 	%>
+	<!-- 잘못된 수량으로 update.jsp를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
+	<%	
+		String fail = request.getParameter("fail");
+		if ("quantityInvalid".equals(fail)) {
+	%>
+	<div class="alert alert-danger">
+		<strong>수량이 올바르지 않습니다.</strong>
+	</div>
+	<%
+		}
+		if ("stockInvalid".equals(fail)) {
+	%>
+	<div class="alert alert-danger">
+		<strong>입력하신 수량보다 재고가 부족합니다.</strong>
+	</div>	
+	<%		
+		}
+	%>
+	
 	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
 		onsubmit="return submitOrderForm();" : 폼 제출시 submitOrderForm()의 반환값이 false이면 제출되지 않는다. -->
 	<form id="cart-form" method="get" action="" >
@@ -166,11 +184,12 @@
 			<div class="col-3">
 				<div class="card mb-3">
 					<div class="card-body">
-					<!-- 배송지 변경은 address를 저장하고, user에 반영시킨다. -->
+						<!-- addressList.jsp에서 재요청하면서 보낸 addressNo를 받아서 DB에서 해당 배송지정보를 조회하고 출력한다.-->
 						<h6 class="card-title">배송지</h6>
 						<p>사용자가 선택한 배송지 주소가 이곳에 출력됩니다.</p>
 						<div class="d-grid gap-2">
-							<a href="#" target="_blank" class="btn btn-outline-secondary btn-sm">배송지 변경</a>
+							<a href="addressList.jsp" target="_blank" class="btn btn-outline-secondary btn-sm"
+							onclick="window.open('addressList.jsp', 'newwindow', 'width=500,height=750'); return false;">배송지 변경</a>
 						</div>
 					</div>
 					<div class="card-footer text-muted">
@@ -181,6 +200,7 @@
 					</div>
 				</div>
 				<div class="d-grid gap-2">
+					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
 				    <button type="button" class="btn btn-primary" onclick="submitForm('orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
