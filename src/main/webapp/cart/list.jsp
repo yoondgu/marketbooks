@@ -65,6 +65,7 @@
 		List<CartItem> cartItemList = cartItemDao.getCartItemsByUser(userNo);
 		int cartItemListSize = cartItemList.size();
 		
+		// 재요청에 대한 응답일 경우 요청객체에서 체크 상태를 유지할 아이템번호 획득
 		String[] itemNos = request.getParameterValues("itemNo");
 	%>
 	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
@@ -94,6 +95,7 @@
 			<%
 				} else {
 			%>
+				<!-- form 전달값 -->
 				<table class="table">
 					<colgroup>
 						<col width="5%">
@@ -108,17 +110,18 @@
 					<tbody>
 					<%
 						for (CartItem item : cartItemList) {
-					%>	
+					%>			
+						<!-- TO DO : 체크박스가 여러 개일때 적용이 되지 않는다. -->
 						<!-- tr태그의 id는 "item-row-카트아이템번호" 이다. -->
 						<tr id="item-row-<%=item.getNo() %>">
 							<td class="align-middle">
-							<!-- TO DO: 수량 변경, 개별 삭제 클릭 시 체크상태 유지 구현 - name을 식별가능하게 만들고(개별 변경은 updateItem, 개별 삭제는 deleteItem) form으로 보내기 -->
+							<!-- TO DO: 수량 변경, 개별 삭제 클릭 시 체크상태 유지 구현 - 개별삭제, 수량변경의 전달값은 for문 밖에서 hidden태그로 설정하고, 모두 form으로 보내도록 수정 예정 -->
+							<!-- 수량 변경에 대하여 직접 쿼리스트링을 만드니까 재요청 페이지에서 체크 상태가 이상하게 바뀐다.  -->
 								<input type="checkbox" class="book-checkbox" 
-									<%=itemNos == null || Arrays.binarySearch(itemNos, String.valueOf(item.getNo())) == -1 ? "" : "checked" %>
+									 <%=itemNos == null || Arrays.binarySearch(itemNos, String.valueOf(item.getNo())) == -1 ? "" : "checked" %>
 									name="itemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 							</td>
 							<td  class="align-middle">
-								<!-- 커버이미지 파일은 sample-책번호.jpg 포맷으로 저장해두고 가져온다. -->
 								<img alt="cover image" src="../image/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
@@ -130,7 +133,7 @@
 							<td class="align-middle">
 								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
-							<td  class="align-middle">
+							<td class="align-middle" id="td-item-<%=item.getNo() %>">
 								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="changeQuantity(<%=item.getNo() %>);"/>
 							</td>
 							<td  class="align-middle">
@@ -189,9 +192,9 @@
 	*/
 	function toggleCheckbox() {
 		let allToggleCheckboxCheckedStatus = document.getElementById("all-toggle-checkbox").checked;
-		let bookCheckboxList = document.querySelectorAll(".book-checkbox");
 		
 		// bookCheckboxList의 모든 체크박스 상태를 allToggleCheckbox와 같게 만든다.
+		let bookCheckboxList = document.querySelectorAll(".book-checkbox");
 		for (let checkbox of bookCheckboxList) {
 			checkbox.checked = allToggleCheckboxCheckedStatus;
 		}
@@ -260,13 +263,37 @@
 	/*
 		사용자가 input[type=number] 태그에서 수량을 변경할 때마다 실행되는 이벤트핸들러 함수
 	*/
-	function changeQuantity(itemNo) {
+	function changeQuantity(updateItemNo) {
 		// td 태그에 표시된 금액 정보를 변경한다.
-		// dao 작업: modify.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.	
-		let quantity = document.getElementById("item-quantity-" + itemNo).value;
+		// dao 작업: modify.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
+		let quantityElement = document.getElementById("item-quantity-" + updateItemNo);
+		let quantity = quantityElement.value;
+		
+		/*
+		let tdElement = document.getElementById("td-item-" + updateItemNo);
+		let hiddenInput = '<input type="hidden" name="updateItem" value="' + updateItemNo + '"/>'
+						+ '<input type="hidden" name="quantity" value="' + quantity + '"/>';
+		tdElement.innerHTML += hiddenInput;
+							
+		console.log(tdElement);
+		
+		*/
+		
+		// 이렇게 하고 이진값탐색 하니까 이상하게 된다.
+		// 함께 전달할 체크상태의 체크박스 아이템번호도 쿼리스트링으로 저장한다.
+		let checkedBookCheckboxList = document.querySelectorAll(".book-checkbox:checked");
+		let requestUrl = "modify.jsp?updateItemNo=" + updateItemNo + "&quantity=" + quantity;
+		for (let checkedBox of checkedBookCheckboxList) {
+			requestUrl += "&itemNo=" + checkedBox.value;
+		}
+		
 		// location.href로 URL을 변경한다.
-		location.href = "modify.jsp?updateItemNo=" + itemNo + "&quantity=" + quantity;
+		location.href = requestUrl;
 	}
+	
+	// 개별삭제
+		// form 제출 시 요청URL에 deleteItemNo=아이템번호 쿼리스트링이 추가 될 수 있도록 name속성을 추가시킨다.
+		//quantityElement.setAttribute("name", "deleteItemNo");
 	
 	/*
 		form 입력값에 대하여 지정된 URL로 form 요청을 보내는 이벤트핸들러 함수
