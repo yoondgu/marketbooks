@@ -112,15 +112,25 @@ public class CartItemDao {
 	}
 
 	/**
-	 * 장바구니아이템 객체를 전달받아 DB에 새로 저장한다.
+	 * 장바구니아이템 객체를 전달받아 DB에 새로 저장한다. 이미 같은 사용자에게 해당 장바구니아이템의 도서가 존재할 경우, 수량을 증가시킨다.
 	 * @param cartItem 장바구니아이템 객체
 	 * @throws SQLException
 	 */
 	public void insertCartItem(CartItem cartItem) throws SQLException {
-		String sql = "INSERT INTO HTA_CART_ITEMS (CART_ITEM_NO, USER_NO, BOOK_NO, CART_ITEM_QUANTITY) "
-					+ "VALUES (CART_ITEMS_SEQ.nextval, ?, ?, ?) ";
+		String sql = "MERGE "
+					+ "    INTO HTA_CART_ITEMS C "
+					+ "USING DUAL "
+					+ "    ON (C.USER_NO = ? AND C.BOOK_NO = ?) "
+					+ "WHEN MATCHED THEN "
+					+ "    UPDATE "
+					+ "        SET "
+					+ "            C.CART_ITEM_QUANTITY = C.CART_ITEM_QUANTITY + ?, "
+					+ "            C.CART_ITEM_UPDATED_DATE = SYSDATE "
+					+ "WHEN NOT MATCHED THEN "
+					+ "    INSERT (CART_ITEM_NO, USER_NO, BOOK_NO, CART_ITEM_QUANTITY) "
+					+ "    VALUES (CART_ITEMS_SEQ.nextval, ?, ?, ?)";
 		
-		helper.insert(sql, cartItem.getUserNo(), cartItem.getBook().getNo(), cartItem.getQuantity());
+		helper.insert(sql, cartItem.getUserNo(), cartItem.getBook().getNo(), cartItem.getQuantity(), cartItem.getUserNo(), cartItem.getBook().getNo(), cartItem.getQuantity());
 	}
 	
 }

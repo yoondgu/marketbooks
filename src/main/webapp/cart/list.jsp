@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="util.StringUtil"%>
 <%@page import="dao.CartItemDao"%>
@@ -66,7 +67,9 @@
 		int cartItemListSize = cartItemList.size();
 		
 		// 재요청에 대한 응답일 경우 요청객체에서 체크 상태를 유지할 아이템번호 획득
-		String[] itemNos = request.getParameterValues("itemNo");
+		String[] checkedValues = request.getParameterValues("checkedItemNo");
+		// null일 경우 빈 list 객체를 대입한다.
+		List<String> checkedItemNos = checkedValues == null ? new ArrayList<>() : Arrays.asList(checkedValues);
 	%>
 	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
 		onsubmit="return submitOrderForm();" : 폼 제출시 submitOrderForm()의 반환값이 false이면 제출되지 않는다. -->
@@ -79,8 +82,8 @@
 						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 					</div>
 					<div class="col-5">
-						<span class="border-end me-3 pe-3" id="checked-number">전체선택(0/<%=cartItemListSize %>)</span>
-						<a class="link-dark text-decoration-none" href="javascript:submitOrderForm('delete.jsp')">선택삭제</a>
+						<span class="border-end me-3 pe-3" id="checked-number">전체선택(<%=checkedItemNos.size() %>/<%=cartItemListSize %>)</span>
+						<a class="link-dark text-decoration-none" href="javascript:deleteCheckedItems();">선택삭제</a>
 					</div>
 				</div>
 			</div>
@@ -96,6 +99,9 @@
 				} else {
 			%>
 				<!-- form 전달값 -->
+				<input type="hidden" name="job" id="hidden-job" />
+				<input type="hidden" name="itemNo" id="hidden-itemNo" />
+				<input type="hidden" name="quantity" id="hidden-quantity" />
 				<table class="table">
 					<colgroup>
 						<col width="5%">
@@ -111,15 +117,12 @@
 					<%
 						for (CartItem item : cartItemList) {
 					%>			
-						<!-- TO DO : 체크박스가 여러 개일때 적용이 되지 않는다. -->
 						<!-- tr태그의 id는 "item-row-카트아이템번호" 이다. -->
 						<tr id="item-row-<%=item.getNo() %>">
 							<td class="align-middle">
-							<!-- TO DO: 수량 변경, 개별 삭제 클릭 시 체크상태 유지 구현 - 개별삭제, 수량변경의 전달값은 for문 밖에서 hidden태그로 설정하고, 모두 form으로 보내도록 수정 예정 -->
-							<!-- 수량 변경에 대하여 직접 쿼리스트링을 만드니까 재요청 페이지에서 체크 상태가 이상하게 바뀐다.  -->
 								<input type="checkbox" class="book-checkbox" 
-									 <%=itemNos == null || Arrays.binarySearch(itemNos, String.valueOf(item.getNo())) == -1 ? "" : "checked" %>
-									name="itemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
+									 <%=checkedItemNos.contains(String.valueOf(item.getNo())) ? "checked" : "" %>
+									name="checkedItemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 							</td>
 							<td  class="align-middle">
 								<img alt="cover image" src="../image/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
@@ -133,8 +136,8 @@
 							<td class="align-middle">
 								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
-							<td class="align-middle" id="td-item-<%=item.getNo() %>">
-								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="changeQuantity(<%=item.getNo() %>);"/>
+							<td class="align-middle">
+								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
 							</td>
 							<td  class="align-middle">
 							<%
@@ -147,7 +150,7 @@
 								</small>
 							</td>
 							<td  class="align-middle">
-								<a href="delete.jsp?deleteItemNo=<%=item.getNo() %>" class="btn btn-outline-danger btn-sm">삭제</a>
+								<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(<%=item.getNo() %>);">삭제</button>
 							</td>
 						</tr>
 					<%
@@ -178,7 +181,7 @@
 					</div>
 				</div>
 				<div class="d-grid gap-2">
-				    <button type="button" class="btn btn-primary" onclick="submitOrderForm('orderform.jsp');" >주문하기</button>
+				    <button type="button" class="btn btn-primary" onclick="submitForm('orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -263,43 +266,40 @@
 	/*
 		사용자가 input[type=number] 태그에서 수량을 변경할 때마다 실행되는 이벤트핸들러 함수
 	*/
-	function changeQuantity(updateItemNo) {
+	function updateQuantity(updateItemNo) {
 		// td 태그에 표시된 금액 정보를 변경한다.
 		// dao 작업: modify.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
 		let quantityElement = document.getElementById("item-quantity-" + updateItemNo);
 		let quantity = quantityElement.value;
 		
-		/*
-		let tdElement = document.getElementById("td-item-" + updateItemNo);
-		let hiddenInput = '<input type="hidden" name="updateItem" value="' + updateItemNo + '"/>'
-						+ '<input type="hidden" name="quantity" value="' + quantity + '"/>';
-		tdElement.innerHTML += hiddenInput;
-							
-		console.log(tdElement);
+		// hidden태그 값 설정하기
+		document.getElementById("hidden-itemNo").value = updateItemNo;
+		document.getElementById("hidden-quantity").value = quantity;
 		
-		*/
-		
-		// 이렇게 하고 이진값탐색 하니까 이상하게 된다.
-		// 함께 전달할 체크상태의 체크박스 아이템번호도 쿼리스트링으로 저장한다.
-		let checkedBookCheckboxList = document.querySelectorAll(".book-checkbox:checked");
-		let requestUrl = "modify.jsp?updateItemNo=" + updateItemNo + "&quantity=" + quantity;
-		for (let checkedBox of checkedBookCheckboxList) {
-			requestUrl += "&itemNo=" + checkedBox.value;
-		}
-		
-		// location.href로 URL을 변경한다.
-		location.href = requestUrl;
+		//form 제출하기
+		submitForm("update.jsp");
 	}
 	
 	// 개별삭제
-		// form 제출 시 요청URL에 deleteItemNo=아이템번호 쿼리스트링이 추가 될 수 있도록 name속성을 추가시킨다.
-		//quantityElement.setAttribute("name", "deleteItemNo");
+	function deleteItem(deleteItemNo) {
+		document.getElementById("hidden-job").value = "one";
+		document.getElementById("hidden-itemNo").value = deleteItemNo;
+		
+		submitForm("delete.jsp");
+	}
+	
+	// 선택삭제
+	function deleteCheckedItems() {
+		document.getElementById("hidden-job").value = "all";
+		
+		submitForm("delete.jsp");
+	}
 	
 	/*
 		form 입력값에 대하여 지정된 URL로 form 요청을 보내는 이벤트핸들러 함수
 		선택삭제버튼 클릭: delete.jsp, 주문하기 버튼: orderform.jsp로 요청을 보낸다.
 	*/
-	function submitOrderForm(requestURL) {
+	function submitForm(requestURL) {
 		let form = document.getElementById("cart-form");
 		form.setAttribute("action", requestURL);
 		
