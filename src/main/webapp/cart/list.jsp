@@ -157,7 +157,7 @@
 							<td class="align-middle">
 								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
 							</td>
-							<td  class="align-middle">
+							<td class="align-middle">
 							<%
 								int totalDiscountPrice = item.getBook().getDiscountPrice() * item.getQuantity();
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
@@ -188,8 +188,8 @@
 						<h6 class="card-title">배송지</h6>
 						<p>사용자가 선택한 배송지 주소가 이곳에 출력됩니다.</p>
 						<div class="d-grid gap-2">
-							<a href="addressList.jsp" target="_blank" class="btn btn-outline-secondary btn-sm"
-							onclick="window.open('addressList.jsp', 'newwindow', 'width=500,height=750'); return false;">배송지 변경</a>
+							<button class="btn btn-outline-secondary btn-sm"
+							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
 						</div>
 					</div>
 					<div class="card-footer text-muted">
@@ -209,6 +209,9 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
+	// 주문정보 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
+	changeOrderInfo();
+	
 	/*
 		all-toggle-checkbox의 체크상태가 변경되는 이벤트 핸들러 함수
         all-toggle-checkbox의 체크상태가 변경되면 input[name="book-checkbox"]의 상태를 같이 변경한다.
@@ -331,6 +334,17 @@
 		// 요청페이지에서 dao 작업 후, 재요청으로 다시 list.jsp를 불러온다.	
 	}
 	
+	function submitFormNewWindow(requestURL, windowname) {
+		window.open(requestURL, windowname, 'width=500,height=750'); 
+		
+		let form = document.getElementById("cart-form");
+
+		// 자식창에 cart-form의 입력값을 전달한다. (체크된 아이템번호를 전달하기 위함)
+		form.setAttribute("target", windowname);
+		form.setAttribute("action", requestURL);
+		
+		form.submit();
+	}
 	
 </script>
 </body>
