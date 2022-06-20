@@ -12,6 +12,7 @@ public class User {
 	private String deleted;
 	private Date createdDate;
 	private Date updatedDate;
+	private UserAddress address;
 	
 	public User() {}
 
@@ -78,6 +79,15 @@ public class User {
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+
+	public UserAddress getAddress() {
+		return address;
+	}
+
+	public void setAddress(UserAddress address) {
+		this.address = address;
+	}
+	
 	
 	
 }

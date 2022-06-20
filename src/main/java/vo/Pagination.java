@@ -15,7 +15,7 @@ public class Pagination {
 	private int endIndex;			// 데이터 조회 끝위치
 	
 	public Pagination(int totalRows, int currentPage) {
-		this(5, totalRows, currentPage);
+		this(5,totalRows, currentPage);
 	}
 	
 	public Pagination(int rows, int totalRows, int currentPage) {
