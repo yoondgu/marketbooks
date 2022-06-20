@@ -6,8 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>marketbooks</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon"
+	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
+	type="image/x-icon">
 <style type="text/css">
 	.text-middle-center {
 	    justify-content: center;
@@ -82,7 +85,7 @@
 	   						</div>
 	   					</td>
 	   					<td class="align-middle">
-	   						<a href="javascript:modifyAddress(130001);">
+	   						<a href="javascript:openModifyForm(130001);">
 	   							<!-- 부트스트랩 아이콘 -->
 		   						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-pen" viewBox="0 0 16 16">
 	  								<path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
@@ -94,7 +97,7 @@
 	   			<tfoot>
 	   				<tr>
 	   					<td colspan="3" class="align-middle">
-	   						<a href="javascript:addAddress();" class="link-dark text-decoration-none">
+	   						<a href="javascript:openAddForm();" class="link-dark text-decoration-none">
 	   							<strong>+ 새 배송지 추가</strong>
 	   						</a>
 	   					</td>
@@ -105,16 +108,25 @@
    </form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">	
 	function changeDefaultAddress() {
 		// form 획득해서 changeDefAddress.jsp 페이지에 submit하면 checked인 값의 value인 defAddressNo가 전달된다.
 		// 전달받은 address_no를 userDao에서 user의 user_default_ad_no로 update하고 화면을 닫고 list.jsp가 리로드된다.
 		
-		submitForm('changeDefAddress.jsp');
+		let form = document.getElementById("address-form");
+		
+		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
+		window.opener.name = 'parentName'
+		form.setAttribute("target", 'parentName');
+		form.setAttribute("action", 'changeDefAddress.jsp');
+
+		console.log(window.opener);
+		form.submit();
 		window.close();
 	}
 	
-	function modifyAddress(addressNo) {
+	function openModifyForm(addressNo) {
 		// form 획득해서 modifyAddressForm.jsp에 submit하면 checked인 값의 value인 addressNo와 hidden태그의 수정할 modifyAddressNo가 전달된다.
 		// modifyAddressForm에서 수정폼 화면에 modifyAddressNo에 해당하는 address 정보를 출력한다. 
 		// modifyAddressForm.jsp에서 폼 작성후 modifyAddress.jsp로 submit
@@ -122,32 +134,17 @@
 		
 		// 히든태그 값 수정
 		document.getElementById("hidden-modifyAddressNo").value = addressNo;
-		submitFormNewWindow('modifyAddressForm.jsp', 'modifyAddressForm');
-	}
-	
-	function addAddress() {
-		window.open('addAddressForm.jsp', 'addAddressForm', 'width=500,height=750'); 
-	}
-	
-	function submitForm(requestURL) {
-		let form = document.getElementById("address-form");
 		
-		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
-		form.setAttribute("target", window.opener.name);
-		form.setAttribute("action", requestURL);
-
+		// 새 창을 띄우지 않고 같은 창에서 페이지 변경한다.
+		let form = document.getElementById("address-form");
+		form.setAttribute("action", "modifyAddressForm.jsp");
 		form.submit();
 	}
 	
-	function submitFormNewWindow(requestURL, windowname) {
-		window.open(requestURL, windowname, 'width=500,height=750'); 
-		
+	function openAddForm() {
+		// 새 창을 띄우지 않고 같은 창에서 페이지 변경한다.
 		let form = document.getElementById("address-form");
-
-		// 자식창에 cart-form의 입력값을 전달한다. (체크된 아이템번호를 전달하기 위함)
-		form.setAttribute("target", windowname);
-		form.setAttribute("action", requestURL);
-		
+		form.setAttribute("action", "addAddressForm.jsp");
 		form.submit();
 	}
 	
