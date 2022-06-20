@@ -2,7 +2,6 @@ package dao;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import helper.DaoHelper;
 import vo.User;
 import vo.UserAddress;
@@ -14,8 +13,27 @@ public class UserDao {
 	public static UserDao getInstance() {
 		return instance;
 	}
+  
 	
-	private DaoHelper helper = DaoHelper.getInstance();
+	private DaoHelper helper = helper.getInstance();
+    
+  	public User getUserByEmail(String email) throws SQLException {
+		String sql = "select * "
+				   + "from hta_users "
+				   + "where user_email = ? ";
+		
+		return helper.selectOne(sql, rs -> {
+			User user = new User();
+			user.setNo(rs.getInt("user_no"));
+			user.setEmail(rs.getString("user_email"));
+			user.setPassword(rs.getString("user_password"));
+			user.setName(rs.getString("user_name"));
+			user.setTel(rs.getString("user_tel"));
+			user.setCreatedDate(rs.getDate("user_created_date"));
+			
+			return user;
+		}, email);
+	}
 	
 	public User getUserByNo(int userNo) throws SQLException {
 		String sql = "select u.user_no, u.user_email, u.user_name, u.user_tel, u.user_deleted, u.user_created_date, u.user_updated_date, "
@@ -44,8 +62,7 @@ public class UserDao {
 			
 			return user;
 		}, userNo);
-		
-	}
+    
 	
 	public List<User> getUsers(int beginIndex, int endIndex) throws SQLException {
 		String sql = "select user_no, user_email, user_name, user_tel, user_deleted, user_created_date, user_updated_date "
