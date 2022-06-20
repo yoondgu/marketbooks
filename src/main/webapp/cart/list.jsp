@@ -11,8 +11,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>marketbooks</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon"
+	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
+	type="image/x-icon">
 <style>
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 	input { width: 80%; }
@@ -143,7 +146,7 @@
 									name="checkedItemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 							</td>
 							<td  class="align-middle">
-								<img alt="cover image" src="../image/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
+								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
 								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
@@ -338,7 +341,7 @@
 		window.open(requestURL, windowname, 'width=500,height=750'); 
 		
 		let form = document.getElementById("cart-form");
-
+		
 		// 자식창에 cart-form의 입력값을 전달한다. (체크된 아이템번호를 전달하기 위함)
 		form.setAttribute("target", windowname);
 		form.setAttribute("action", requestURL);
