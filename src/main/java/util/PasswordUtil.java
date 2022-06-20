@@ -18,9 +18,9 @@ public class PasswordUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(PasswordUtil.generateSecretPassword("yoo", "zxcv1234"));
+		System.out.println(PasswordUtil.generateSecretPassword("admin", "zxcv1234"));
 		System.out.println(PasswordUtil.generateSecretPassword("hong", "zxcv1234"));
-		System.out.println(PasswordUtil.generateSecretPassword("kang", "zxcv1234"));
 		System.out.println(PasswordUtil.generateSecretPassword("kim", "zxcv1234"));
+		System.out.println(PasswordUtil.generateSecretPassword("kang", "zxcv1234"));
 	}
 }
