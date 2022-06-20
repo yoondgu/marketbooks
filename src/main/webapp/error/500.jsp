@@ -16,6 +16,9 @@
 		<div class="container-fluid py-3">
 			<h1 class="display-5 fw-bold">오류 페이지</h1>
 			<p class="fs-4">요청 처리중 오류가 발생하였습니다.</p>
+			<%
+				exception.printStackTrace();
+			%>
 			<p class="fs-4 text-danger"><%=exception.getMessage() %></p>
 		</div>
 	</div>

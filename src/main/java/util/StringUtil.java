@@ -1,6 +1,19 @@
 package util;
 
+import java.text.DecimalFormat;
+
 public class StringUtil {
+	
+	private static final DecimalFormat currencyFormat = new DecimalFormat("##,###");
+
+	/**
+	 * 정수를 전달받아서 ","가 포함된 금융통화형식의 문자열을 반환한다.
+	 * @param value 정수
+	 * @return 3자리마다 ","가 포함된 문자열
+	 */
+	public static String numberToCurrency(int value) {
+		return currencyFormat.format(value);
+	}
 
 	/**
 	 * value가 null이면 빈 문자열을 반환한다
@@ -8,7 +21,7 @@ public class StringUtil {
 	 * @return 빈 문자열 혹은 원래 문자열
 	 */
 	public static String nullToBlank(String value) {
-		return value == null ? "" : value;
+		return value == null ? "" : value.trim();
 	}
 	
 	/**
