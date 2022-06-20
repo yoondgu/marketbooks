@@ -197,6 +197,10 @@ public class DaoHelper {
 	private static final String USER_NAME = "semi";
 	private static final String PASSWORD = "zxcv1234";
 	
+//  private static final String URL = "jdbc:oracle:thin:@DB20220611164357_high?TNS_ADMIN=/Users/jewonlee/Users/Wallet_DB20220611164357";
+//  private static final String USER_NAME = "semi";
+//  private static final String PASSWORD = "Wpdnjs77";
+	
 	static {
 		try {
 			Class.forName("oracle.jdbc.OracleDriver");
