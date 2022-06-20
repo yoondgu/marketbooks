@@ -2,7 +2,7 @@ package dto;
 
 import java.util.Date;
 
-public class inquiryDto {
+public class InquiryDto {
 	private int no;
 	private int userNo;
 	private String userName;
@@ -16,7 +16,7 @@ public class inquiryDto {
 	private Date answerCreatedDate;
 	private Date answerUpdatedDate;
 	
-	public inquiryDto() {}
+	public InquiryDto() {}
 
 	public int getNo() {
 		return no;

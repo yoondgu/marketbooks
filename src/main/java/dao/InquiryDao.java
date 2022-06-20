@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dto.inquiryDto;
+import dto.InquiryDto;
 import helper.DaoHelper;
 import vo.Inquiry;
 
@@ -26,12 +26,12 @@ public class InquiryDao {
 	 * @return 
 	 * @throws SQLException
 	 */
-	public List<inquiryDto> getAllInquiries() throws SQLException {
+	public List<InquiryDto> getAllInquiries() throws SQLException {
 		String sql = "SELECT I.INQUIRY_NO, I.USER_NO, U.USER_NAME, I.INQUIRY_TITLE, I.INQUIRY_CONTENT, I.INQUIRY_DELETED, I.INQUIRY_CREATED_DATE, I.INQUIRY_UPDATED_DATE, I.INQUIRY_ANSWER_CONTENT,I.INQUIRY_ANSWER_CREATED_DATE, I.INQUIRY_ANSWER_UPDATED_DATE, I.INQUIRY_ANSWER_STATUS "
 				   + "FROM HTA_INQUIRIES I, HTA_USERS U "
 				   + "WHERE I.USER_NO = U.USER_NO ";
 		return helper.selectList(sql, rs-> {
-			inquiryDto inquiry = new inquiryDto();
+			InquiryDto inquiry = new InquiryDto();
 					
 			inquiry.setNo(rs.getInt("inquiry_no"));
 			inquiry.setUserNo(rs.getInt("user_no"));
