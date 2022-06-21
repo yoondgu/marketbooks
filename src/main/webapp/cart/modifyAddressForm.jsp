@@ -31,6 +31,19 @@
    <div class="formwrapper p-3">
 		<form id="address-form" method="post" action="" onsubmit="return checkInputValue();">
    		<!-- form 전달값 -->
+			<!-- addressList.jsp에 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
+	 	<%
+	 		// list.jsp페이지에서 체크된 아이템번호 값을 getParameters로 꺼내서 반복문으로 hidden타입의 input태그를 만든다.
+	 		// form 전송 시 이 값이 함께 전달된다.
+			String[] checkedValues = request.getParameterValues("checkedItemNo");
+	 		if (checkedValues != null) {
+	 			for (String value : checkedValues) {
+		%>
+			<input type="hidden" name="checkedItemNo" id="hidden-checkedItemNo" value="<%=StringUtil.stringToInt(value) %>"/>
+		<%
+	 			}
+	 		}
+		%>
 			<!-- 이전 페이지에서 선택한 주소와 우편번호를 전달받아서 hidden타입의 input태그에 저장하고, 화면에도 출력한다. -->
 			<input type="hidden" id="postcode" name="postcode" />
 			<input type="hidden" id="address" name="address" />

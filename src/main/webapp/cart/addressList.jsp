@@ -1,3 +1,8 @@
+<%@page import="vo.User"%>
+<%@page import="dao.UserDao"%>
+<%@page import="vo.UserAddress"%>
+<%@page import="java.util.List"%>
+<%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -38,7 +43,14 @@
    <%
 		// TO DO: 로그인된 사용자 정보 조회
 		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
+		//		 user.getAddress()가 NULL일 경우 처리해줘야 함
 		int userNo = 110;
+		UserDao userDao = UserDao.getInstance();
+		User user = userDao.getUserByNo(userNo);
+   
+   		// 해당 사용자의 배송지 정보 리스트 획득
+   		UserAddressDao userAddressDao = UserAddressDao.getInstance();
+   		List<UserAddress> addrList = userAddressDao.getAllAddressesByUser(userNo);
    %>
    <form id="address-form" method="get" action="">
    		<!-- form 전달값 -->
@@ -72,20 +84,25 @@
 	   			</thead>
 	   			<tbody>
 	   			<!-- for문으로 배송지 정보를 출력한다. -->
-	   				<tr id="item-row-130001">
+	   			<%
+	   				for (UserAddress addr : addrList) {
+	   			%>
+	   				<tr id="item-row-<%=addr.getNo() %>">
 	   					<td class="align-middle">
 	   						<!-- 기본 배송지 정보만 checked 상태로 출력한다. -->
-	   						<input type="checkbox" id="item-checkbox-160001" name="defAddressNo" value="160001" onchange="changeDefaultAddress();"/>
+	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>" name="defAddressNo" value="<%=addr.getNo() %>"
+	   						 <%=user.getAddress() !=null && user.getAddress().getNo() == addr.getNo() ? "checked" : "" %> onchange="changeDefaultAddress();"/>
 	   					</td>
 	   					<td class="text-start align-middle">
-	   						<div id="item-address-130001">배송지주소</div>
-	   						<div id="item-user-130001">
-	   							<small class="border-end pe-1">유도영</small>
-	   							<small class="pe-1">010-1111-1111</small>
+	   						<div id="item-address-<%=addr.getNo() %>"><%=addr.getAddress() %> <%=addr.getDetailAddress() %></div>
+	   						<div id="item-user-<%=addr.getNo() %>">
+	   							<!-- 추후 받는이,전화번호 정보 작업 나중에 추가 -->
+	   							<small class="border-end pe-1">받는이</small>
+	   							<small class="pe-1">전화번호</small>
 	   						</div>
 	   					</td>
 	   					<td class="align-middle">
-	   						<a href="javascript:openModifyForm(130001);">
+	   						<a href="javascript:openModifyForm(<%=addr.getNo() %>);">
 	   							<!-- 부트스트랩 아이콘 -->
 		   						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-pen" viewBox="0 0 16 16">
 	  								<path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
@@ -93,6 +110,9 @@
 	   						</a>
 	   					</td>
 	   				</tr>
+	   			<%
+	   				}
+	   			%>
 	   			</tbody>
 	   			<tfoot>
 	   				<tr>
@@ -121,7 +141,6 @@
 		form.setAttribute("target", 'parentName');
 		form.setAttribute("action", 'changeDefAddress.jsp');
 
-		console.log(window.opener);
 		form.submit();
 		window.close();
 	}

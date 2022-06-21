@@ -1,3 +1,7 @@
+<%@page import="vo.UserAddress"%>
+<%@page import="dao.UserAddressDao"%>
+<%@page import="vo.User"%>
+<%@page import="dao.UserDao"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="util.StringUtil"%>
@@ -62,6 +66,8 @@
 		// TO DO: 로그인된 사용자 정보 조회
 		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
 		int userNo = 110;
+		UserDao userDao = UserDao.getInstance();
+		User user = userDao.getUserByNo(userNo);
 		
 		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
 		CartItemDao cartItemDao = CartItemDao.getInstance();
@@ -187,9 +193,22 @@
 			<div class="col-3">
 				<div class="card mb-3">
 					<div class="card-body">
-						<!-- addressList.jsp에서 재요청하면서 보낸 addressNo를 받아서 DB에서 해당 배송지정보를 조회하고 출력한다.-->
-						<h6 class="card-title">배송지</h6>
-						<p>사용자가 선택한 배송지 주소가 이곳에 출력됩니다.</p>
+						<!-- 사용자의 기본 배송지 정보를 출력한다. 기본 배송지가 없을 경우, 안내메시지가 출력된다.-->
+						<h6 class="card-title"><strong>배송지</strong></h6>
+					<%
+			   			// 해당 사용자의 배송지 정보 리스트 획득
+			   			if (user.getAddress() == null) {
+			   		%>
+				   		<p>기본 배송지를 선택하세요.</p>
+			   		<%
+			   			} else {
+				   			UserAddressDao userAddressDao = UserAddressDao.getInstance();
+				   			UserAddress addr = userAddressDao.getAddressByNo(user.getAddress().getNo());
+			   		%>
+						<p><%=addr.getAddress() %> <%=addr.getDetailAddress() %></p>
+					<%
+			   			}
+					%>
 						<div class="d-grid gap-2">
 							<button class="btn btn-outline-secondary btn-sm"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
@@ -327,6 +346,7 @@
 	*/
 	function submitForm(requestURL) {
 		let form = document.getElementById("cart-form");
+		form.setAttribute("target", ""); // submitFormNewWindow()를 실행한 뒤 이 함수를 실행할 때 target의 값을 초기화해야 한다.
 		form.setAttribute("action", requestURL);
 		
 		// form태그의 submit으로 서버에 제출하면, name=value 쌍으로 존재하는 입력값을 요청파라미터로 전달된다.
