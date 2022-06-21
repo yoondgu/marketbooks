@@ -5,7 +5,7 @@
 <%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,6 +47,12 @@
 		int userNo = 110;
 		UserDao userDao = UserDao.getInstance();
 		User user = userDao.getUserByNo(userNo);
+		
+		// 사용자의 기본 배송지 번호 획득
+		int defAddressNo = 0;
+		if (user.getAddress() != null) {
+			defAddressNo = user.getAddress().getNo();
+		}
    
    		// 해당 사용자의 배송지 정보 리스트 획득
    		UserAddressDao userAddressDao = UserAddressDao.getInstance();
@@ -68,6 +74,7 @@
 	 		}
 		%>
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
+		<input type="hidden" name="changeDefAddressNo" id="hidden-changeDefAddressNo" />
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -90,15 +97,16 @@
 	   				<tr id="item-row-<%=addr.getNo() %>">
 	   					<td class="align-middle">
 	   						<!-- 기본 배송지 정보만 checked 상태로 출력한다. -->
-	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>" name="defAddressNo" value="<%=addr.getNo() %>"
-	   						 <%=user.getAddress() !=null && user.getAddress().getNo() == addr.getNo() ? "checked" : "" %> onchange="changeDefaultAddress();"/>
+	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>"
+	   						<%=defAddressNo == addr.getNo() ? "checked" : "" %> onchange="changeDefaultAddress(<%=addr.getNo() %>);"/>
 	   					</td>
 	   					<td class="text-start align-middle">
 	   						<div id="item-address-<%=addr.getNo() %>"><%=addr.getAddress() %> <%=addr.getDetailAddress() %></div>
 	   						<div id="item-user-<%=addr.getNo() %>">
-	   							<!-- 추후 받는이,전화번호 정보 작업 나중에 추가 -->
+	   							<!--
 	   							<small class="border-end pe-1">받는이</small>
 	   							<small class="pe-1">전화번호</small>
+	   							 추후 받는이,전화번호 정보 작업 나중에 추가 -->
 	   						</div>
 	   					</td>
 	   					<td class="align-middle">
@@ -130,11 +138,14 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
-	function changeDefaultAddress() {
-		// form 획득해서 changeDefAddress.jsp 페이지에 submit하면 checked인 값의 value인 defAddressNo가 전달된다.
-		// 전달받은 address_no를 userDao에서 user의 user_default_ad_no로 update하고 화면을 닫고 list.jsp가 리로드된다.
-		
+
+	// CUD 작업 모두 기본 배송지가 바뀌니까 부모창 새로고침되어야 함
+	
+	function changeDefaultAddress(addressNo) {
 		let form = document.getElementById("address-form");
+		
+		// 히든태그 값 수정
+		document.getElementById("hidden-changeDefAddressNo").value = addressNo;
 		
 		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 		window.opener.name = 'parentName'
@@ -145,12 +156,7 @@
 		window.close();
 	}
 	
-	function openModifyForm(addressNo) {
-		// form 획득해서 modifyAddressForm.jsp에 submit하면 checked인 값의 value인 addressNo와 hidden태그의 수정할 modifyAddressNo가 전달된다.
-		// modifyAddressForm에서 수정폼 화면에 modifyAddressNo에 해당하는 address 정보를 출력한다. 
-		// modifyAddressForm.jsp에서 폼 작성후 modifyAddress.jsp로 submit
-		// modifyAddress.jsp에서 전달받은 내용으로 addressDao에서 해당 address를 update 후 adressList.jsp로 재요청한다.
-		
+	function openModifyForm(addressNo) {		
 		// 히든태그 값 수정
 		document.getElementById("hidden-modifyAddressNo").value = addressNo;
 		
@@ -158,6 +164,7 @@
 		let form = document.getElementById("address-form");
 		form.setAttribute("action", "modifyAddressForm.jsp");
 		form.submit();
+		
 	}
 	
 	function openAddForm() {

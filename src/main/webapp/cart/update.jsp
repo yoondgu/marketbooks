@@ -29,7 +29,7 @@
 		for (String number : numbers) {
 			int checkedItemNo = StringUtil.stringToInt(number);
 			// 체크 상태를 유지시킬 아이템번호에 해당하는 카트가 없으면 덧붙일 queryString이 없다.
-			if (cartItemDao.getCartItemByNo(itemNo) == null) {
+			if (cartItemDao.getCartItemByNo(checkedItemNo) == null) {
 				continue;
 			}
 			

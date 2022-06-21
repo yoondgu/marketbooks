@@ -57,7 +57,7 @@
 			</div>
 			<input type="text" id="detailAddress" name="detailAddress" placeholder="나머지 주소를 입력해주세요" class="form-control mb-3" />
 			<div class="d-grid gap-2">
-				<button type="button" class="btn btn-primary mb-3" onclick="submitForm('addAddress.jsp');">저장</button>
+				<button type="button" class="btn btn-primary mb-3" onclick="addAddress();">저장</button>
 			</div>
 			<input type="checkbox" name="isChecked" value="yes" /><span> 기본 배송지로 저장</span>
 		</form>
@@ -141,12 +141,26 @@
 	
 	
 	/*
-	저장 또는 삭제 버튼을 누르면 실행되는 이벤트핸들러 함수. 
+		저장 버튼을 누르면 실행되는 이벤트핸들러 함수.
+		'기본 배송지로 저장' 체크박스에 체크되어있다면 부모창으로 폼을 제출하고, 현재 창을 닫는다.
+		'기본 배송지로 저장' 체크박스에 체크되어있지 않다면 현재 창으로 폼을 제출한다.
 	*/
-	function submitForm(requestURL) {
+	function addAddress() {
 		let form = document.getElementById("address-form");
-		form.setAttribute("action", requestURL);
-		form.submit();
+		let isCheckedStatus = document.querySelector("input[name=isChecked]").checked;
+		
+		if (isCheckedStatus) {
+			// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
+			window.opener.name = 'parentName'
+			form.setAttribute("target", 'parentName');
+			form.setAttribute("action", 'addAddress.jsp');
+
+			form.submit();
+			window.close();
+		} else {
+			form.setAttribute("action", 'addAddress.jsp');
+			form.submit();
+		}
 	}
 		
 </script>

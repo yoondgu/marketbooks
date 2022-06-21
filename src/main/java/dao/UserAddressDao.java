@@ -32,15 +32,26 @@ public class UserAddressDao {
 		helper.insert(sql, userAddr.getNo(), userAddr.getUserNo(), userAddr.getAddress(), userAddr.getDetailAddress(), userAddr.getPostalCode());
 	}
 	
-	// 배송지 삭제 
-	
 	// 배송지 업데이트
+	public void updateAddress(UserAddress userAddr) throws SQLException {
+		String sql = "UPDATE HTA_USER_ADDRESSES "
+					+ "SET "
+					+ "		USER_ADDRESS = ?, "
+					+ "		USER_DETAIL_ADDRESS = ?, "
+					+ "		POSTAL_CODE = ?, "
+					+ "		USER_ADDRESS_DELETED = ? "
+					+ "WHERE ADDRESS_NO = ? ";
+		
+		helper.update(sql, userAddr.getAddress(), userAddr.getDetailAddress(), userAddr.getPostalCode(), userAddr.getDeleted(), userAddr.getNo());
+	}
 	
-	// 배송지 번호로 배송지 조회
+	// 배송지 번호로 등록된 배송지 조회
+	// (주문정보를 조회할 때는, 현재는 삭제된 배송지 번호로 배송지 정보를 조회할 수도 있으므로 DELETED 값과 상관없이 모두 조회할것) 
 	public UserAddress getAddressByNo(int addrNo) throws SQLException {
 		String sql = "SELECT ADDRESS_NO, USER_NO, USER_ADDRESS, USER_DETAIL_ADDRESS, POSTAL_CODE "
 				+ "FROM HTA_USER_ADDRESSES "
-				+ "WHERE ADDRESS_NO = ? ";
+				+ "WHERE USER_ADDRESS_DELETED = 'N' "
+				+ "AND ADDRESS_NO = ? ";
 	
 	return helper.selectOne(sql, rs -> {
 		UserAddress userAddr = new UserAddress();
@@ -49,15 +60,17 @@ public class UserAddressDao {
 		userAddr.setAddress(rs.getString("user_address"));
 		userAddr.setDetailAddress(rs.getString("user_detail_address"));
 		userAddr.setPostalCode(rs.getInt("postal_code"));
+		userAddr.setDeleted("N");
 		return userAddr;
 		}, addrNo);
 	}
 	
-	// 사용자정보로 모든 배송지 조회
+	// 사용자정보로 모든 등록된 배송지 조회
 	public List<UserAddress> getAllAddressesByUser(int userNo) throws SQLException {
 		String sql = "SELECT ADDRESS_NO, USER_NO, USER_ADDRESS, USER_DETAIL_ADDRESS, POSTAL_CODE "
 					+ "FROM HTA_USER_ADDRESSES "
-					+ "WHERE USER_NO = ? ";
+					+ "WHERE USER_ADDRESS_DELETED = 'N' "
+					+ "AND USER_NO = ? ";
 		
 		return helper.selectList(sql, rs -> {
 			UserAddress userAddr = new UserAddress();
