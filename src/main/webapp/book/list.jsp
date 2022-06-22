@@ -12,21 +12,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>북 스토어</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link  href=""  rel="stylesheet"  type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/common.css" rel="stylesheet">
+<link href="../css/normalize.css" rel="stylesheet">
+<link href="../css/section1.css" rel="stylesheet">
 </head>
 <body>
 	<!-- 헤더 include -->
+<div class="container">
 	<jsp:include page="../common/header.jsp">
-		<jsp:param name="menu" value="book" />
+		<jsp:param name="menu" value="list" />
 	</jsp:include>
 
 	<div id="main" class="">
-		<div id="content">
-
-			<br>
+		<div id="content" class="mr-3">
 
 			<!-- 상품목록 -->
 			<div id="page_article" class="row">
@@ -38,7 +38,7 @@
 						</div>
 					</div>
 					<div class="inner_lnb">
-						<h3 class="tit">인문학</h3>
+						<h3 class="tit">a</h3>
 						<ul class="list on" style="list-style-type:none;">
 							<li data-start="124" data-end="188"><a class="on">눈에 띄는
 									새책</a></li>
@@ -157,7 +157,10 @@
 			</div>
 		</div>
 	</div>
-
+	<jsp:include page="../common/footer.jsp">
+		<jsp:param name="menu" value="list" />
+	</jsp:include>
+</div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 	<script type="text/javascript">

@@ -26,7 +26,7 @@ public class BookDao {
 				+ "             row_number() over (order by book_no desc) row_number " + "      from hta_books "
 				+ "      where book_deleted = 'N') B, hta_book_categories C "
 				+ "where B.row_number >= ? and B.row_number <= ? " + "and B.category_no = C.category_no "
-				+ "order by B.book_no desc ";
+				+ "order by B.book_no asc ";
 
 		return helper.selectList(sql, rs -> {
 			Book book = new Book();
@@ -53,7 +53,7 @@ public class BookDao {
 				+ "             row_number() over (order by book_no desc) row_number " + "      from hta_books "
 				+ "      where book_deleted = 'N' and book_title like '%' || ? || '%') B, hta_book_categories C "
 				+ "where B.row_number >= ? and B.row_number <= ? " + "and B.category_no = C.category_no "
-				+ "order by B.book_no desc ";
+				+ "order by B.book_no asc ";
 
 		return helper.selectList(sql, rs -> {
 			Book book = new Book();
@@ -86,7 +86,8 @@ public class BookDao {
 	}
 
 	public int getTotalRows() throws SQLException {
-		String sql = "select count(*) cnt " + "from hta_books " + "where book_deleted = 'N' ";
+		String sql = "select count(*) cnt " + "from hta_books " 
+				   + "where book_deleted = 'N' ";
 
 		return helper.selectOne(sql, rs -> {
 			return rs.getInt("cnt");
@@ -95,7 +96,7 @@ public class BookDao {
 
 	public int getTotalRows(String keyword) throws SQLException {
 		String sql = "select count(*) cnt " + "from hta_books "
-				+ "where book_deleted = 'N' and book_title like '%' || ? || '%' ";
+				   + "where book_deleted = 'N' and book_title like '%' || ? || '%' ";
 
 		return helper.selectOne(sql, rs -> {
 			return rs.getInt("cnt");
