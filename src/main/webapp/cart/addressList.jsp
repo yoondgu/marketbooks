@@ -41,12 +41,12 @@
    		<span class="fs-4"><strong>배송지</strong></span>
    </div>
    <%
-		// TO DO: 로그인된 사용자 정보 조회
-		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
-		//		 user.getAddress()가 NULL일 경우 처리해줘야 함
-		int userNo = 110;
-		UserDao userDao = UserDao.getInstance();
-		User user = userDao.getUserByNo(userNo);
+		// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 에러페이지를 띄운다.
+		User user = (User) session.getAttribute("LOGINED_USER");
+		if (user == null) {
+			throw new RuntimeException("로그인 후 이용가능한 서비스입니다.");
+		}
+		int userNo = user.getNo();
 		
 		// 사용자의 기본 배송지 번호 획득
 		int defAddressNo = 0;

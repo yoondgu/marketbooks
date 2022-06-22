@@ -48,7 +48,7 @@
 					<input type="text" id="addressPreview" placeholder="주소지를 선택하세요" disabled class="form-control mb-3 " />
 				</div>
 				<div class="col-3">
-					<button type="button" onclick="execDaumPostcode()" class="btn btn-outline-primary ">
+					<button type="button" onclick="execDaumPostcode()" class="btn" style="border-color:#5f0080; color:#5f0080;" >
 						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
 							<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 						</svg> 검색
@@ -57,7 +57,7 @@
 			</div>
 			<input type="text" id="detailAddress" name="detailAddress" placeholder="나머지 주소를 입력해주세요" class="form-control mb-3" />
 			<div class="d-grid gap-2">
-				<button type="button" class="btn btn-primary mb-3" onclick="addAddress();">저장</button>
+				<button type="button" class="btn mb-3" style="background-color:#5f0080; color:white;" onclick="addAddress();">저장</button>
 			</div>
 			<input type="checkbox" name="isChecked" value="yes" /><span> 기본 배송지로 저장</span>
 		</form>

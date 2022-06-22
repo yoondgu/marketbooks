@@ -29,11 +29,16 @@
    		<span class="text-muted">배송지 상세주소를 수정하세요.</span>
    </div>
    <%
-   		int userNo = 110;
-   		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
-		// 사용자 정보에 저장된 기본 배송지번호 획득하기
-		UserDao userDao = UserDao.getInstance();
-		User user = userDao.getUserByNo(userNo);
+		// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
+		User user = (User) session.getAttribute("LOGINED_USER");
+		if (user == null) {
+			response.sendRedirect("../loginform.jsp?fail=deny");
+			return;
+		}
+		int userNo = user.getNo();
+		
+		// 수정할 배송지 번호 획득
+		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
 		
 		// 사용자의 기본 배송지 번호 획득
 		int defAddressNo = 0;
@@ -74,10 +79,10 @@
 			<input type="text" id="addressPreview" value="<%=userAddr.getAddress() %>" disabled class="form-control mb-3 " />
 			<input type="text" id="detailAddress" name="detailAddress" value="<%=userAddr.getDetailAddress() %>" class="form-control mb-3" />
 			<div class="d-grid gap-2">
-				<button type="button" class="btn btn-primary" onclick="modifyAddress();">저장</button>
-				<button type="button" class="btn btn-outline-danger mb-3" onclick="deleteAddress();">삭제</button>
+				<button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="modifyAddress();">저장</button>
+				<button type="button" class="btn mb-3" style="border-color:#5f0080; color:#5f0080;" onclick="deleteAddress();">삭제</button>
 			</div>
-			<input type="checkbox" name="isChecked" value="yes" /><span> 기본 배송지로 저장</span>
+			<input type="checkbox" style="color:#5f0080" name="isChecked" value="yes" /><span> 기본 배송지로 저장</span>
 		</form>
    </div>
 	

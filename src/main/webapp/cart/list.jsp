@@ -63,11 +63,13 @@
 		</div>  
 	</div>
 	<%
-		// TO DO: 로그인된 사용자 정보 조회
-		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
-		int userNo = 110;
-		UserDao userDao = UserDao.getInstance();
-		User user = userDao.getUserByNo(userNo);
+		// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
+		User user = (User) session.getAttribute("LOGINED_USER");
+		if (user == null) {
+			response.sendRedirect("../loginform.jsp?fail=deny");
+			return;
+		}
+		int userNo = user.getNo();
 		
 		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
 		CartItemDao cartItemDao = CartItemDao.getInstance();
@@ -79,7 +81,7 @@
 		// null일 경우 빈 list 객체를 대입한다.
 		List<String> checkedItemNos = checkedValues == null ? new ArrayList<>() : Arrays.asList(checkedValues);
 	%>
-	<!-- 잘못된 수량으로 update.jsp를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
+	<!-- 잘못된 수량, 번호로 update.jsp, delete.jsp 를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
 	<%	
 		String fail = request.getParameter("fail");
 		if ("quantityInvalid".equals(fail)) {
@@ -96,6 +98,13 @@
 	</div>	
 	<%		
 		}
+		if ("invalid".equals(fail)) {
+	%>
+	<div class="alert alert-danger">
+		<strong>잘못된 접근입니다.</strong>
+	</div>	
+	<%
+		}
 	%>
 	
 	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
@@ -108,9 +117,9 @@
 						<!-- TO DO : 카트아이템 dao 작업으로 인한 재요청 시 checked 상태 유지 구현하기 -->
 						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 					</div>
-					<div class="col-5">
-						<span class="border-end me-3 pe-3" id="checked-number">전체선택(<%=checkedItemNos.size() %>/<%=cartItemListSize %>)</span>
-						<a class="link-dark text-decoration-none" href="javascript:deleteCheckedItems();">선택삭제</a>
+					<div class="col-5" >
+						<span class="border-end me-3 pe-3 text-muted" id="checked-number">전체선택(<%=checkedItemNos.size() %>/<%=cartItemListSize %>)</span>
+						<a class="link-dark text-decoration-none text-muted" href="javascript:deleteCheckedItems();">선택삭제</a>
 					</div>
 				</div>
 			</div>
@@ -164,6 +173,7 @@
 								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
 							<td class="align-middle">
+								<!-- 추후 레퍼런스와 유사한 + - 버튼 방식으로 수정 예정 -->
 								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
 							</td>
 							<td class="align-middle">
@@ -176,8 +186,15 @@
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
 								</small>
 							</td>
-							<td  class="align-middle">
+							<td  class="align-middle text-center">
+								<a href="javascript:deleteItem(<%=item.getNo() %>);" >
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-x-lg" viewBox="0 0 16 16">
+										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+									</svg>
+								</a>
+								<!-- 
 								<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(<%=item.getNo() %>);">삭제</button>
+								-->
 							</td>
 						</tr>
 					<%
@@ -210,7 +227,7 @@
 			   			}
 					%>
 						<div class="d-grid gap-2">
-							<button class="btn btn-outline-secondary btn-sm"
+							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
 						</div>
 					</div>
@@ -223,7 +240,7 @@
 				</div>
 				<div class="d-grid gap-2">
 					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn btn-primary" onclick="submitForm('orderform.jsp');" >주문하기</button>
+				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -231,8 +248,9 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-	// 주문정보 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
+	// 주문정보, 전체 토글박스 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
 	changeOrderInfo();
+	changeCheckbox();
 	
 	/*
 		all-toggle-checkbox의 체크상태가 변경되는 이벤트 핸들러 함수
