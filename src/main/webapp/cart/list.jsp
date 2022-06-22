@@ -59,7 +59,7 @@
 <div class="container" style="min-width: 1200px; max-width: 1200px">
    	<div class="row">
 		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 text-center">장바구니</h1>
+			<h1 class="fs-3 p-5 mb-3 text-center"><strong>장바구니</strong></h1>
 		</div>  
 	</div>
 	<%
@@ -210,21 +210,47 @@
 			<div class="col-3">
 				<div class="card mb-3">
 					<div class="card-body">
-						<!-- 사용자의 기본 배송지 정보를 출력한다. 기본 배송지가 없을 경우, 안내메시지가 출력된다.-->
-						<h6 class="card-title"><strong>배송지</strong></h6>
+						<!-- 사용자의 배송지 정보를 출력한다. 
+							선택된 배송지 번호를 요청 파라미터로 받았을 경우 그 배송지의 정보를, 받지 않았을 경우 기본배송지를 선택 배송지로 하고 정보를 출력한다.
+							기본 배송지가 없을 경우, 안내메시지가 출력된다.
+							이 배송지번호는 히든 태그에 저장되어 주문 폼 제출 시 전달된다.-->
+						<h6 class="card-title mb-3"><strong>배송지</strong></h6>
 					<%
-			   			// 해당 사용자의 배송지 정보 리스트 획득
-			   			if (user.getAddress() == null) {
-			   		%>
-				   		<p>기본 배송지를 선택하세요.</p>
-			   		<%
-			   			} else {
-				   			UserAddressDao userAddressDao = UserAddressDao.getInstance();
-				   			UserAddress addr = userAddressDao.getAddressByNo(user.getAddress().getNo());
-			   		%>
-						<p><%=addr.getAddress() %> <%=addr.getDetailAddress() %></p>
+						// 해당 사용자의 기본 배송지 획득
+						UserAddress defAddr = user.getAddress();
+			   			// 해당 사용자가 선택한 배송지 정보 획득
+			   			int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+						UserAddressDao userAddressDao = UserAddressDao.getInstance();
+						UserAddress addr = userAddressDao.getAddressByNo(selectedAddressNo);
+						
+						// addr== null, defAddress== null : 배송지 선택하세요
+						// addr== null, defAddress !== null : addr=defAddress 기본 배송지 출력, 기본배송지태그 추가
+						// addr !=null, addr != defAddress: 선택 배송지 출력
+						// addr != null, addr == defAddress : 선택 배송지 출력, 기본배송지태그 추가
+						
+					%>
 					<%
-			   			}
+						if (addr == null && defAddr == null) {
+					%>
+						<p>배송지를 선택하세요.</p>
+					<%
+						} else if (addr == null && defAddr != null) {
+							addr = defAddr;
+						}
+					
+						if (addr != null && defAddr != null && addr.getNo() == defAddr.getNo()) {
+					%>
+						<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
+					<%
+						} 
+					%>
+					<%
+						if (addr != null) {
+					%>
+			   			<input type="hidden" name="selectedAddressNo" value="<%=addr.getNo() %>" />
+						<p><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></p>
+					<%
+						}
 					%>
 						<div class="d-grid gap-2">
 							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
@@ -240,7 +266,7 @@
 				</div>
 				<div class="d-grid gap-2">
 					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('orderform.jsp');" >주문하기</button>
+				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('../order/orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
 		</div>
