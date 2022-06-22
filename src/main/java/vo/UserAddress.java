@@ -7,6 +7,11 @@ public class UserAddress {
 	private String address;
 	private String detailAddress;
 	private int postalCode;
+	private String deleted;
+	
+	public UserAddress() {
+
+	}
 	
 	public int getNo() {
 		return no;
@@ -48,4 +53,11 @@ public class UserAddress {
 		this.postalCode = postalCode;
 	}
 	
+	public String getDeleted() {
+		return deleted;
+	}
+	
+	public void setDeleted(String deleted) {
+		this.deleted = deleted;
+	}
 }

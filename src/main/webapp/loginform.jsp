@@ -63,7 +63,18 @@
 	<%
 		}
 	%>
-
+		<!--
+			로그아웃 상태에서 로그인이 필요한 페이지 요청을 했을 경우 아래 내용이 출력된다.
+		-->
+	<%
+		if ("deny".equals(fail)) {
+	%>
+		<div class="alert alert-danger">
+			<strong>접근 제한</strong> 로그인이 필요한 기능입니다.
+		</div>
+	<%
+		}
+	%>
     <div class="form-floating">
       <input type="email" class="form-control mb-2" id="floatingInput" name="email" placeholder="name@example.com">
       <label for="floatingInput">이메일을 입력해주세요</label>
