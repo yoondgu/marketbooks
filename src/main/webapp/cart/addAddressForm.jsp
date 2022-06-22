@@ -1,3 +1,4 @@
+<%@page import="vo.User"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -18,6 +19,20 @@
 </style>
 </head>
 <body>
+<%
+	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 에러페이지를 띄운다.
+	User user = (User) session.getAttribute("LOGINED_USER");
+	if (user == null) {
+		throw new RuntimeException("로그인 후 이용가능한 서비스입니다.");
+	}
+	int userNo = user.getNo();
+	
+	// 사용자의 기본 배송지 번호 획득
+	int defAddressNo = 0;
+	if (user.getAddress() != null) {
+		defAddressNo = user.getAddress().getNo();
+	}
+%>
 <div class="container" style="min-width: 300px; max-width: 500px">
    <div class="title p-3 text-center">
    		<div class="fs-4 mb-1"><strong>새 배송지 추가하기</strong></div>
@@ -25,9 +40,16 @@
    </div>
    
    <div class="formwrapper p-3">
-		<form id="address-form" method="post" action="" onsubmit="return checkInputValue();">
+		<form id="address-form" method="post" action="">
    		<!-- form 전달값 -->
-			<!-- addressList.jsp에 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
+   			<!-- 기본 배송지 번호와 사용자가 주문제출을 위해 선택한 배송지 번호 input 태그에 저장 -->
+   		<%
+			int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+   		%>
+   			<input type="hidden" name="selectedAddressNo" id="hidden-selectedAddressNo" value="<%=selectedAddressNo %>" />
+   			<input type="hidden" name="defAddressNo" id="hidden-defAddressNo" value="<%=defAddressNo %>" />
+   			
+			<!-- addressList.jsp에 전달하기 위한, list.jsp의 체크된 아이템 번호 input태그에 저장 -->
 	 	<%
 	 		// list.jsp페이지에서 체크된 아이템번호 값을 getParameters로 꺼내서 반복문으로 hidden타입의 input태그를 만든다.
 	 		// form 전송 시 이 값이 함께 전달된다.
@@ -117,7 +139,6 @@
             }
         }).open();
     }
-	
 
 	/*
 		저장 버튼을 눌러 폼을 제출할 때 실행되는 이벤트핸들러 함수. 전달값 중 하나라도 누락되면 alert창을 띄우고 false를 반환한다.
@@ -131,7 +152,7 @@
 		}
 		
 		let postcodeField = document.getElementById("postcode");
-		if (typeof(postcodeField.value) !== number ) {
+		if (parseInt(postcodeField.value) == NaN) {
 			alert('우편번호가 유효하지 않습니다.')
 			return false;
 		}
@@ -142,14 +163,24 @@
 	
 	/*
 		저장 버튼을 누르면 실행되는 이벤트핸들러 함수.
-		'기본 배송지로 저장' 체크박스에 체크되어있다면 부모창으로 폼을 제출하고, 현재 창을 닫는다.
-		'기본 배송지로 저장' 체크박스에 체크되어있지 않다면 현재 창으로 폼을 제출한다.
+		'기본 배송지로 저장' 체크박스에 체크되어있고, 현재 선택 배송지번호가 기본 배송지번호와 같다면 부모창으로 폼을 제출하고, 현재 창을 닫는다.
+		'기본 배송지로 저장' 체크박스에 체크되어있지 않다면 현재 창으로 폼을 제출한다. (새로 저장하는 것이므로 저장 배송지 번호 = 기본 배송지 번호 일 경우는 없다.)
 	*/
 	function addAddress() {
-		let form = document.getElementById("address-form");
-		let isCheckedStatus = document.querySelector("input[name=isChecked]").checked;
 		
-		if (isCheckedStatus) {
+		if (!checkInputValue()) {
+			console.log("false")
+			return;
+		}
+		
+		let form = document.getElementById("address-form");
+		let selectedAddressNo = document.getElementById("hidden-selectedAddressNo").value;
+		let defAddressNo = document.getElementById("hidden-defAddressNo").value;
+		
+		let isCheckedStatus = document.querySelector("input[name=isChecked]").checked;
+		let wasDefAddressSelected = selectedAddressNo === defAddressNo;
+		
+		if (isCheckedStatus && wasDefAddressSelected) {
 			// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 			window.opener.name = 'parentName'
 			form.setAttribute("target", 'parentName');

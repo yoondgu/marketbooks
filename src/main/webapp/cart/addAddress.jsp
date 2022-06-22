@@ -15,9 +15,21 @@
 	}
 	int userNo = user.getNo();
 	
+	String queryString = "";
 	// 체크 상태를 유지시킬 아이템번호를 전달받아서 재요청URL에 반영해둔다.
 	String[] numbers = request.getParameterValues("checkedItemNo");
-	String checkboxQueryString = QueryStringUtil.generateCartItemQueryString(numbers, "checkedItemNo");
+	queryString += QueryStringUtil.generateCartItemQueryString(numbers, "checkedItemNo");
+	
+	// 선택된 배송지번호를 전달받아서 재요청URL에 반영해둔다.
+	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	queryString += (queryString.isEmpty()? "?" : "&") + "selectedAddressNo=" + selectedAddressNo;
+	// 선택된 배송지가 현재 기본배송지인지 확인한다.
+	int defaultAddressNo = 0;
+	if (user.getAddress() !=null) {
+		defaultAddressNo = user.getAddress().getNo();
+	}
+	// 선택된 배송지와 현재 기본배송지 모두 존재하지 않을 경우에도 true를 반환한다.
+	boolean wasDefaultSelected = defaultAddressNo == selectedAddressNo;
 	
 	// postcode, address, detailAddress 파라미터값 전달 받아서 db에 hta_user_addresses에 저장하기
 	int postcode = StringUtil.stringToInt(request.getParameter("postcode"));
@@ -47,7 +59,6 @@
 		userDao.updateUser(user);
 	}
 	
-	// 추가폼에서 '기본배송지로 저장'에 체크했을 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
-	boolean isDefaultAddress = user.getAddress() != null && user.getAddress().getNo() == addrNo;
-	response.sendRedirect((isCheckedDefAddr? "list.jsp" : "addressList.jsp") + checkboxQueryString);
+	// 추가폼에서 '기본배송지로 저장'에 체크했고, selectedAddress가 기본 배송지였을 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
+	response.sendRedirect((isCheckedDefAddr && wasDefaultSelected? "list.jsp" : "addressList.jsp") + queryString);
 %>

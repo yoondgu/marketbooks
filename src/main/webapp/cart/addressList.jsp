@@ -36,28 +36,31 @@
 	4. false이면 for문으로 뿌리기
 	5. 체크박스 클릭하면 user_default_ad_no 변경, list.jsp 리로드
  -->
+<%
+	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 에러페이지를 띄운다.
+	User user = (User) session.getAttribute("LOGINED_USER");
+	if (user == null) {
+		throw new RuntimeException("로그인 후 이용가능한 서비스입니다.");
+	}
+	int userNo = user.getNo();
+	
+	// 사용자의 기본 배송지 번호 획득
+	int defAddressNo = 0;
+	if (user.getAddress() != null) {
+		defAddressNo = user.getAddress().getNo();
+	}
+	 
+	// 사용자가 주문제출을 위해 선택한 배송지 번호 획득
+	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	
+	// 해당 사용자의 배송지 정보 리스트 획득
+	UserAddressDao userAddressDao = UserAddressDao.getInstance();
+	List<UserAddress> addrList = userAddressDao.getAllAddressesByUser(userNo);
+%>
 <div class="container" style="min-width: 300px; max-width: 500px">
    <div class="title p-3 border-2 border-bottom border-dark">
    		<span class="fs-4"><strong>배송지</strong></span>
    </div>
-   <%
-		// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 에러페이지를 띄운다.
-		User user = (User) session.getAttribute("LOGINED_USER");
-		if (user == null) {
-			throw new RuntimeException("로그인 후 이용가능한 서비스입니다.");
-		}
-		int userNo = user.getNo();
-		
-		// 사용자의 기본 배송지 번호 획득
-		int defAddressNo = 0;
-		if (user.getAddress() != null) {
-			defAddressNo = user.getAddress().getNo();
-		}
-   
-   		// 해당 사용자의 배송지 정보 리스트 획득
-   		UserAddressDao userAddressDao = UserAddressDao.getInstance();
-   		List<UserAddress> addrList = userAddressDao.getAllAddressesByUser(userNo);
-   %>
    <form id="address-form" method="get" action="">
    		<!-- form 전달값 -->
 			<!-- 부모창에서 재요청 시 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
@@ -74,7 +77,7 @@
 	 		}
 		%>
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
-		<input type="hidden" name="changeDefAddressNo" id="hidden-changeDefAddressNo" />
+		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo" value="<%=selectedAddressNo %>"/>
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -96,12 +99,20 @@
 	   			%>
 	   				<tr id="item-row-<%=addr.getNo() %>">
 	   					<td class="align-middle">
-	   						<!-- 기본 배송지 정보만 checked 상태로 출력한다. -->
+   						<!-- 선택한 배송지 정보만 checked 상태로 출력한다. -->
 	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>"
-	   						<%=defAddressNo == addr.getNo() ? "checked" : "" %> onchange="changeDefaultAddress(<%=addr.getNo() %>);"/>
+	   						<%=selectedAddressNo == addr.getNo() ? "checked" : "" %> onchange="changeSelectedAddress(<%=addr.getNo() %>);"/>
 	   					</td>
 	   					<td class="text-start align-middle">
-	   						<div id="item-address-<%=addr.getNo() %>"><%=addr.getAddress() %> <%=addr.getDetailAddress() %></div>
+   						<!-- 기본 배송지 정보에만 '기본배송지' 텍스트를 추가한다. -->
+   						<%
+   							if (defAddressNo == addr.getNo()) {
+   						%>
+ 							<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
+	   					<%
+   							}
+	   					%>
+	   						<div id="item-address-<%=addr.getNo() %>"><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></div>
 	   						<div id="item-user-<%=addr.getNo() %>">
 	   							<!--
 	   							<small class="border-end pe-1">받는이</small>
@@ -139,18 +150,19 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
 
-	// CUD 작업 모두 기본 배송지가 바뀌니까 부모창 새로고침되어야 함
-	
-	function changeDefaultAddress(addressNo) {
+
+	// 주문 폼에 제출할 선택 배송지를 변경한다. 부모창의 화면이 바뀌므로 부모창으로 폼 제출, 이 화면은 닫는다.
+	function changeSelectedAddress(addressNo) {
 		let form = document.getElementById("address-form");
 		
 		// 히든태그 값 수정
-		document.getElementById("hidden-changeDefAddressNo").value = addressNo;
+		document.getElementById("hidden-changeSelectedAddressNo").value = addressNo;
 		
 		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
+		// 다른 페이지를 거칠 필요 없이, 체크박스아이템번호와 변경된 선택된 배송지번호가 제출되어 화면에 반영된다.
 		window.opener.name = 'parentName'
 		form.setAttribute("target", 'parentName');
-		form.setAttribute("action", 'changeDefAddress.jsp');
+		form.setAttribute("action", 'list.jsp');
 
 		form.submit();
 		window.close();

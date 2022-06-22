@@ -15,9 +15,14 @@
 	}
 	int userNo = user.getNo();
 	
+	String queryString = "";
 	// 체크 상태를 유지시킬 아이템번호를 전달받아서 재요청URL에 반영해둔다.
 	String[] numbers = request.getParameterValues("checkedItemNo");
-	String checkboxQueryString = QueryStringUtil.generateCartItemQueryString(numbers, "checkedItemNo");
+	queryString += QueryStringUtil.generateCartItemQueryString(numbers, "checkedItemNo");
+	
+	// 선택된 배송지번호를 전달받아서 재요청URL에 반영해둔다.
+	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	queryString += (queryString.isEmpty()? "?" : "&") + "selectedAddressNo=" + selectedAddressNo;
 
 	// 파라미터값 전달 받아서 db에 hta_user_addresses에 업데이트하기
 	int addrNo = StringUtil.stringToInt(request.getParameter("addressNo"));
@@ -39,5 +44,5 @@
 		userDao.updateUser(user);
 	}
 	
-	// 기본배송지를 삭제할 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
-	response.sendRedirect((isDefaultAddress ? "list.jsp" : "addressList.jsp") + checkboxQueryString);%>
+	// 선택된 배송지를 삭제할 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
+	response.sendRedirect((addrNo == selectedAddressNo? "list.jsp" : "addressList.jsp") + queryString);%>
