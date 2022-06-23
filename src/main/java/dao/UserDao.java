@@ -78,7 +78,7 @@ public class UserDao {
 			int addressNo = rs.getInt("address_no");
 			if (addressNo != 0) {
 				UserAddress address = new UserAddress();
-				address.setNo(addressNo);
+				address.setNo(rs.getInt("address_no"));
 				address.setUserNo(userNo);
 				address.setAddress(rs.getString("user_address"));
 				address.setDetailAddress(rs.getString("user_detail_address"));
