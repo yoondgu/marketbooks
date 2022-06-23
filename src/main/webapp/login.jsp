@@ -26,5 +26,5 @@
 	session.setAttribute("LOGINED_USER", savedUser);
 	
 	// 재요청URL을 응답으로 보낸다.
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("board/faq.jsp");
 %>

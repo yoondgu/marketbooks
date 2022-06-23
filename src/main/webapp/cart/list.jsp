@@ -1,3 +1,7 @@
+<%@page import="vo.UserAddress"%>
+<%@page import="dao.UserAddressDao"%>
+<%@page import="vo.User"%>
+<%@page import="dao.UserDao"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="util.StringUtil"%>
@@ -11,8 +15,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>marketbooks</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon"
+	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
+	type="image/x-icon">
 <style>
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 	input { width: 80%; }
@@ -52,13 +59,17 @@
 <div class="container" style="min-width: 1200px; max-width: 1200px">
    	<div class="row">
 		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 text-center">장바구니</h1>
+			<h1 class="fs-3 p-5 mb-3 text-center"><strong>장바구니</strong></h1>
 		</div>  
 	</div>
 	<%
-		// TO DO: 로그인된 사용자 정보 조회
-		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
-		int userNo = 110;
+		// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
+		User user = (User) session.getAttribute("LOGINED_USER");
+		if (user == null) {
+			response.sendRedirect("../loginform.jsp?fail=deny");
+			return;
+		}
+		int userNo = user.getNo();
 		
 		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
 		CartItemDao cartItemDao = CartItemDao.getInstance();
@@ -70,7 +81,7 @@
 		// null일 경우 빈 list 객체를 대입한다.
 		List<String> checkedItemNos = checkedValues == null ? new ArrayList<>() : Arrays.asList(checkedValues);
 	%>
-	<!-- 잘못된 수량으로 update.jsp를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
+	<!-- 잘못된 수량, 번호로 update.jsp, delete.jsp 를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
 	<%	
 		String fail = request.getParameter("fail");
 		if ("quantityInvalid".equals(fail)) {
@@ -87,6 +98,13 @@
 	</div>	
 	<%		
 		}
+		if ("invalid".equals(fail)) {
+	%>
+	<div class="alert alert-danger">
+		<strong>잘못된 접근입니다.</strong>
+	</div>	
+	<%
+		}
 	%>
 	
 	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
@@ -99,9 +117,9 @@
 						<!-- TO DO : 카트아이템 dao 작업으로 인한 재요청 시 checked 상태 유지 구현하기 -->
 						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 					</div>
-					<div class="col-5">
-						<span class="border-end me-3 pe-3" id="checked-number">전체선택(<%=checkedItemNos.size() %>/<%=cartItemListSize %>)</span>
-						<a class="link-dark text-decoration-none" href="javascript:deleteCheckedItems();">선택삭제</a>
+					<div class="col-5" >
+						<span class="border-end me-3 pe-3 text-muted" id="checked-number">전체선택(<%=checkedItemNos.size() %>/<%=cartItemListSize %>)</span>
+						<a class="link-dark text-decoration-none text-muted" href="javascript:deleteCheckedItems();">선택삭제</a>
 					</div>
 				</div>
 			</div>
@@ -143,7 +161,7 @@
 									name="checkedItemNo" value="<%=item.getNo() %>" onchange="changeCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 							</td>
 							<td  class="align-middle">
-								<img alt="cover image" src="../image/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
+								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
 								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
@@ -155,6 +173,7 @@
 								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
 							<td class="align-middle">
+								<!-- 추후 레퍼런스와 유사한 + - 버튼 방식으로 수정 예정 -->
 								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
 							</td>
 							<td class="align-middle">
@@ -167,8 +186,15 @@
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
 								</small>
 							</td>
-							<td  class="align-middle">
+							<td  class="align-middle text-center">
+								<a href="javascript:deleteItem(<%=item.getNo() %>);" >
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-x-lg" viewBox="0 0 16 16">
+										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+									</svg>
+								</a>
+								<!-- 
 								<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(<%=item.getNo() %>);">삭제</button>
+								-->
 							</td>
 						</tr>
 					<%
@@ -184,11 +210,50 @@
 			<div class="col-3">
 				<div class="card mb-3">
 					<div class="card-body">
-						<!-- addressList.jsp에서 재요청하면서 보낸 addressNo를 받아서 DB에서 해당 배송지정보를 조회하고 출력한다.-->
-						<h6 class="card-title">배송지</h6>
-						<p>사용자가 선택한 배송지 주소가 이곳에 출력됩니다.</p>
+						<!-- 사용자의 배송지 정보를 출력한다. 
+							선택된 배송지 번호를 요청 파라미터로 받았을 경우 그 배송지의 정보를, 받지 않았을 경우 기본배송지를 선택 배송지로 하고 정보를 출력한다.
+							기본 배송지가 없을 경우, 안내메시지가 출력된다.
+							이 배송지번호는 히든 태그에 저장되어 주문 폼 제출 시 전달된다.-->
+						<h6 class="card-title mb-3"><strong>배송지</strong></h6>
+					<%
+						// 해당 사용자의 기본 배송지 획득
+						UserAddress defAddr = user.getAddress();
+			   			// 해당 사용자가 선택한 배송지 정보 획득
+			   			int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+						UserAddressDao userAddressDao = UserAddressDao.getInstance();
+						UserAddress addr = userAddressDao.getAddressByNo(selectedAddressNo);
+						
+						// addr== null, defAddress== null : 배송지 선택하세요
+						// addr== null, defAddress !== null : addr=defAddress 기본 배송지 출력, 기본배송지태그 추가
+						// addr !=null, addr != defAddress: 선택 배송지 출력
+						// addr != null, addr == defAddress : 선택 배송지 출력, 기본배송지태그 추가
+						
+					%>
+					<%
+						if (addr == null && defAddr == null) {
+					%>
+						<p>배송지를 선택하세요.</p>
+					<%
+						} else if (addr == null && defAddr != null) {
+							addr = defAddr;
+						}
+					
+						if (addr != null && defAddr != null && addr.getNo() == defAddr.getNo()) {
+					%>
+						<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
+					<%
+						} 
+					%>
+					<%
+						if (addr != null) {
+					%>
+			   			<input type="hidden" name="selectedAddressNo" value="<%=addr.getNo() %>" />
+						<p><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></p>
+					<%
+						}
+					%>
 						<div class="d-grid gap-2">
-							<button class="btn btn-outline-secondary btn-sm"
+							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
 						</div>
 					</div>
@@ -201,7 +266,7 @@
 				</div>
 				<div class="d-grid gap-2">
 					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn btn-primary" onclick="submitForm('orderform.jsp');" >주문하기</button>
+				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('../order/orderform.jsp');" >주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -209,8 +274,9 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-	// 주문정보 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
+	// 주문정보, 전체 토글박스 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
 	changeOrderInfo();
+	changeCheckbox();
 	
 	/*
 		all-toggle-checkbox의 체크상태가 변경되는 이벤트 핸들러 함수
@@ -324,6 +390,7 @@
 	*/
 	function submitForm(requestURL) {
 		let form = document.getElementById("cart-form");
+		form.setAttribute("target", ""); // submitFormNewWindow()를 실행한 뒤 이 함수를 실행할 때 target의 값을 초기화해야 한다.
 		form.setAttribute("action", requestURL);
 		
 		// form태그의 submit으로 서버에 제출하면, name=value 쌍으로 존재하는 입력값을 요청파라미터로 전달된다.
@@ -338,7 +405,7 @@
 		window.open(requestURL, windowname, 'width=500,height=750'); 
 		
 		let form = document.getElementById("cart-form");
-
+		
 		// 자식창에 cart-form의 입력값을 전달한다. (체크된 아이템번호를 전달하기 위함)
 		form.setAttribute("target", windowname);
 		form.setAttribute("action", requestURL);

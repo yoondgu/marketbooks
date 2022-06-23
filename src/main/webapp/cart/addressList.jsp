@@ -1,13 +1,21 @@
+<%@page import="vo.User"%>
+<%@page import="dao.UserDao"%>
+<%@page import="vo.UserAddress"%>
+<%@page import="java.util.List"%>
+<%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>marketbooks</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon"
+	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
+	type="image/x-icon">
 <style type="text/css">
 	.text-middle-center {
 	    justify-content: center;
@@ -28,15 +36,31 @@
 	4. false이면 for문으로 뿌리기
 	5. 체크박스 클릭하면 user_default_ad_no 변경, list.jsp 리로드
  -->
+<%
+	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 에러페이지를 띄운다.
+	User user = (User) session.getAttribute("LOGINED_USER");
+	if (user == null) {
+		throw new RuntimeException("로그인 후 이용가능한 서비스입니다.");
+	}
+	int userNo = user.getNo();
+	
+	// 사용자의 기본 배송지 번호 획득
+	int defAddressNo = 0;
+	if (user.getAddress() != null) {
+		defAddressNo = user.getAddress().getNo();
+	}
+	 
+	// 사용자가 주문제출을 위해 선택한 배송지 번호 획득
+	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	
+	// 해당 사용자의 배송지 정보 리스트 획득
+	UserAddressDao userAddressDao = UserAddressDao.getInstance();
+	List<UserAddress> addrList = userAddressDao.getAllAddressesByUser(userNo);
+%>
 <div class="container" style="min-width: 300px; max-width: 500px">
    <div class="title p-3 border-2 border-bottom border-dark">
    		<span class="fs-4"><strong>배송지</strong></span>
    </div>
-   <%
-		// TO DO: 로그인된 사용자 정보 조회
-		//		 로그인된 사용자가 NULL이거나, cartItem의 userNo와 로그인된 사용자의 userNo가 다를 경우 경고메시지를 띄우고 로그인페이지로 이동한다.
-		int userNo = 110;
-   %>
    <form id="address-form" method="get" action="">
    		<!-- form 전달값 -->
 			<!-- 부모창에서 재요청 시 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
@@ -53,6 +77,7 @@
 	 		}
 		%>
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
+		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo" value="<%=selectedAddressNo %>"/>
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -69,20 +94,34 @@
 	   			</thead>
 	   			<tbody>
 	   			<!-- for문으로 배송지 정보를 출력한다. -->
-	   				<tr id="item-row-130001">
+	   			<%
+	   				for (UserAddress addr : addrList) {
+	   			%>
+	   				<tr id="item-row-<%=addr.getNo() %>">
 	   					<td class="align-middle">
-	   						<!-- 기본 배송지 정보만 checked 상태로 출력한다. -->
-	   						<input type="checkbox" id="item-checkbox-160001" name="defAddressNo" value="160001" onchange="changeDefaultAddress();"/>
+   						<!-- 선택한 배송지 정보만 checked 상태로 출력한다. -->
+	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>"
+	   						<%=selectedAddressNo == addr.getNo() ? "checked" : "" %> onchange="changeSelectedAddress(<%=addr.getNo() %>);"/>
 	   					</td>
 	   					<td class="text-start align-middle">
-	   						<div id="item-address-130001">배송지주소</div>
-	   						<div id="item-user-130001">
-	   							<small class="border-end pe-1">유도영</small>
-	   							<small class="pe-1">010-1111-1111</small>
+   						<!-- 기본 배송지 정보에만 '기본배송지' 텍스트를 추가한다. -->
+   						<%
+   							if (defAddressNo == addr.getNo()) {
+   						%>
+ 							<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
+	   					<%
+   							}
+	   					%>
+	   						<div id="item-address-<%=addr.getNo() %>"><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></div>
+	   						<div id="item-user-<%=addr.getNo() %>">
+	   							<!--
+	   							<small class="border-end pe-1">받는이</small>
+	   							<small class="pe-1">전화번호</small>
+	   							 추후 받는이,전화번호 정보 작업 나중에 추가 -->
 	   						</div>
 	   					</td>
 	   					<td class="align-middle">
-	   						<a href="javascript:modifyAddress(130001);">
+	   						<a href="javascript:openModifyForm(<%=addr.getNo() %>);">
 	   							<!-- 부트스트랩 아이콘 -->
 		   						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-pen" viewBox="0 0 16 16">
 	  								<path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
@@ -90,11 +129,14 @@
 	   						</a>
 	   					</td>
 	   				</tr>
+	   			<%
+	   				}
+	   			%>
 	   			</tbody>
 	   			<tfoot>
 	   				<tr>
 	   					<td colspan="3" class="align-middle">
-	   						<a href="javascript:addAddress();" class="link-dark text-decoration-none">
+	   						<a href="javascript:openAddForm();" class="link-dark text-decoration-none">
 	   							<strong>+ 새 배송지 추가</strong>
 	   						</a>
 	   					</td>
@@ -105,49 +147,42 @@
    </form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
-	function changeDefaultAddress() {
-		// form 획득해서 changeDefAddress.jsp 페이지에 submit하면 checked인 값의 value인 defAddressNo가 전달된다.
-		// 전달받은 address_no를 userDao에서 user의 user_default_ad_no로 update하고 화면을 닫고 list.jsp가 리로드된다.
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">	
+
+
+	// 주문 폼에 제출할 선택 배송지를 변경한다. 부모창의 화면이 바뀌므로 부모창으로 폼 제출, 이 화면은 닫는다.
+	function changeSelectedAddress(addressNo) {
+		let form = document.getElementById("address-form");
 		
-		submitForm('changeDefAddress.jsp');
+		// 히든태그 값 수정
+		document.getElementById("hidden-changeSelectedAddressNo").value = addressNo;
+		
+		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
+		// 다른 페이지를 거칠 필요 없이, 체크박스아이템번호와 변경된 선택된 배송지번호가 제출되어 화면에 반영된다.
+		window.opener.name = 'parentName'
+		form.setAttribute("target", 'parentName');
+		form.setAttribute("action", 'list.jsp');
+
+		form.submit();
 		window.close();
 	}
 	
-	function modifyAddress(addressNo) {
-		// form 획득해서 modifyAddressForm.jsp에 submit하면 checked인 값의 value인 addressNo와 hidden태그의 수정할 modifyAddressNo가 전달된다.
-		// modifyAddressForm에서 수정폼 화면에 modifyAddressNo에 해당하는 address 정보를 출력한다. 
-		// modifyAddressForm.jsp에서 폼 작성후 modifyAddress.jsp로 submit
-		// modifyAddress.jsp에서 전달받은 내용으로 addressDao에서 해당 address를 update 후 adressList.jsp로 재요청한다.
-		
+	function openModifyForm(addressNo) {		
 		// 히든태그 값 수정
 		document.getElementById("hidden-modifyAddressNo").value = addressNo;
-		submitFormNewWindow('modifyAddressForm.jsp', 'modifyAddressForm');
-	}
-	
-	function addAddress() {
-		window.open('addAddressForm.jsp', 'addAddressForm', 'width=500,height=750'); 
-	}
-	
-	function submitForm(requestURL) {
-		let form = document.getElementById("address-form");
 		
-		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
-		form.setAttribute("target", window.opener.name);
-		form.setAttribute("action", requestURL);
-
+		// 새 창을 띄우지 않고 같은 창에서 페이지 변경한다.
+		let form = document.getElementById("address-form");
+		form.setAttribute("action", "modifyAddressForm.jsp");
 		form.submit();
+		
 	}
 	
-	function submitFormNewWindow(requestURL, windowname) {
-		window.open(requestURL, windowname, 'width=500,height=750'); 
-		
+	function openAddForm() {
+		// 새 창을 띄우지 않고 같은 창에서 페이지 변경한다.
 		let form = document.getElementById("address-form");
-
-		// 자식창에 cart-form의 입력값을 전달한다. (체크된 아이템번호를 전달하기 위함)
-		form.setAttribute("target", windowname);
-		form.setAttribute("action", requestURL);
-		
+		form.setAttribute("action", "addAddressForm.jsp");
 		form.submit();
 	}
 	

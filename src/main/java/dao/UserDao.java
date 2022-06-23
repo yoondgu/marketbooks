@@ -18,18 +18,36 @@ public class UserDao {
 	private DaoHelper helper = DaoHelper.getInstance();
     
   	public User getUserByEmail(String email) throws SQLException {
-		String sql = "select * "
-				   + "from hta_users "
-				   + "where user_email = ? ";
+		String sql = "select u.user_no, u.user_email, u.user_name, u.user_password, u.user_tel, u.user_deleted, u.user_created_date, u.user_updated_date, "
+				   +	     "a.address_no, a.user_address, a.user_detail_address, a.postal_code "
+				   + "from hta_users u, hta_user_addresses a "
+				   // 로그인 시 세션객체 획득할 때 사용하는 메소드이므로 관리자 아이디도 조회된다.
+				   // 배송지정보 중 기본배송지만 조회한다. 기본배송지가 없을 시 배송지 관련 값은 모두 null이다.
+				   + "where u.user_default_ad_no = a.address_no(+) "
+				   + "and u.user_email = ? ";
 		
 		return helper.selectOne(sql, rs -> {
 			User user = new User();
 			user.setNo(rs.getInt("user_no"));
 			user.setEmail(rs.getString("user_email"));
-			user.setPassword(rs.getString("user_password"));
 			user.setName(rs.getString("user_name"));
+			user.setPassword(rs.getString("user_password"));
 			user.setTel(rs.getString("user_tel"));
+			user.setDeleted(rs.getString("user_deleted"));
 			user.setCreatedDate(rs.getDate("user_created_date"));
+			user.setUpdatedDate(rs.getDate("user_updated_date"));
+			
+			// 기본 배송지번호가 존재할 경우에만 address 객체를 생성해 user객체에 저장한다.
+			int addressNo = rs.getInt("address_no");
+			if (addressNo != 0) {
+				UserAddress address = new UserAddress();
+				address.setNo(addressNo);
+				address.setUserNo(rs.getInt("user_no"));
+				address.setAddress(rs.getString("user_address"));
+				address.setDetailAddress(rs.getString("user_detail_address"));
+				address.setPostalCode(rs.getInt("postal_code"));
+				user.setAddress(address);
+			}
 			
 			return user;
 		}, email);
@@ -120,7 +138,7 @@ public class UserDao {
 				   + "		user_default_ad_no = ? "
 				   + "where user_no = ?";
 		
-		helper.update(sql, user.getEmail(), user.getPassword(), user.getName(), user.getTel(), user.getDeleted(), user.getCreatedDate(), user.getAddress().getNo(), user.getNo());
+
 				   
 	}
 }
