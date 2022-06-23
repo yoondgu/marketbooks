@@ -4,7 +4,6 @@
 <div class="header">
 
 	<!-- 화면 최상단 가입이벤트문구(링크) -->
-
 	<div class="bnr_header" id="top-message">
 		<a href="" id="eventLanding"> 지금 가입하고 인기상품 <b>100원</b>에 받아가세요!<img
 			src="https://res.kurly.com/pc/ico/1908/ico_arrow_fff_84x84.png"
@@ -17,7 +16,6 @@
 			</div>
 		</a>
 	</div>
-
 
 	<!-- 유저 메뉴 -->
 	<div class="row">
@@ -37,13 +35,14 @@
 			</ul>
 		</div>
 	</div>
+	
 	<!-- 헤더 로고 -->
 	<div class="row">
 		<div id="headerLogo" class="layout-wrapper">
 			<h1 class="logo">
 				<a href="http://localhost/marketbooks/home.jsp" class="link_main">
 					<span id="gnbLogoContainer"></span> 
-					<img src="/marketbooks/images/marketbooks-logo.png" class="img-thumbnail" style="width:103px; height:79px;">
+					<img src="/marketbooks/images/marketbooks-logo.png" class="img-thumbnail" style="border:0;">
 
 				</a>
 			</h1>
@@ -68,18 +67,12 @@
 					
 						<!-- 카테고리 그룹 NAV -->
 						<ul class="gnb">					
+					  		<!--<li class="menu1"  onmouseenter="menu1Enter(event)" onmouseleave="menu1Leave(event)"> -->
 					  		<li class="menu1">
-								<a href="" class="">
-									<span class="ico"></span>									
+								<a href="" class="">	
+									<span class="ico"></span>						
 									<span class="txt">전체 카테고리</span>
 								</a>
-								<ul class="sub">
-									<li><a href="#none" onclick="">인문학</a></li>
-									<li><a href="#none" onclick="">사회과학</a></li>
-									<li><a href="#none" onclick="">소설</a></li>
-									<li><a href="#none" onclick="">역사</a></li>
-									<li><a href="#none" onclick="">예술/대중문화</a></li>
-								</ul>
 							</li>							
 
 							<li class="menu2">
@@ -151,8 +144,8 @@
 									<span class="emph">배송지를 등록</span>
 									하고<br> 구매 가능한 상품을 확인하세요! 
 									<div class="group_button double">
-										<button type="button" class="btn default login">로그인</button>
-										<button type="button" class="btn active searchAddress">
+										<button type="button" class="btn default login" style="padding:0px;">로그인</button>
+										<button type="button" class="btn active searchAddress" style="padding:0px;">
 											<span class="ico"></span>주소검색
 										</button>
 									</div>
@@ -168,28 +161,46 @@
 					</div>
 					
 					<!-- 서브카테고리 --> 
-					<div class="gnb_sub" style="display: none; width: 219px;">
+					<!-- <div class="gnb_sub" onmouseleave="gnb_subLeave(event)" > -->
+					<div class="gnb_sub">
 						<div class="inner_sub">
 							<ul data-default="219" data-min="219" data-max="731" class="gnb_menu" style="height: auto;">
 								<li>
-									<a class="menu">
-										<span class="ico">
-											<img src="https://img-cf.kurly.com/category/icon/pc/25040bd0-5889-4d8c-b863-13f71750a8e6" alt="카테고리 아이콘" class="ico_off">
-											<img src="https://img-cf.kurly.com/category/icon/pc/e9ba198b-d9da-46b7-a4a4-6058613732bd" alt="카테고리 아이콘" class="ico_on">
-										</span>
+									<a class="menu">										
 										<span class="tit">
-											<span class="txt">채소</span>
+											<span class="txt">인문학</span>
 										</span>
-									</a>
-									<ul class="sub_menu">
-										<li><a class="sub"><span class="name">인문학</span></a></li>
-										<li><a class="sub"><span class="name">사회과학</span></a></li>
-										<li><a class="sub"><span class="name">소설</span></a></li>
-										<li><a class="sub"><span class="name">역사</span></a></li>
-										<li><a class="sub"><span class="name">예술/대중문화</span></a></li>
-										<li><a class="sub">		
-									</ul>
+									</a>									
 								</li>
+								<li>
+									<a class="menu">										
+										<span class="tit">
+											<span class="txt">사회과학</span>
+										</span>
+									</a>									
+								</li>
+								<li>
+									<a class="menu">										
+										<span class="tit">
+											<span class="txt">소설</span>
+										</span>
+									</a>									
+								</li>
+								<li>
+									<a class="menu">										
+										<span class="tit">
+											<span class="txt">역사</span>
+										</span>
+									</a>									
+								</li>
+								<li>
+									<a class="menu">										
+										<span class="tit">
+											<span class="txt">예술/대중문화</span>
+										</span>
+									</a>									
+								</li>
+								
 							</ul>
 						</div>
 					</div>
@@ -199,3 +210,37 @@
 		</div>
 	</div>
 </div>
+
+<script>
+
+/* function menu1Enter(e) {
+    e.stopPropagation();
+    var elems = document.getElementsByClassName('gnb_sub');
+    for (var i = 0; i < elems.length; i += 1) {
+    	elems[i].style.display = 'block';
+   	}
+}
+
+function menu1Leave(e) {
+    e.stopPropagation();
+    var elems = document.getElementsByClassName('gnb_sub');
+    for (var i = 0; i < elems.length; i += 1) {
+    	if (!(elems.onmouseover)) {
+    		console.log("1");
+        	elems[i].style.display = 'none';
+    	} else {
+    		console.log("2");
+    		break;
+    	}
+   	}
+}
+
+function gnb_subLeave(e) {
+    e.stopPropagation();
+    var elems = document.getElementsByClassName('gnb_sub');
+    for (var i = 0; i < elems.length; i += 1) {
+    	elems[i].style.display = 'none';
+   	}
+} */
+
+</script>
