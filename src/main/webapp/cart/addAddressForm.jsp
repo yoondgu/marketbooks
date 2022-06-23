@@ -141,7 +141,7 @@
     }
 
 	/*
-		저장 버튼을 눌러 폼을 제출할 때 실행되는 이벤트핸들러 함수. 전달값 중 하나라도 누락되면 alert창을 띄우고 false를 반환한다.
+		전달값 중 하나라도 누락되면 alert창을 띄우고 false를 반환한다.
 	*/
 	function checkInputValue() {
 		
@@ -169,7 +169,6 @@
 	function addAddress() {
 		
 		if (!checkInputValue()) {
-			console.log("false")
 			return;
 		}
 		

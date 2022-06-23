@@ -107,8 +107,7 @@
 		}
 	%>
 	
-	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(order.jsp, delete.jsp, modify.jsp) 가 대입된다. 
-		onsubmit="return submitOrderForm();" : 폼 제출시 submitOrderForm()의 반환값이 false이면 제출되지 않는다. -->
+	<!-- action의 값에는 각 폼입력값이 변경상태에 따른 요청url(orderform.jsp, delete.jsp, modify.jsp) 가 대입된다.  -->
 	<form id="cart-form" method="get" action="" >
 		<div class="row">
 			<div class="col-9 mb-3 pb-3 border-bottom border-dark">
@@ -260,7 +259,7 @@
 					<div class="card-footer text-muted">
 						<div class="row mt-3 mb-3"><div class="col">주문금액</div><div class="col"><strong id="order-total-price">0</strong>원</div></div>
 						<div class="row mb-3"><div class="col">주문할인금액</div><div class="col"><strong id="order-discount-amount">0</strong>원</div></div>
-						<div class="row mb-3 pb-3 border-bottom"><div class="col">배송비</div><div class="col"><strong id="item-ship-price">0</strong>원</div></div>
+						<div class="row mb-3 pb-3 border-bottom"><div class="col">배송비</div><div class="col"><strong id="order-ship-price">0</strong>원</div></div>
 						<div class="row mb-3"><div class="col">결제예정금액</div><div class="col"><strong id="order-pay-price">0</strong>원</div></div>
 					</div>
 				</div>

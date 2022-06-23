@@ -29,7 +29,7 @@
 		defaultAddressNo = user.getAddress().getNo();
 	}
 	// 선택된 배송지와 현재 기본배송지 모두 존재하지 않을 경우에도 true를 반환한다.
-	boolean wasDefaultSelected = user.getAddress().getNo() == selectedAddressNo;
+	boolean wasDefaultSelected = defaultAddressNo == selectedAddressNo;
 
 	// modifyAddressNo, postcode, address, detailAddress 파라미터값 전달 받아서 db에 hta_user_addresses에 업데이트하기
 	int addrNo = StringUtil.stringToInt(request.getParameter("addressNo"));
