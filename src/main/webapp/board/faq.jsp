@@ -1,3 +1,8 @@
+<%@page import="vo.Inquiry"%>
+<%@page import="dao.InquiryDao"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.Pagination"%>
+<%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,6 +19,13 @@
 <link rel="stylesheet" href="../css/board.css">
 </head>
 <body class="board-list">
+	<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/nav.jsp">
+			<jsp:param name="menu" value="faq" />
+		</jsp:include>
+	</div>
+
 	<div id="wrap">
 		<div id="container">
 			<div id="main">
@@ -23,16 +35,13 @@
 							<h2 class="tit_snb">고객센터</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li><a
-										href="/marketbooks/board/list.jsp">공지사항</a>
-									</li>
-									<li class="on"><a
-										href="/marketbooks/board/faq.jsp">자주하는
+									<li><a href="/marketbooks/board/list.jsp">공지사항</a></li>
+									<li class="on"><a href="/marketbooks/board/faq.jsp">자주하는
 											질문</a></li>
 									<li><a href=/marketbooks/board/inquiry.jsp>1:1 문의</a></li>
 								</ul>
 							</div>
-							<a href="/mypage/inquiry/form" class="link_inquire"><span
+							<a href="/marketbooks/board/form.jsp" class="link_inquire"><span
 								class="emph">도움이 필요하신가요 ?</span> 1:1 문의하기</a>
 						</div>
 						<div class="page_section">
@@ -593,7 +602,7 @@
 											<td>
 												<div class="search_bt">
 													<a href="javascript:document.frmList.submit()"><img
-														src="images/search.JPG" align="absmiddle"></a> <input
+														src="../images/search.jpeg" align="absmiddle"></a> <input
 														type="text" name="search[word]" value="" required="">
 												</div>
 											</td>
@@ -606,8 +615,9 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	</div>
+
+		</div>
+
 	<script>
 		var preContent;
 
@@ -642,6 +652,8 @@
 				view_content(document.getElementById(no));
 		}
 	</script>
+
+
 </body>
 </html>
 
