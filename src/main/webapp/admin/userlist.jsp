@@ -136,8 +136,10 @@
 				</ul>
 	   </nav>
    </div>
-   
+   </form>
   
+	<form id = "search-form" method="get" action="userlist.jsp">
+			<input type="hidden" name="page" />
 	<div class="d-flex mb-3">
 		<div class="me-auto p-2"></div>
 		<div class="p-2">
@@ -147,21 +149,19 @@
 			<button type="button" style="width: 60px" class="btn btn-outline-primary" onclick="searchKeyword()">검색</button>
 		</div>
 	</div>
-	<form id = "submit-form" method="get" action="userlist.jsp">
-			<input type="hidden" name="page" />
 	</form>
-		
-	
-</form>
 
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-	// 페이지 변경
 	function changePageNo(pageNo) {
 		document.querySelector("input[name=page]").value = pageNo;
-		document.getElementById("submit-form").submit();
+		document.getElementById("search-form").submit();
+	}
+	function searchKeyword() {
+		document.querySelector("input[name=page]").value = 1;
+		document.getElementById("search-form").submit();
 	}
 </script>
 </body>

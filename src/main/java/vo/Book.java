@@ -17,6 +17,7 @@ public class Book {
 	private Date createdDate;
 	private Date updatedDate;
 	private String deleted;
+	private Category category;
 
 	public Book() {
 	}
@@ -142,6 +143,16 @@ public class Book {
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	
+	
 
 }
 

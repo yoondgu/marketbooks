@@ -1,3 +1,8 @@
+<%@page import="vo.Book"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.Pagination"%>
+<%@page import="dao.BookDao"%>
+<%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" errorPage="error/500.jsp"%>
     
@@ -32,6 +37,19 @@
 </aside>
 <form class="col-10">
    <h2 style="width: 820px">전체도서관리</h2>
+   
+   <%
+   		int currentPage = StringUtil.stringToInt(request.getParameter("page"));
+   		BookDao bookDao = BookDao.getInstance();
+   		
+   		int totalRows = bookDao.getTotalRows();
+   		
+   		Pagination pagination = new Pagination(totalRows, currentPage);
+   		
+   		List<Book> bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
+   		
+   %>
+   
    <div>   
    		<a href="form.jsp" class="btn btn-primary btn-sm float-end">도서 등록</a>
    </div>
@@ -57,39 +75,31 @@
    				<th>가격</th>
    				<th></th>
    			</tr>
+   		
    		</thead>
    		<tbody class="table-group-divider text-center">
+   		<%
+   			for(Book book : bookList) {
+   		%>
    			<tr class="text-center">
-   				<th>1</th>
-   				<th>예술/대중문화</th>
+   				<th><%=book.getNo() %></th>
+   				<th><%=book.getCategory().getName() %></th>
    				<!-- 도서명을 클릭하면 해당 도서페이지로 넘어가도록 링크를 설정한다. -->
    				<th>
-   					<a href="">2022 제5회 한국과학문학상 수상작품집 - 루나 + 블랙박스와의 인터뷰 + 옛날 옛적 판교에서 + 책이 된 남자 + 신께서는 아이들 + 후루룩 쩝접 맛있는<a/>
-   				</th>
-   				<th>서윤빈, 김혜윤, 김쿠만, 김필산, 성수나, 이멍</th>
-   				<th>AK(에이케이)커뮤니케이션즈</th>
-   				<th>1</th>
-   				<th class="align-middle"><strong>27,000</strong>원(30,000원)</th>
+   					<a href=""><%=book.getTitle() %>
+ 				</th>
+   				<th><%=book.getAuthor() %></th>
+   				<th><%=book.getPublisher() %></th>
+   				<th><%=book.getStock() %></th>
+   				<th class="align-middle"><strong><%=book.getDiscountPrice() %></strong>원(<%=book.getPrice() %>원)</th>
    				<th class="align-middle">
    					<a href="modifyform.jsp" class="btn btn-outline-info btn-sm">수정</a>
  					<a href="userdelete.jsp" class="btn btn-outline-danger btn-sm">삭제</a>
    				</th>
    			</tr>
-   			<tr>
-   				<th>2</th>
-   				<th>소설</th>
-   				<th><a href="">작별인사<a/></th>
-   				<th>김영하</th>
-   				<th>복복서가</th>
-   				<th>9999</th>
-   				<th class="align-middle"><strong>12,600</strong>원 (14,000원)</th>
-   				<th>
-   					<div class="d-flex flex-nowrap">
-	   					<a href="modifyform.jsp" class="btn btn-outline-info btn-sm">수정</a>
-	 					<a href="userdelete.jsp" class="btn btn-outline-danger btn-sm">삭제</a>
- 					</div>
-   				</th>
-   			</tr>
+   			<%
+   				}
+   			%>
    		</tbody>
    </table>
    
@@ -103,13 +113,19 @@
        <nav>
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
-						<a class="page-link" href="">이전</a>
-						<li class="page-item"><a class="page-link" href="">1</a></li>
-						<li class="page-item"><a class="page-link" href="">2</a></li>
-						<li class="page-item"><a class="page-link" href="">3</a></li>
-						<li class="page-item"><a class="page-link" href="">4</a></li>
-						<li class="page-item"><a class="page-link" href="">5</a></li>
-						<a class="page-link" href="">다음</a>
+						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() -1%>)">이전</a>
+					</li>
+					<%
+					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
+					%>
+					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
+						<a class="page-link" href="javascript:changePageNo(<%=num %>)"><%=num %></a>
+					</li>
+					<%
+					}
+					%>
+					<li class="page-item">	
+						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() +1%>)">다음</a>
 					</li>
 				</ul>
 	   </nav>
@@ -125,6 +141,9 @@
 			<button type="button" style="width: 60px" class="btn btn-outline-primary" onclick="searchKeyword()">검색</button>
 		</div>
 	</div>
+	<form id = "submit-form" method="get" action="userlist.jsp">
+			<input type="hidden" name="page" />
+	</form>
 
 </form>
 </div>
