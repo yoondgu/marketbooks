@@ -57,6 +57,13 @@ public class InquiryDto {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	public String getHtmlContent() {
+		if (content == null) {
+			return "";
+		}
+		return content.replace(System.lineSeparator(), "<br />");
+	}
 
 	public String getDeleted() {
 		return deleted;

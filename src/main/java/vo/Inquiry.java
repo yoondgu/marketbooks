@@ -8,6 +8,9 @@ public class Inquiry {
 	private int userNo;
 	private String title;
 	private String content;
+	
+
+	private User name;
 	private String deleted;
 	private Date createdDate;
 	private Date updatedDate;
@@ -47,6 +50,21 @@ public class Inquiry {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public String getHtmlContent() {
+		if (content == null) {
+			return "";
+		}
+		return content.replace(System.lineSeparator(), "<br />");
+	}
+	
+	public User getName() {
+		return name;
+	}
+
+	public void setName(User name) {
+		this.name = name;
 	}
 
 	public String getDeleted() {
