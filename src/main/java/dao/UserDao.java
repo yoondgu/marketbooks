@@ -138,7 +138,8 @@ public class UserDao {
 				   + "		user_default_ad_no = ? "
 				   + "where user_no = ?";
 		
-		helper.update(sql, user.getEmail(), user.getPassword(), user.getName(), user.getTel(), user.getDeleted(), user.getCreatedDate(), user.getAddress().getNo(), user.getNo());
+		helper.update(sql, user.getEmail(), user.getPassword(), user.getName(), user.getTel(), user.getDeleted(), user.getCreatedDate(), 
+				user.getAddress() == null ? null : user.getAddress().getNo(), user.getNo());
 				   
 	}
 }
