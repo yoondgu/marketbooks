@@ -71,7 +71,7 @@
 		}
 		int userNo = user.getNo();
 		
-		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
+		// 해당 사용자의 장바구니아이템 리스트, 리스트 내 객체 개수 획득
 		CartItemDao cartItemDao = CartItemDao.getInstance();
 		List<CartItem> cartItemList = cartItemDao.getCartItemsByUser(userNo);
 		int cartItemListSize = cartItemList.size();
@@ -95,7 +95,7 @@
 	%>
 	<div class="alert alert-danger">
 		<strong>입력하신 수량보다 재고가 부족합니다.</strong>
-	</div>	
+	</div>		
 	<%		
 		}
 		if ("invalid".equals(fail)) {
@@ -181,7 +181,7 @@
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
 							%>
 								<strong id="item-total-discount-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalDiscountPrice) %></strong>원<br/>
-								<small class="text-decoration-line-through" style="<%=totalPrice == totalDiscountPrice ? "display:none" : "" %>">
+								<small class="text-decoration-line-through <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
 								</small>
 							</td>
@@ -191,9 +191,6 @@
 										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
 									</svg>
 								</a>
-								<!-- 
-								<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(<%=item.getNo() %>);">삭제</button>
-								-->
 							</td>
 						</tr>
 					<%
@@ -264,8 +261,8 @@
 					</div>
 				</div>
 				<div class="d-grid gap-2">
-					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('../order/orderform.jsp');" >주문하기</button>
+					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호, 선택된 배송지 번호가 orderform.jsp로 전달된다. -->
+				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitOrderForm();">주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -274,7 +271,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 	// 주문정보, 전체 토글박스 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
-	changeOrderInfo();
+	changeCartInfo();
 	changeCheckbox();
 	
 	/*
@@ -290,7 +287,7 @@
 			checkbox.checked = allToggleCheckboxCheckedStatus;
 		}
 		
-		changeOrderInfo();
+		changeCartInfo();
 	}
 	
 	/*
@@ -308,35 +305,56 @@
 			allToggleCheckboxElement.checked = false;
 		}
 		
-		changeOrderInfo();
+		changeCartInfo();
 	}
 	
 	/*
 		폼 입력값의 변화에 따라 화면에 출력된 전체 주문정보를 페이지 이동 없이 변경한다.(실제 order 객체의 값이 아니다) (ajax)
 		체크박스 선택, 카트아이템 삭제, 수량 변경 시 각각 해당하는 이벤트핸들러함수 내에서 이 함수를 실행시킨다.
+		계산한 값은 JSON형식으로 로컬스토리지에 저장하여 주문서 페이지에서 사용할 수 있게끔 한다.
 	*/
-	function changeOrderInfo() {
+	function changeCartInfo() {
 		// 내용을 출력할 DOM객체
 		let totalPriceElement = document.getElementById("order-total-price"); 
-		let discountAmountElement = document.getElementById("order-discount-amount"); 
+		let discountAmountElement = document.getElementById("order-discount-amount");
+		let shipPriceElement = document.getElementById("order-ship-price");
 		let payPriceElement = document.getElementById("order-pay-price"); 
 		
 		// 체크박스가 checked 상태인 카트아이템의 번호를 모두 획득 후, for문으로 전체 계산
+		// 
 		let checkedBookCheckboxList = document.querySelectorAll(".book-checkbox:checked");
 		let totalPrice = 0;
-		let payPrice = 0;
+		let discountedPrice = 0;
 		for (let bookCheckbox of checkedBookCheckboxList) {
 			let itemNo = bookCheckbox.value;
 		// 일반 금액 합계
 			totalPrice += parseInt(document.getElementById("item-total-price-" + itemNo).textContent.replaceAll(",",""));
-		// 할인된 금액 합계 (결제예정금액)
-			payPrice += parseInt(document.getElementById("item-total-discount-price-" + itemNo).textContent.replaceAll(",",""));
+		// 할인된 금액 합계 
+			discountedPrice += parseInt(document.getElementById("item-total-discount-price-" + itemNo).textContent.replaceAll(",",""));
 		}
 		
-		// 할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계
+		// 배송비는 2만원 이상 구매 시 무료이다.
+		let shipPrice = (discountedPrice >= 20000) || totalPrice == 0 ? 0 : 2500;
+		
+		// 전체 주문금액을 화면에 출력
 		totalPriceElement.textContent = totalPrice.toLocaleString();
-		discountAmountElement.textContent = (totalPrice - payPrice).toLocaleString();
-		payPriceElement.textContent = payPrice.toLocaleString(); // 현재는 배송비, 쿠폰, 적립금 등 적용이 없어 주문할인금액 = 결제 예정 금액이다.
+		// 할인받는 금액을 주문에 출력 (할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계)
+		discountAmountElement.textContent = (totalPrice - discountedPrice).toLocaleString();
+		// 배송비를 화면에 출력
+		shipPriceElement.textContent = "+ " + shipPrice.toLocaleString();
+		// 결제예정금액을 화면에 출력
+		let payPrice = discountedPrice + shipPrice; // 현재는 쿠폰, 적립금 등 적용이 없어 (할인된 금액 + 배송비)가 결제 예정 금액이다.
+		payPriceElement.textContent = payPrice.toLocaleString();
+		
+		// 계산한 값들을 객체로 만들고 JSON형식으로 변환해서 로컬스토리지에 저장한다.
+		let cartInfo = {};
+		cartInfo.totalPrice = totalPrice;
+		cartInfo.discountedPrice = discountedPrice;
+		cartInfo.shipPrice = shipPrice;
+		cartInfo.payPrice = payPrice;
+		
+		// 이 값은 다른 페이지에서도 꺼내쓸 수 있다.
+		localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
 	}
 	
 	/*
@@ -410,6 +428,39 @@
 		form.setAttribute("action", requestURL);
 		
 		form.submit();
+	}
+	
+	/*
+		주문하기 버튼을 클릭하면 실행되는 함수
+		선택한 장바구니아이템 또는 선택한 배송지가 존재하지 않을 경우 alert창을 띄우고 폼을 제출하지 않는다. 
+	*/
+	function checkParameters() {
+		let checkedItemsElement = document.querySelectorAll(".book-checkbox:checked");
+		let selectedAddressNoElement = document.querySelector("input[name=selectedAddressNo]");
+
+		if (checkedItemsElement.length === 0) {
+			alert("주문할 상품을 선택해주세요.");
+			return false;
+		}
+		
+		if (selectedAddressNoElement == null) {
+			alert("배송지를 선택해주세요.");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/*
+		주문폼 제출 시 전달값 체크를 위해, 다른 폼 제출과 이벤트핸들러 함수를 분리한다.
+	
+	*/
+	function submitOrderForm() {
+		if (!checkParameters()) {
+			return;
+		}
+		
+		submitForm('../order/orderform.jsp');
 	}
 	
 </script>
