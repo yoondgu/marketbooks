@@ -74,4 +74,36 @@ public class OrderDao {
 				order.getPayMethod(), order.getAddressNo(), order.getIsFreeShipping(), order.getNo());	
 	}
 	
+	/**
+	 * 주문번호를 전달받아 해당 번호를 가진 주문정보 객체를 반환한다.
+	 * @param orderNo 주문번호
+	 * @return 주문정보 객체
+	 * @throws SQLException
+	 */
+	public Order getOrderByNo(int orderNo) throws SQLException {
+		String sql = "SELECT ORDER_NO, USER_NO, ORDER_TITLE, ORDER_TOTAL_PRICE, ORDER_TOTAL_PAY_PRICE, ORDER_TOTAL_QUANTITY, ORDER_CREATED_DATE, ORDER_UPDATED_DATE, "
+					+ "ORDER_STATUS, ORDER_PAY_METHOD, ADDRESS_NO, IS_FREE_SHIPPING "
+					+ "FROM HTA_ORDERS "
+					+ "WHERE ORDER_NO = ? ";
+		
+		return helper.selectOne(sql, rs -> {
+			Order order = new Order();
+			
+			order.setNo(rs.getInt("order_no"));
+			order.setUserNo(rs.getInt("user_no"));
+			order.setTitle(rs.getString("order_title"));
+			order.setTotalPrice(rs.getInt("order_total_price"));
+			order.setTotalPayPrice(rs.getInt("order_total_pay_price"));
+			order.setTotalQuantity(rs.getInt("order_total_quantity"));
+			order.setCreatedDate(rs.getDate("order_created_date"));
+			order.setUpdatedDate(rs.getDate("order_updated_date"));
+			order.setStatus(rs.getString("order_status"));
+			order.setPayMethod(rs.getString("order_pay_method"));
+			order.setAddressNo(rs.getInt("address_no"));
+			order.setIsFreeShipping(rs.getString("is_free_shipping"));
+			
+			return order;
+		}, orderNo);
+	}
+	
 }

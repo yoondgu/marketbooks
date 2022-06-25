@@ -1,7 +1,9 @@
+<%@page import="vo.Order"%>
+<%@page import="dao.OrderDao"%>
 <%@page import="util.StringUtil"%>
 <%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +31,22 @@
 	4. '쇼핑 계속하기' 링크 -> 홈화면으로 이동
 <!-- DB 관련 구현 내용 : 없음 -->
 <%
-
+	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
+	User user = (User) session.getAttribute("LOGINED_USER");
+	if (user == null) {
+		response.sendRedirect("../loginform.jsp?fail=deny");
+		return;
+	}
+	int userNo = user.getNo();
+	
+	// 요청객체에서 주문번호를 획득 : 주문번호가 NULL이거나 로그인 사용자의 주문정보가 아닐 경우 예외를 던진다.
+	int orderNo = StringUtil.stringToInt(request.getParameter("orderNo"));
+	OrderDao orderDao = OrderDao.getInstance();
+	Order order = orderDao.getOrderByNo(orderNo);
+	if (order == null || order.getUserNo() != userNo) {
+		throw new RuntimeException("잘못된 요청입니다.");
+	}
+	
 %>
 <div class="contatiner">
    	<div class="row">
@@ -47,15 +64,15 @@
 					  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
 					  <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
 					</svg>
-					<h1 class="fs-5 p-3 fw-bold">오공일님의 주문이 완료되었습니다.</h1>
+					<h1 class="fs-5 p-3 fw-bold"><%=user.getName() %>님의 주문이 완료되었습니다.</h1>
 				</div>  
 			</div>
-			<div class="row text-middle-center mb-5" id="payPrice-info">
-				<div class="col-3 fw-bold text-muted">
+			<div class="row text-middle-center fw-bold text-muted mb-5" id="payPrice-info">
+				<div class="col-3">
 					<small>결제금액</small>
 				</div>
 				<div class="col-3 text-end">
-					<small>28,169원</small>
+					<small><%=StringUtil.numberToCurrency(order.getTotalPayPrice()) %>원</small>
 				</div>
 			</div>
 			<div class="row text-middle-center" id="customer-info-list">
@@ -70,8 +87,8 @@
 			<div class="row p-5">
 				<div class="col-12 text-center">
 					<div class="d-grid gap-2 col-6 mx-auto">
-						<button type="button" class="btn fw-bold" style="border-color:#5f0080; color:#5f0080;">주문 상세보기</button>
-						<button type="button" class="btn btn-primary fw-bold" style="background-color:#5f0080; color:white;">쇼핑 계속하기</button>
+						<a href="detail.jsp?orderNo=<%=orderNo %>" class="btn fw-bold" style="border-color:#5f0080; color:#5f0080;">주문 상세보기</a>
+						<a href="../home.jsp" class="btn btn-primary fw-bold" style="background-color:#5f0080; color:white;">쇼핑 계속하기</a>
 					</div>		
 				</div>
 			</div>
