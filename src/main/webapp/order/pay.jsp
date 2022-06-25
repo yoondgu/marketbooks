@@ -97,6 +97,26 @@
 	int shipPrice = totalPrice >= 20000 ? 2500 : 0;
 	int totalPayPrice = totalPrice + shipPrice;
 	
+	// 결제수단은 받은 값에 따라 맞는 문자열로 바꾼다.
+	String payMethodText = "";
+	switch (payMethod) {
+		case "kakaopay":
+			payMethodText = "카카오페이";
+			break;
+		case "creditcard":
+			payMethodText = "신용카드";
+			break;
+		case "simplepay":
+			payMethodText = "간편결제";
+			break;
+		case "mobilepay":
+			payMethodText = "휴대폰결제";
+			break;
+	}
+	if (payMethodText.isBlank()) {
+		throw new RuntimeException("결제 실패: 요청 정보가 올바르지 않습니다.");
+	}
+	
 	Order order = new Order();
 	order.setNo(orderNo);
 	order.setUserNo(userNo);
@@ -106,7 +126,7 @@
 	order.setTotalPayPrice(totalPayPrice);
 	order.setAddressNo(addressNo);
 	order.setIsFreeShipping(shipPrice == 0 ? "Y" : "N");
-	order.setPayMethod(payMethod);
+	order.setPayMethod(payMethodText);
 	
 	orderDao.insertOrder(order);
 	
