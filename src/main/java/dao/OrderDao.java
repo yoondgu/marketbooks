@@ -44,11 +44,11 @@ public class OrderDao {
 	public void insertOrder(Order order) throws SQLException {
 		String sql = "INSERT INTO HTA_ORDERS "
 					+ "(ORDER_NO, USER_NO, ORDER_TITLE, ORDER_TOTAL_PRICE, ORDER_TOTAL_PAY_PRICE,"
-					+ " ORDER_TOTAL_QUANTITY, ADDRESS_NO, IS_FREE_SHIPPING) "
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " ORDER_TOTAL_QUANTITY, ODER_PAY_METHOD, ADDRESS_NO, IS_FREE_SHIPPING) "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		helper.insert(sql, order.getNo(), order.getUserNo(), order.getTitle(), order.getTotalPrice(), order.getTotalPayPrice(), 
-					order.getTotalQuantity(), order.getAddressNo(), order.getIsFreeShipping());
+					order.getTotalQuantity(), order.getPayMethod(), order.getAddressNo(), order.getIsFreeShipping());
 	}
 	
 	/**
@@ -64,13 +64,14 @@ public class OrderDao {
 					+ "		ORDER_TOTAL_PAY_PRICE= ?, "
 					+ "		ORDER_TOTAL_QUANTITY = ?, "
 					+ "		ORDER_STATUS = ?, "
+					+ "		ORDER_PAY_METHOD = ?, "
 					+ "		ADDRESS_NO = ?, "
 					+ "		IS_FREE_SHIPPING = ?,"
 					+ "		ORDER_UPDATED_DATE = SYSDATE "
 					+ "WHERE ORDER_NO = ? ";
 		
-		helper.insert(sql, order.getTitle(), order.getTotalPrice(), order.getTotalPayPrice(), 
-				order.getTotalQuantity(), order.getStatus(), order.getAddressNo(), order.getIsFreeShipping(), order.getNo());	
+		helper.insert(sql, order.getTitle(), order.getTotalPrice(), order.getTotalPayPrice(), order.getTotalQuantity(), order.getStatus(), 
+				order.getPayMethod(), order.getAddressNo(), order.getIsFreeShipping(), order.getNo());	
 	}
 	
 }
