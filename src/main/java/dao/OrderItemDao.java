@@ -1,11 +1,8 @@
 package dao;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import helper.DaoHelper;
-import vo.Book;
-import vo.Order;
 import vo.OrderItem;
 
 public class OrderItemDao {
@@ -27,6 +24,7 @@ public class OrderItemDao {
 		});	   
 	}
 	
+	/*
 	// 다시 작성예정인 부분입니다..
 	public OrderItem getItemByUserNo(int userNo) throws SQLException{
 		String sql = "select i.order_item_no, i.order_no, i.book_no, i.order_item_price, i.order_item_quantity, i.order_item_created_date, i.order_item_updated_date, "
@@ -57,5 +55,18 @@ public class OrderItemDao {
 			
 			return item;
 		}, userNo);
+	}
+	*/
+	
+	/**
+	 * 주문아이템 객체를 하나 전달하여 HTA_ORDER_ITEMS 테이블에 저장한다.
+	 * @param orderItem
+	 * @throws SQLException
+	 */
+	public void insertOrderItem(OrderItem orderItem) throws SQLException {
+		String sql = "INSERT INTO HTA_ORDER_ITEMS (ORDER_ITEM_NO, ORDER_NO, BOOK_NO, ORDER_ITEM_PRICE, ORDER_ITEM_QUANTITY) "
+					+ "VALUES (ORDER_ITEMS_SEQ.NEXTVAL, ?, ?, ?, ?) ";
+		
+		helper.insert(sql, orderItem.getOrderNo(), orderItem.getBook().getNo(), orderItem.getPrice(), orderItem.getQuantity());
 	}
 }

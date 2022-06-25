@@ -49,7 +49,8 @@
 	1. cart/list.jsp에서 받아온 checkedItemNo를 이용해 cartItem 정보를 모두 조회하고, hidden타입의 input태그를 생성, 주문상품 아코디언 창에도 출력한다. => 둘다 for문 돌려야 하니까 같은 위치에 넣기
 	2. session객체에 저장된 user객체를 확인하고, 주문자 정보 란에 사용자 정보를 출력한다.
 	3. cart/list.jsp에서 받아온 selectedAddressNo를 이용해 userAddress객체를 확인하고, 배송 정보 란에 출력한다.
-	4. 카트아이템 번호, 배송지번호, 결제수단을 요청파라미터로 order.jsp에 폼을 제출한다. (추가작업: 주문 상세정보)
+	4. 카트아이템 번호, 배송지번호, 주문제목(편의상 추가), 결제수단을 요청파라미터로 order.jsp에 폼을 제출한다. (추가작업: 주문 상세정보)
+	* 금액 계산 정보는 URL을 통해 악의적인 조작이 가능하므로 pay.jsp에서 자체적으로 다시 계산한다.
 	5. order.jsp에서는 카트아이템번호를 사용해 orderItem과 '결제완료' 상태의 order 객체를 생성한다.
 	6. DB의 hta_orderItems, hta_orders에 저장하고, hta_books의 재고를 변경시킨다. 
 	7. DB의 hta_cartItems에서 주문에 사용한 카트아이템을 삭제한다.
@@ -85,7 +86,7 @@
 	// 요청객체에서 선택한 배송지 번호를 획득 : 배송지 정보가 NULL일 경우 장바구니 페이지로 이동하고, fail=invalid값을 전달한다.
 	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
 	UserAddress selectedAddress = userAddressDao.getAddressByNo(selectedAddressNo);
-	if (selectedAddress == null) {
+	if (selectedAddress == null || selectedAddress.getUserNo() != userNo) {
 		response.sendRedirect("../cart/list.jsp?fail=invalid");
 		return;
 	}
@@ -106,6 +107,15 @@
 			cartItemList.add(cartItem);
 		}
 	}
+	
+	// 화면에 출력하고, 편의상 폼 제출에도 전달할 주문제목 문자열을 생성한다.
+	String orderTitle = "";
+	if (cartItemList.size() == 1) {
+		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "]";
+	} else {
+		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "] 외 " + (cartItemList.size() - 1) + "개";
+	}
+	
 %>
 <div class="container" style="min-width: 1200px; max-width: 1200px">
    	<div class="row">
@@ -113,7 +123,7 @@
 			<h1 class="fs-3 p-5 mb-3 text-center"><strong>주문서</strong></h1>
 		</div>  
 	</div>
-	<form id="order-form" method="post" action="order.jsp" onsubmit="return checkRequiredAllow();">
+	<form id="order-form" method="post" action="pay.jsp" onsubmit="return checkRequiredAllow();">
 		<!-- 주문할 카트아이템 번호, 배송지 번호, 결제금액 계산결과를 hidden 타입의 input태그에 저장해 전달한다. -->
 		<input type="hidden" name="selectedAddressNo" value="<%=selectedAddressNo %>" />
 	<%
@@ -123,9 +133,7 @@
 	<%
 		}
 	%>
-		<input type="hidden" name="totalDiscountedPrice" />
-		<input type="hidden" name="shipPrice" />
-		<input type="hidden" name="totalPayPrice" />
+		<input type="hidden" name="orderTitle" value="<%=orderTitle %>" />
 		<div class="row mb-5" id="order-items-row">
 			<!-- 1. 주문상품 %%%외 %개 상품을 주문합니다. : 화살표를 클릭하면 주문상품리스트가 펼쳐진다. -->
 			<div class="accordion accordion-flush m-0 p-0" id="accordionFlush">
@@ -172,19 +180,7 @@
 				</div>
 			</div>
 			<!-- 주문상품 버튼을 누르면 아래 태그가 숨겨진다. -->
-			<div class="text-center p-5 border-bottom border-gray fw-bold" id="order-summary"> 
-		<%
-			if (cartItemList.size() > 1) {
-		%>
-			[<%=cartItemList.get(0).getBook().getTitle() %>] 외 <%=cartItemList.size() - 1 %>개의 상품을 주문합니다.
-		<%
-			} else if (cartItemList.size() == 1) {
-		%>
-			[<%=cartItemList.get(0).getBook().getTitle() %>] 상품을 주문합니다.
-		<%		
-			}
-		%>
-		</div>
+			<div class="text-center p-5 border-bottom border-gray fw-bold" id="order-title"><%=orderTitle %> 상품을 주문합니다.</div>
 		</div>
 		<!-- 2. 주문자 정보: 보내는 분, 휴대폰, 이메일 -->
 		<div class="row mb-5" id="user-info-row">
@@ -264,17 +260,17 @@
 						카카오페이를 선택했을 때는 openAPI로 연결하고, 나머지는 바로 결제완료 창으로 보내기 -->
 					<div class="col-8 m-auto p-3">
 						<div class="btn-group w-100 mb-3 kakaopay-btn" role="group" aria-label="Basic radio toggle button group">
-							<input type="radio" class="btn-check" name="paymethod" value="kakaopay" id="btnradio1" autocomplete="off" onchange="displayInfo('kakaopay')">
+							<input type="radio" class="btn-check" name="payMethod" value="kakaopay" id="btnradio1" autocomplete="off" onchange="displayInfo('kakaopay')">
 							<label class="btn btn-sm btn-outline-dark p-3 px-5 round-0" for="btnradio1">카카오페이</label>
 						</div>
 						<div class="btn-group w-100 mb-5" role="group" aria-label="Basic radio toggle button group">
-							<input type="radio" class="btn-check" name="paymethod" value="creditcard" id="btnradio2" autocomplete="off" value="신용카드" checked onchange="displayInfo('creditcard')">
+							<input type="radio" class="btn-check" name="payMethod" value="creditcard" id="btnradio2" autocomplete="off" value="신용카드" checked onchange="displayInfo('creditcard')">
 							<label class="btn btn-sm btn-outline-dark p-3 px-5 round-0" for="btnradio2">신용카드</label>
 							
-							<input type="radio" class="btn-check" name="paymethod" value="simplepay" id="btnradio3" autocomplete="off" onchange="displayInfo('simplepay')">
+							<input type="radio" class="btn-check" name="payMethod" value="simplepay" id="btnradio3" autocomplete="off" onchange="displayInfo('simplepay')">
 							<label class="btn btn-sm btn-outline-dark p-3 px-5 round-0" for="btnradio3">간편결제</label>
 							
-							<input type="radio" class="btn-check" name="paymethod" value="mobilepay" id="btnradio4" autocomplete="off" onchange="displayInfo('mobilepay')">
+							<input type="radio" class="btn-check" name="payMethod" value="mobilepay" id="btnradio4" autocomplete="off" onchange="displayInfo('mobilepay')">
 							<label class="btn btn-sm btn-outline-dark p-3 px-5 round-0" for="btnradio4">휴대폰</label>
 						</div>
 						<!-- 위 라디오버튼 선택에 따라 다른 html 내용이 출력된다. -->
@@ -480,22 +476,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
-	// cart/list.jsp에서 로컬스토리지에 저장한 계산정보를 가져와 hidden타입의 input태그에 저장하고, 화면에도 출력한다.
+	// cart/list.jsp에서 로컬스토리지에 저장한 계산정보를 가져와 화면에 출력한다.
 	let cartInfo = JSON.parse(localStorage.getItem('cartInfo'));
-
-	// hidden타입의 input태그에 필요한 계산 값 저장(꼭 할 필요는 없는데, cart/list.jsp에서 이미 계산했던 것을 다시 계산할 필요 없게 전달해서 order.jsp에서 바로 사용하려고 한다.)
-	document.querySelector("input[name=totalDiscountedPrice]").value = cartInfo.discountedPrice;
-	document.querySelector("input[name=shipPrice]").value = cartInfo.payPrice;
-	document.querySelector("input[name=totalPayPrice]").value = cartInfo.payPrice;
 	
-	// 화면에 출력
 	document.getElementById("info-discounted-price").textContent = (cartInfo.discountedPrice).toLocaleString();
 	document.getElementById("info-total-price").textContent = (cartInfo.totalPrice).toLocaleString();
 	document.getElementById("info-discount-amount").textContent = (cartInfo.totalPrice - cartInfo.discountedPrice).toLocaleString();
 	document.getElementById("info-ship-price").textContent = (cartInfo.shipPrice).toLocaleString();
 	document.getElementById("info-pay-price").textContent = (cartInfo.payPrice).toLocaleString();
 	document.getElementById("button-pay-price").textContent = (cartInfo.payPrice).toLocaleString();
-
+	
 	/*
 		결제하기 버튼을 누르면 실행되는 이벤트핸들러함수
 		개인정보 수집/제공 동의란에 체크하지 않으면 폼 제출을 하지 않고, alert창을 띄운다.
@@ -516,7 +506,7 @@
 		아코디언이 닫혀있을 때는 주문정보 요약 텍스트가 보이고, 열려있을 때는 보이지 않도록 한다.
 	*/
 	function displaySummary(e) {
-		let summary = document.getElementById('order-summary');
+		let summary = document.getElementById('order-title');
 		if (e.target.getAttribute('aria-expanded') === 'true') {
 			summary.classList.add('d-none'); 
 		} else {

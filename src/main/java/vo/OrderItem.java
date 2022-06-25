@@ -6,13 +6,11 @@ public class OrderItem {
 
 	private int no;
 	private int orderNo;
-	private int bookNo;
+	private Book book;
 	private int price;
 	private int quantity;
 	private Date createdDate;
 	private Date updatedDate;
-	private Book book;
-	private Order order;
 	
 	public OrderItem() {}
 
@@ -30,14 +28,6 @@ public class OrderItem {
 
 	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
-	}
-
-	public int getBookNo() {
-		return bookNo;
-	}
-
-	public void setBookNo(int bookNo) {
-		this.bookNo = bookNo;
 	}
 
 	public int getPrice() {
@@ -79,15 +69,5 @@ public class OrderItem {
 	public void setBook(Book book) {
 		this.book = book;
 	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	
-	
 	
 }
