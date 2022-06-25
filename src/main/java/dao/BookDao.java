@@ -84,6 +84,55 @@ public class BookDao {
 				book.getDescription(), book.getPrice(), book.getDiscountPrice(), book.getOnSell(), book.getStock(),
 				book.getCreatedDate(), book.getUpdatedDate());
 	}
+	
+	
+	public void updateBook(Book book) throws SQLException {
+		String sql = "update hta_books "
+					+ "set "
+					+ "		category_no = ?, "
+					+ "		book_title = ?, "
+					+ "		book_author = ?, "
+					+ "		book_publisher= ?, "
+					+ "		book_description = ?, "
+					+ "		book_price = ?,	"
+					+ "		book_discount_price = ?, "
+					+ "		book_on_sell = ?, "
+					+ "		book_stock = ?, "
+					+ "		book_updated_date = sysdate, "
+					+ "		book_deleted = ? "
+					+ "where book_no = ? ";
+		
+		helper.update(sql, book.getCategoryNo(), book.getTitle(), book.getAuthor(), book.getPublisher(), 
+				book.getDescription(), book.getPrice(), book.getDiscountPrice(), book.getOnSell(), book.getStock(), book.getDeleted(), book.getNo());
+	}
+	
+	public Book getBookByNo(int bookNo) throws SQLException {
+		String sql = "select book_no, category_no, book_title, book_author, book_publisher, book_description, book_price, "
+					+ "book_discount_price, book_on_sell, book_stock, book_created_date, book_updated_date, book_deleted "
+					+ "from hta_books "
+					+ "where book_no = ? "
+					+ "and book_on_sell = 'Y' "
+					+ "and book_deleted = 'N' ";
+		
+		return helper.selectOne(sql, rs -> {
+			Book book = new Book();
+			book.setNo(bookNo);
+			book.setCategoryNo(rs.getInt("category_no"));
+			book.setTitle(rs.getString("book_title"));
+			book.setAuthor(rs.getString("book_author"));
+			book.setPublisher(rs.getString("book_publisher"));
+			book.setDescription(rs.getString("book_description"));
+			book.setPrice(rs.getInt("book_price"));
+			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setOnSell(rs.getString("book_on_sell"));
+			book.setStock(rs.getInt("book_stock"));
+			book.setCreatedDate(rs.getDate("book_created_date"));
+			book.setUpdatedDate(rs.getDate("book_updated_date"));
+			book.setDeleted(rs.getString("book_deleted"));
+			
+			return book;
+		}, bookNo);
+	}
 
 	public int getTotalRows() throws SQLException {
 		String sql = "select count(*) cnt " + "from hta_books " 
