@@ -662,3 +662,779 @@ ol, ul {
 .gnb_search .init .btn_delete.on {
 	opacity: 1
 }
+
+/* normalize */
+@font-face {
+	font-family: nanum gothic;
+	font-style: normal;
+	font-weight: 400;
+	src: local("Nanum Gothic"),
+		url(https://res.kurly.com/fonts/NanumGothic-Regular.woff2)
+		format("woff2"),
+		url(https://res.kurly.com/fonts/NanumGothic-Regular.woff)
+		format("woff"),
+		url(https://res.kurly.com/fonts/NanumGothic-Regular.otf)
+		format("opentype");
+}
+
+@font-face {
+	font-family: noto sans;
+	font-style: normal;
+	font-weight: 200;
+	src: local("NotoSansKR-Light"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Light.woff2)
+		format("woff2"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Light.woff) format("woff"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Light.otf)
+		format("opentype");
+}
+
+@font-face {
+	font-family: noto sans;
+	font-style: normal;
+	font-weight: 400;
+	src: local("NotoSansKR-Regular"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Regular.woff2)
+		format("woff2"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Regular.woff)
+		format("woff"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Regular.otf)
+		format("opentype");
+}
+
+@font-face {
+	font-family: noto sans;
+	font-style: normal;
+	font-weight: 700;
+	src: local("NotoSansKR-Medium"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Medium.woff2)
+		format("woff2"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Medium.woff) format("woff"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Medium.otf)
+		format("opentype");
+}
+
+@font-face {
+	font-family: noto sans;
+	font-style: normal;
+	font-weight: 800;
+	src: local("NotoSansKR-Bold"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Bold.woff2) format("woff2"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Bold.woff) format("woff"),
+		url(https://res.kurly.com/fonts/NotoSansKR-Bold.otf)
+		format("opentype");
+} 
+
+*, *:after, *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+img, video, canvas {
+	max-width: 100%;
+}
+
+html {
+	font-family: sans-serif;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup,
+	main, menu, nav, section, summary {
+	display: block;
+}
+
+a {
+	background-color: transparent;
+	text-decoration: none !important;
+	color: inherit;
+}
+
+a:active, a:hover {
+	outline: 0;
+}
+
+abbr[title] {
+	border-bottom: 1px dotted;
+}
+
+b, strong {
+	font-weight: 700;
+}
+
+dfn {
+	font-style: italic;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+mark {
+	background: #ff0;
+	color: #000;
+}
+
+small {
+	font-size: 80%;
+}
+
+sub, sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+
+sup {
+	top: -0.5em;
+}
+
+sub {
+	bottom: -0.25em;
+}
+
+img {
+	border: 0;
+}
+
+svg:not(:root) {
+	overflow: hidden;
+}
+
+figure {
+	margin: 1em 40px;
+}
+
+hr {
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	height: 0;
+}
+
+pre {
+	overflow: auto;
+}
+
+code, kbd, pre, samp {
+	font-family: monospace, monospace;
+	font-size: 1em;
+}
+
+button, input, optgroup, select, textarea {
+	color: inherit;
+	font: inherit;
+	margin: 0;
+}
+
+button {
+	overflow: visible;
+	border-radius: 0;
+}
+
+button, select {
+	text-transform: none;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"]
+	{
+	-webkit-appearance: button;
+	cursor: pointer;
+}
+
+button[disabled], html input[disabled] {
+	cursor: default;
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+input {
+	line-height: normal;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	box-sizing: border-box;
+	padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button
+	{
+	height: auto;
+}
+
+input[type="search"] {
+	-webkit-appearance: textfield;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration
+	{
+	-webkit-appearance: none;
+}
+
+fieldset {
+	border: 1px solid silver;
+	margin: 0 2px;
+	padding: 0.35em 0.625em 0.75em;
+}
+
+legend {
+	border: 0;
+	padding: 0;
+}
+
+textarea {
+	overflow: auto;
+}
+
+optgroup {
+	font-weight: 700;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td, th {
+	padding: 0;
+}
+
+ol, ul {
+	list-style-type: none;
+}
+
+html, body {
+	height: 100%;
+}
+
+/* section1 */
+.bnr_header {
+	position: relative;
+	min-width: 1050px;
+	text-align: center;
+	line-height: 42px;
+	font-size: 14px;
+}
+
+.bnr_header a {
+	display: block;
+	height: 42px;
+	background-color: #5f0080;
+	color: #fff !important;
+}
+
+.bnr_header .bnr_arr {
+	display: inline-block;
+	width: 42px;
+	height: 42px;
+	vertical-align: top;
+}
+
+.bnr_header .bnr_top {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 0;
+}
+
+.bnr_header .inner_top_close {
+	position: relative;
+	width: 1050px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.bnr_header .btn_top_bnr {
+	background-image:
+		url(https://res.kurly.com/pc/ico/1908/ico_close_fff_42x42.png);
+	width: 42px;
+	height: 42px;
+	background-color: transparent;
+	border: 0;
+	text-indent: -9999px;
+	position: absolute;
+	bottom: 0;
+	right: -15px;
+}
+
+.bnr_header.btn_top_bnr {
+	background-image:
+		url(https://res.kurly.com/pc/ico/1908/ico_close_333_42x42.png);
+}
+
+#footer {
+	font-family: noto sans;
+	letter-spacing: 0;
+}
+
+#footer strong {
+	font-weight: 700;
+}
+
+#footer strong.emph {
+	color: #5f0080;
+}
+
+/* common */
+#header, #container, #content {
+	position: relative;
+}
+
+#content {
+	min-width: 1050px;
+	padding-bottom: 60px;
+}
+
+#main {
+	border-bottom: 1px solid #f7f7f7;
+}
+
+body, input, select, textarea, button {
+	font-family: noto sans, malgun gothic, AppleGothic, dotum;
+	line-height: 1;
+	letter-spacing: -0.05em;
+	color: #4c4c4c;
+	font-size: 12px !important;
+	max-width: 100%;
+}
+
+button {
+	outline: none;
+}
+
+div, th, td, li, dt, dd, p {
+	word-break: break-all;
+}
+
+.layout-wrapper {
+	position: relative;
+	width: 1050px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.screen_out {
+	display: block;
+	overflow: hidden;
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	font-size: 0;
+	line-height: 0;
+	text-indent: -9999px;
+}
+
+/* 유저메뉴 */
+#userMenu {
+	width: 1050px;
+	margin: 0 auto;
+}
+
+#userMenu * {
+	font-family: noto sans;
+	font-weight: 400;
+	letter-spacing: -0.3px;
+}
+
+#userMenu:after {
+	content: "";
+	display: block;
+	overflow: hidden;
+	width: 100%;
+	height: 0;
+	font-size: 0;
+	text-indent: -9999px;
+}
+
+#userMenu .list_menu {
+	float: right;
+}
+
+#userMenu .menu {
+	position: relative;
+	z-index: 400;
+	float: left;
+}
+
+#userMenu .menu:before {
+	content: "";
+	position: absolute;
+	right: 13px;
+	top: 16px;
+	width: 8px;
+	height: 5px;
+	background: url(https://res.kurly.com/pc/ico/1908/ico_down_8x5.png)
+		no-repeat 0 0;
+}
+
+#userMenu .menu:after {
+	content: "";
+	float: right;
+	width: 1px;
+	height: 13px;
+	margin-top: 12px;
+	background-color: #d8d8d8;
+}
+
+#userMenu .link_menu {
+	float: left;
+	height: 37px;
+	padding: 0 12px;
+	color: #333;
+	line-height: 35px;
+	white-space: nowrap;
+}
+
+#userMenu .txt {
+	float: left;
+	padding-left: 4px;
+}
+
+#userMenu .name {
+	overflow: hidden;
+	float: left;
+	text-align: right;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#userMenu .sir {
+	float: left;
+	padding: 0 1px 0 2px;
+}
+
+#userMenu .ico_new {
+	width: 10px;
+	height: 10px;
+	margin: 13px 0 0 2px;
+	vertical-align: top;
+}
+
+#userMenu .ico_grade {
+	float: left;
+	margin-top: 10px;
+}
+
+#userMenu .menu_user .link_menu {
+	padding-right: 24px;
+}
+
+#userMenu .menu_user .sub {
+	left: auto;
+	right: 11px;
+}
+
+#userMenu .sub {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 34px;
+	width: 102px;
+	padding: 3px 9px;
+	border: 1px solid #ddd;
+	background-color: #fff;
+}
+
+#userMenu .sub li {
+	padding-left:10px;
+}
+
+#userMenu .lst .sub {
+	left: auto;
+	right: 0;
+}
+
+#userMenu .menu:hover .sub {
+	display: block;
+}
+
+#userMenu .none_sub:hover .sub {
+	display: none;
+}
+
+#userMenu .sub a {
+	font-size: 12px;
+	color: #404040;
+	line-height: 24px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+#userMenu .sub .ico_new {
+	margin: 7px 0 0 1px;
+}
+
+#userMenu .none_sub:before, #userMenu .lst:after {
+	display: none;
+}
+
+#userMenu .menu_join .link_menu {
+	color: #5f0080;
+}
+
+#userMenu .menu.lst:before {
+	right: 0;
+}
+
+#userMenu .menu.lst .link_menu {
+	padding-right: 13px;
+}
+
+#userMenu .menu .sub.on {
+	display: block;
+}
+
+/* 푸터영역 */
+#footer {
+	font-weight: 400;
+	letter-spacing: -0.2px;
+}
+
+#footer .footer-top {
+	width: 1050px;
+	margin: 0 auto;
+}
+
+#footer .inner_footer {
+	overflow: hidden;
+	padding-bottom: 24px;
+}
+
+#footer .footer_cc {
+	float: left;
+	width: 534px;
+}
+
+#footer .tit_cc {
+	padding: 29px 0 2px;
+	font-weight: 700;
+	font-size: 20px;
+	color: #333;
+	line-height: 24px;
+}
+
+#footer .cc_view {
+	overflow: hidden;
+	padding-top: 16px;
+}
+
+#footer .cc_view .tit {
+	float: left;
+	width: 140px;
+	margin-right: 16px;
+}
+
+#footer .cc_call {
+	padding-top: 20px;
+}
+
+#footer .cc_call .tit {
+	padding-top: 4px;
+	font-weight: 800;
+	font-size: 28px;
+	color: #333;
+	line-height: 36px;
+	letter-spacing: -0.5px;
+	white-space: nowrap;
+}
+
+#footer .cc_bulkorder .tit, #footer .cc_kakao .tit, #footer .cc_qna .tit
+	{
+	height: 40px;
+	padding-top: 7px;
+	margin-top: 3px;
+	border: 1px solid #e3e3e3;
+	border-radius: 3px;
+	font-weight: 700;
+	font-size: 14px;
+	color: #333;
+	line-height: 22px;
+	text-align: center;
+}
+
+#footer .cc_bulkorder .txt, #footer .footer_cc .list {
+	font-size: 14px;
+	color: #333;
+	line-height: 22px;
+	letter-spacing: -0.2px;
+}
+
+#footer .footer_cc .list dt {
+	display: block;
+}
+
+#footer .footer_cc .list dd {
+	color: #999;
+}
+
+#footer .cc_bulkorder .txt {
+	padding-top: 9px;
+	color: #999;
+}
+
+#footer .company {
+	float: left;
+	padding-top: 29px;
+	font-size: 12px;
+	color: #999;
+	line-height: 20px;
+}
+
+#footer .company .bar {
+	padding: 0 4px 0 3px;
+}
+
+#footer .company .link {
+	color: #5f0080;
+}
+
+#footer .company .list {
+	overflow: hidden;
+	width: 100%;
+	padding-bottom: 29px;
+}
+
+#footer .company .list li {
+	float: left;
+	padding-right: 16px;
+}
+
+#footer .company .list .link {
+	font-size: 14px;
+	color: #333;
+	line-height: 18px;
+}
+
+#footer .company .list .emph {
+	font-weight: 700;
+}
+
+#footer .footer_link {
+	overflow: hidden;
+	padding: 20px 0 24px;
+	border-top: 1px solid #eee;
+	letter-spacing: 0;
+}
+
+#footer .footer_indemnification_clause {
+	background-color: #f7f7f7;
+	text-align: center;
+	padding: 19px 0 27px;
+}
+
+#footer .footer_indemnification_clause .txt {
+	font-size: 10px;
+	line-height: 16px;
+	color: #999;
+	letter-spacing: -0.5px;
+}
+
+#footer .footer_indemnification_clause .copy {
+	font-style: normal;
+	font-size: 10px;
+	color: #949296;
+	line-height: 25px;
+	letter-spacing: 0;
+}
+
+#footer .list_sns {
+	float: left;
+	padding-top: 45px;
+}
+
+#footer .list_sns li {
+	float: left;
+}
+
+#footer .list_sns .link_sns {
+	display: block;
+	width: 30px;
+	height: 30px;
+	margin-right: 10px;
+}
+
+#footer .list_sns .lst {
+	margin-right: 0;
+}
+
+#footer .authentication {
+	float: left;
+	padding-top: 3px;
+}
+
+#footer .mark {
+	float: left;
+	width: 267px;
+}
+
+#footer .mark .logo {
+	float: left;
+	width: 34px;
+	height: 34px;
+	margin-right: 10px;
+}
+
+#footer .mark .txt {
+	float: left;
+	padding-top: 1px;
+	font-size: 10px;
+	color: #999;
+	line-height: 16px;
+	letter-spacing: -0.5px;
+	white-space: nowrap;
+}
+
+#footer .mark .emph {
+	padding-left: 2px;
+	color: #5f0080;
+}
+
+#footer .lguplus {
+	width: 428px;
+}
+
+#footer .lguplus .logo {
+	width: 102px;
+	height: 34px;
+}
+
+#pageTop {
+	overflow: hidden;
+	position: fixed;
+	z-index: 300;
+	right: 31px;
+	bottom: 0;
+	width: 58px;
+	height: 58px;
+	border: 0;
+	background:
+		url(https://res.kurly.com/pc/service/common/1903/btn_pagetop_v2.png)
+		no-repeat 50% 50%;
+	font-size: 0;
+	line-height: 0;
+	text-indent: -9999px;
+	opacity: 0;
+	transition: background 0.5s;
+}
+
+#pageTop:hover {
+	background-image:
+		url(https://res.kurly.com/pc/service/common/1903/btn_pagetop_hover.png);
+	transition: background 0.5s;
+}
