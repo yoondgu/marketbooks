@@ -5,16 +5,17 @@
 
 	<!-- 화면 최상단 가입이벤트문구(링크) -->
 	<div class="bnr_header" id="top-message">
-		<a href="" id="eventLanding"> 지금 가입하고 인기상품 <b>100원</b>에 받아가세요!<img
-			src="https://res.kurly.com/pc/ico/1908/ico_arrow_fff_84x84.png"
-			class="bnr_arr">
+		<a href="" id="eventLanding">
+			" 지금 가입하고 인기상품 "
+			<b>100원</b>
+			에 받아가세요!
+			<img src="https://res.kurly.com/pc/ico/1908/ico_arrow_fff_84x84.png" class="bnr_arr">
+		</a>
 			<div class="bnr_top">
 				<div class="inner_top_close">
-					<button id="top-message-close" class="btn_top_bnr">가입하고
-						혜택받기</button>
+					<button type="button" id="top-message-close" class="btn_top_bnr" onclick="bnrHeaderClose()">가입하고 혜택받기</button>
 				</div>
 			</div>
-		</a>
 	</div>
 
 	<!-- 유저 메뉴 -->
@@ -23,13 +24,13 @@
 			<ul class="list_menu">
 				<li class="menu none_sub menu_join"><a href="registerform.jsp"
 					class="link_menu">회원가입</a></li>
-				<li class="menu none_sub menu_login"><a href="loginform.jsp"
+				<li class="menu none_sub menu_login"><a href="/marketbooks/loginform.jsp"
 					class="link_menu">로그인</a></li>
 				<li class="menu lst"><a href="" class="link_menu">고객센터</a>
 					<ul class="sub">
-						<li><a href="#none" onclick="">공지사항</a></li>
-						<li><a href="#none" onclick="">Q&A</a></li>
-						<li><a href="#none" onclick="">자주하는 질문</a></li>
+						<li><a href="/marketbooks/board/list.jsp" onclick="">공지사항</a></li>
+						<li><a href="/marketbooks/board/faq.jsp" onclick="">자주하는 질문</a></li>
+						<li><a href="/marketbooks/board/inquiry.jsp" onclick="">1:1 문의</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -48,11 +49,9 @@
 			</h1>
 
 		<!-- 배송안내버튼 -->
-		<!-- 		
 		<a href="" onclick="" class="bnr_delivery"> 
 			<img src="https://res.kurly.com/pc/service/common/2011/delivery_210801.png"	alt="샛별, 택배 배송안내" width="121" height="22">
-		</a> 
-		-->
+		</a> 		
 
 		</div>
 	</div>
@@ -61,20 +60,25 @@
 	<div id="gnb" class="">
 		<div class="fixed_container">
 			<h2 class="screen_out">메뉴</h2>
-			<div id="gnbMenu" class="gnb_kurly">
-				<div class="inner_gnbkurly">
+			<div id="gnbMenu" class="gnb_mb">
+				<div class="inner_gnb_mb">
 					<div class="gnb_main">
 					
 						<!-- 카테고리 그룹 NAV -->
-						<ul class="gnb">					
-					  		<!--<li class="menu1"  onmouseenter="menu1Enter(event)" onmouseleave="menu1Leave(event)"> -->
+						<ul class="gnb">
 					  		<li class="menu1">
-								<a href="" class="">	
-									<span class="ico"></span>						
+								<a href="" class="">
+									<span class="ico"></span>
 									<span class="txt">전체 카테고리</span>
+									<ul class="gnb_sub">
+										<li><span class="txt">인문학</span></li>
+										<li><span class="txt">사회과학</span></li>
+										<li><span class="txt">소설</span></li>
+										<li><span class="txt">역사</span></li>
+										<li><span class="txt">예술/대중문화</span></li>
+									</ul>
 								</a>
-							</li>							
-
+							</li>
 							<li class="menu2">
 							 	<a href="/marketbooks/book/newlist.jsp" class="link new ">
 							 		<span class="txt">신상품</span>
@@ -117,7 +121,7 @@
 						<!-- 장바구니버튼 -->
 						<div class="cart_count">
 							<div class="inner_cartcount">
-								<a href="/shop/goods/goods_cart.php" class="btn_cart">
+								<a href="/marketbooks/cart/list.jsp" class="btn_cart">
 									<span class="screen_out">장바구니</span>
 									<span id="cart_item_count" class="num realtime_cartcount" style="display: none;"></span>
 								</a>
@@ -144,7 +148,7 @@
 									<span class="emph">배송지를 등록</span>
 									하고<br> 구매 가능한 상품을 확인하세요! 
 									<div class="group_button double">
-										<button type="button" class="btn default login" style="padding:0px;">로그인</button>
+										<button type="button" class="btn default login" style="padding:0px;" onclick="goLoginPage()">로그인</button>
 										<button type="button" class="btn active searchAddress" style="padding:0px;">
 											<span class="ico"></span>주소검색
 										</button>
@@ -155,56 +159,11 @@
 
 						<!-- 찜하기 버튼 -->
 						<div class="gnbPick">
-							<a href="/shop/mypage/mypage_pick.php" class="btn_pick">찜한 상품 보기</a>
+							<a href="" class="btn_pick">찜한 상품 보기</a>
 						</div>
 						
 					</div>
-					
-					<!-- 서브카테고리 --> 
-					<!-- <div class="gnb_sub" onmouseleave="gnb_subLeave(event)" > -->
-					<div class="gnb_sub">
-						<div class="inner_sub">
-							<ul data-default="219" data-min="219" data-max="731" class="gnb_menu" style="height: auto;">
-								<li>
-									<a class="menu">										
-										<span class="tit">
-											<span class="txt">인문학</span>
-										</span>
-									</a>									
-								</li>
-								<li>
-									<a class="menu">										
-										<span class="tit">
-											<span class="txt">사회과학</span>
-										</span>
-									</a>									
-								</li>
-								<li>
-									<a class="menu">										
-										<span class="tit">
-											<span class="txt">소설</span>
-										</span>
-									</a>									
-								</li>
-								<li>
-									<a class="menu">										
-										<span class="tit">
-											<span class="txt">역사</span>
-										</span>
-									</a>									
-								</li>
-								<li>
-									<a class="menu">										
-										<span class="tit">
-											<span class="txt">예술/대중문화</span>
-										</span>
-									</a>									
-								</li>
-								
-							</ul>
-						</div>
-					</div>
-
+										
 				</div>
 			</div>
 		</div>
@@ -212,35 +171,13 @@
 </div>
 
 <script>
-
-/* function menu1Enter(e) {
-    e.stopPropagation();
-    var elems = document.getElementsByClassName('gnb_sub');
-    for (var i = 0; i < elems.length; i += 1) {
-    	elems[i].style.display = 'block';
-   	}
+function bnrHeaderClose() {
+	let bnrRow = document.querySelector('#top-message');
+	bnrRow.style.display='none';
 }
 
-function menu1Leave(e) {
-    e.stopPropagation();
-    var elems = document.getElementsByClassName('gnb_sub');
-    for (var i = 0; i < elems.length; i += 1) {
-    	if (!(elems.onmouseover)) {
-    		console.log("1");
-        	elems[i].style.display = 'none';
-    	} else {
-    		console.log("2");
-    		break;
-    	}
-   	}
+function goLoginPage() {
+	location.href="/marketbooks/loginform.jsp";
 }
-
-function gnb_subLeave(e) {
-    e.stopPropagation();
-    var elems = document.getElementsByClassName('gnb_sub');
-    for (var i = 0; i < elems.length; i += 1) {
-    	elems[i].style.display = 'none';
-   	}
-} */
 
 </script>
