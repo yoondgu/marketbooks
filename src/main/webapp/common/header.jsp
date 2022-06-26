@@ -11,11 +11,11 @@
 			에 받아가세요!
 			<img src="https://res.kurly.com/pc/ico/1908/ico_arrow_fff_84x84.png" class="bnr_arr">
 		</a>
-			<div class="bnr_top">
-				<div class="inner_top_close">
-					<button type="button" id="top-message-close" class="btn_top_bnr" onclick="bnrHeaderClose()">가입하고 혜택받기</button>
-				</div>
+		<div class="bnr_top">
+			<div class="inner_top_close">
+				<button type="button" id="top-message-close" class="btn_top_bnr" onclick="bnrHeaderClose()">가입하고 혜택받기</button>
 			</div>
+		</div>
 	</div>
 
 	<!-- 유저 메뉴 -->
