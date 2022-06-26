@@ -84,13 +84,88 @@
   			</div>
   			<div class="row mb-5">
   				<h5 class="py-3 ps-0 mb-3 border-bottom border-2 border-dark"><strong>결제정보</strong></h5>
+				<table class="pay-info-table text-muted">
+					<colgroup>
+						<col width="16%">
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td><strong>상품금액</strong></td>
+							<td class="align-middle text-end p-3"><span>0원</span></td>
+						</tr>
+						<tr>
+							<td><strong>배송비</strong></td>
+							<td class="align-middle text-end p-3"><span>0원</span></td>
+						</tr>
+						<tr>
+							<td><strong>상품할인금액</strong></td>
+							<td class="align-middle text-end p-3"><span>0원</span></td>
+						</tr>
+						<tr>
+							<td><strong>결제금액</strong></td>
+							<td class="align-middle text-end p-3"><span>0원</span></td>
+						</tr>
+						<tr>
+							<td><strong>결제수단</strong></td>
+							<td class="align-middle text-end p-3"><span>신용카드</span></td>
+						</tr>
+					</tbody>
+				</table>
   			</div>
   			<div class="row mb-5">
   				<h5 class="py-3 ps-0 mb-3 border-bottom border-2 border-dark"><strong>주문정보</strong></h5>
+				<table class="order-info-table text-muted">
+					<colgroup>
+						<col width="16%">
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td><strong>주문번호</strong></td>
+							<td class="align-middle text-end p-3"><span>111111</span></td>
+						</tr>
+						<!-- 현재는 주문자명과 보내는 분의 정보가 동일하다. (별도 발송인 정보 기능 없음) -->
+						<tr>
+							<td><strong>주문자명</strong></td>
+							<td class="align-middle text-end p-3"><span>유도영</span></td>
+						</tr>
+						<tr>
+							<td><strong>보내는분</strong></td>
+							<td class="align-middle text-end p-3"><span>유도영</span></td>
+						</tr>
+						<tr>
+							<td><strong>결제일시</strong></td>
+							<td class="align-middle text-end p-3"><span>2022-06-25-18:34:57</span></td>
+						</tr>
+					</tbody>
+				</table>
   			</div>
   			<div class="row mb-5">
   				<h5 class="py-3 ps-0 mb-3 border-bottom border-2 border-dark"><strong>배송정보</strong></h5>
+				<table class="ship-info-table text-muted">
+					<colgroup>
+						<col width="16%">
+						<col width="*">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td><strong>받는분</strong></td>
+							<td class="align-middle text-end p-3"><span>오공일</span></td>
+						</tr>
+						<tr>
+							<td><strong>핸드폰</strong></td>
+							<td class="align-middle text-end p-3"><span>010-1234-3456</span></td>
+						</tr>
+						<tr>
+							<td><strong>주소</strong></td>
+							<td class="align-middle text-end p-3"><span>ㅇㅇㅇㅇ</span></td>
+						</tr>
+						<!-- 추후 배송지 상세정보 추가 -->
+					</tbody>
+				</table>
   			</div>
+  			<!-- 추후 배송 추가 옵션 정보 추가 -->
    		</div>
    </div>
 </div>
