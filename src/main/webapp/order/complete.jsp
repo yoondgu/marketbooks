@@ -55,7 +55,7 @@
 		</div>
 	</div>
 </div>
-<div class="container my-auto" style="min-width: 600px; max-width: 600px; height: 700px;">
+<div class="container" style="min-width: 600px; max-width: 600px; min-height: 700px;">
 	<div class="row align-items-center" style="min-height: 700px;">
 		<div class="col-12">
 		   	<div class="row p-3">
@@ -87,7 +87,7 @@
 			<div class="row p-5">
 				<div class="col-12 text-center">
 					<div class="d-grid gap-2 col-6 mx-auto">
-						<a href="detail.jsp?orderNo=<%=orderNo %>" class="btn fw-bold" style="border-color:#5f0080; color:#5f0080;">주문 상세보기</a>
+						<a href="../mypage/orderdetail.jsp?orderNo=<%=orderNo %>" class="btn fw-bold" style="border-color:#5f0080; color:#5f0080;">주문 상세보기</a>
 						<a href="../home.jsp" class="btn btn-primary fw-bold" style="background-color:#5f0080; color:white;">쇼핑 계속하기</a>
 					</div>		
 				</div>
