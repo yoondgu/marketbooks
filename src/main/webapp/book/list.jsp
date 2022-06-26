@@ -4,24 +4,21 @@
 <%@page import="dao.BookDao"%>
 <%@page import="vo.User"%>
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>북 스토어</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="../css/style.css" rel="stylesheet">
-<link href="../css/common.css" rel="stylesheet">
-<link href="../css/normalize.css" rel="stylesheet">
-<link href="../css/section1.css" rel="stylesheet">
+<link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 </head>
 <body>
 	<!-- 헤더 include -->
 <div class="container">
-	<jsp:include page="../common/header.jsp">
+	<jsp:include page="/common/header.jsp">
 		<jsp:param name="menu" value="list" />
 	</jsp:include>
 
@@ -157,7 +154,7 @@
 			</div>
 		</div>
 	</div>
-	<jsp:include page="../common/footer.jsp">
+	<jsp:include page="/common/footer.jsp">
 		<jsp:param name="menu" value="list" />
 	</jsp:include>
 </div>

@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<div class="container" style="max-width:1900px;">
+<div class="container homeMain">
 
 <!-- 1. 이미지 이벤트 영역 -->
+<div class="sectionRow">
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -24,7 +25,7 @@
 			</div>
 			<div class="carousel-item">
 				<img class=""
-					src="https://img-cf.kurly.com/banner/main/pc/img/b812a903-cb31-400b-9cea-1d4b712ebd03"
+					src="https://img-cf.kurly.com/banner/main/pc/img/1f4eb174-ec9b-4d34-8465-07487048ff11"
 					alt="Second slide">
 			</div>
 			<div class="carousel-item">
@@ -54,13 +55,16 @@
 			<!-- 인디케이터 끝 -->
 		</div>
 	</div>
+</div>
 
 <!-- 2. 베스트셀러 섹션 -->
-	<jsp:include page="../book/bestseller.jsp">
-		<jsp:param name="menu" value="home" />
-	</jsp:include>
+<div class="sectionRow">
+	<jsp:include page="../book/bestsellerList.jsp"></jsp:include>
+</div>
 
 <!-- 3. sns 섹션 -->
-
+<div class="sectionRow">
+	
+</div>
 
 </div>

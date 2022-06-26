@@ -264,12 +264,12 @@ ol, ul {
 	overflow: hidden;
 	float: left;
 	width: 124px;
-	height: 55px;
-	padding: 16px 0 0;
+	height: 55px; padding : 16px 0 0;
 	font-size: 16px;
 	color: #333;
 	line-height: 20px;
-	text-align: center
+	text-align: center;
+	padding: 16px 0 0;
 }
 
 #gnb .gnb_main .gnb a .txt {
@@ -425,8 +425,8 @@ ol, ul {
 }
 
 #sub_a {
-	height:0 !important;
-	padding:0 !important;
+	height: 0 !important;
+	padding: 0 !important;
 }
 
 #gnb .gnb_sub .ico_new {
@@ -723,7 +723,7 @@ ol, ul {
 		url(https://res.kurly.com/fonts/NotoSansKR-Bold.woff) format("woff"),
 		url(https://res.kurly.com/fonts/NotoSansKR-Bold.otf)
 		format("opentype");
-} 
+}
 
 *, *:after, *:before {
 	-webkit-box-sizing: border-box;
@@ -1152,7 +1152,7 @@ div, th, td, li, dt, dd, p {
 }
 
 #userMenu .sub li {
-	padding-left:10px;
+	padding-left: 10px;
 }
 
 #userMenu .lst .sub {
@@ -1437,4 +1437,16 @@ div, th, td, li, dt, dd, p {
 	background-image:
 		url(https://res.kurly.com/pc/service/common/1903/btn_pagetop_hover.png);
 	transition: background 0.5s;
+}
+
+/* 홈페이지 메인영역 */
+.homeMain {
+	max-width:1900px !important;
+}
+
+/* bestseller */
+.bookAuthor {
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

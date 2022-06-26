@@ -4,23 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>market books</title>
+<title>마켓북스</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"	type="image/x-icon">
 <link href="css/home.css" rel="stylesheet">
 </head>
 <body>
-<!-- header -->
-<jsp:include page="common/header.jsp">
-	<jsp:param name="menu" value="home" />
-</jsp:include>
-<!-- main -->
-<jsp:include page="common/main.jsp">
-	<jsp:param name="menu" value="home" />
-</jsp:include>
+<!-- header include -->
+<jsp:include page="common/header.jsp"></jsp:include>
+<!-- main include -->
+<jsp:include page="common/main.jsp"></jsp:include>
 <!-- footer include -->
-<jsp:include page="common/footer.jsp">
-	<jsp:param name="menu" value="home" />
-</jsp:include>
+<jsp:include page="common/footer.jsp"></jsp:include>
 
 <script	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
