@@ -323,7 +323,8 @@ ol, ul {
 /* GNB서브 */
 #gnb .menu1:hover .gnb_sub {
 	display: block;
-	background-color:white;
+	background-color: white;
+	cursor: pointer;
 }
 
 #gnb .gnb_sub {
@@ -341,7 +342,7 @@ ol, ul {
 #gnb .gnb_sub li {
 	width: 100%;
 	text-align: left;
-	padding:12px;
+	padding: 12px;
 }
 
 #gnb .gnb_sub .menu {
@@ -417,6 +418,15 @@ ol, ul {
 	color: #333;
 	line-height: 22px;
 	white-space: nowrap
+}
+
+#gnb .gnb_sub .txt:hover {
+	color: #5f0080;
+}
+
+#sub_a {
+	height:0 !important;
+	padding:0 !important;
 }
 
 #gnb .gnb_sub .ico_new {
@@ -531,9 +541,8 @@ ol, ul {
 	text-align: center
 }
 
-
 #gnb .layer_location .btn_location:hover .layer_location {
-	display:block;
+	display: block;
 }
 
 #gnb .layer_location a.btn {
@@ -592,8 +601,8 @@ ol, ul {
 		url(https://res.kurly.com/pc/ico/2010/ico_delivery_setting_on.svg)
 }
 
-#gnb .location_set:hover .layer_location{
-	display:block;
+#gnb .location_set:hover .layer_location {
+	display: block;
 }
 
 /* gnbPick */
@@ -627,32 +636,6 @@ ol, ul {
 #gnb .layer_location .error .txt {
 	display: block;
 	color: #333
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5) , only screen and
-		(min-device-pixel-ratio: 1.5) , only screen and (min-resolution:
-	1.5dppx) {
-	#gnb .gnb_sub .ico_new {
-		background: url(https://res.kurly.com/pc/ico/1808/ico_new_gnb_16x16.png)
-			no-repeat 0 0;
-		background-size: 14px 14px
-	}
-	#gnb .cart_count .msg_cart .point {
-		background: url( ) no-repeat 0 0;
-		background-size: 20px 14px
-	}
-	#gnb .gnb_main .menu1 .ico {
-		background:
-			url(https://res.kurly.com/pc/service/common/1908/ico_gnb_all_off_x2.png)
-			no-repeat 0 0;
-		background-size: 16px 14px
-	}
-	#gnb .gnb_main .menu1 a.on .ico, #gnb .gnb_main .menu1 a:hover .ico {
-		background:
-			url(https://res.kurly.com/pc/service/common/1908/ico_gnb_all_x2.png)
-			no-repeat 0 0;
-		background-size: 16px 14px
-	}
 }
 
 .gnb_search .init {
