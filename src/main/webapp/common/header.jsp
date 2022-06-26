@@ -70,14 +70,14 @@
 								<a href="" class="">
 									<span class="ico"></span>
 									<span class="txt">전체 카테고리</span>
-									<ul class="gnb_sub">
-										<li><span class="txt">인문학</span></li>
-										<li><span class="txt">사회과학</span></li>
-										<li><span class="txt">소설</span></li>
-										<li><span class="txt">역사</span></li>
-										<li><span class="txt">예술/대중문화</span></li>
-									</ul>
 								</a>
+								<ul class="gnb_sub">
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=인문학'">인문학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=사회과학'">사회과학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=소설'">소설</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=역사'">역사</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=예술/대중문화'">예술/대중문화</span></li>
+								</ul>
 							</li>
 							<li class="menu2">
 							 	<a href="/marketbooks/book/newlist.jsp" class="link new ">
@@ -103,14 +103,8 @@
 			 			
 			 			<!-- 검색창 -->
 		 				<div id="side_search" class="gnb_search">
-			 				<form action="list.jsp" onsubmit="return searchTracking(this)">
-				 				<input type="hidden" name="searched" value="Y">
-				 				<input type="hidden" name="log" value="1">
-				 				<input type="hidden" name="skey" value="all">
-				 				<input type="hidden" name="hid_pr_text" value="">
-				 				<input type="hidden" name="hid_link_url" value="">
-				 				<input type="hidden" id="edit" name="edit" value="">
-				 				<input name="sword" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
+			 				<form action="/marketbooks/book/list.jsp" onsubmit="">
+				 				<input name="keyworkd" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
 				 				<input type="image" src="https://res.kurly.com/pc/service/common/1908/ico_search_x2.png" class="btn_search">
 				 				<div class="init">
 				 					<button type="button" id="searchInit" class="btn_delete">검색어 삭제하기</button>
