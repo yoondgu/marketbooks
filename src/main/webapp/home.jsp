@@ -6,9 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>market books</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="css/normalize.css" rel="stylesheet">
-<link href="css/section1.css" rel="stylesheet">
-<link href="css/common.css" rel="stylesheet">
 <link href="css/home.css" rel="stylesheet">
 </head>
 <body>
