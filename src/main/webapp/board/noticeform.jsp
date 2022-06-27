@@ -18,9 +18,16 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 
 <body>
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="noticeform" />
+		</jsp:include>
+	</div>
 <%
 int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
 %>
@@ -89,4 +96,6 @@ int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
 	}
 	</script>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 </html>

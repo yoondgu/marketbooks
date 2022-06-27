@@ -18,6 +18,7 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 <%  User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
@@ -25,6 +26,12 @@
 	}
 %>
 <body class="board-list">
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="form" />
+		</jsp:include>
+	</div>
 	<div id="wrap">
 		<div id="container">
 			<div id="main">
@@ -81,6 +88,8 @@
 	</div>
 	</div>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script>
 function submitBoardForm() {
 	let titleField = document.querySelector("input[name=title]");
@@ -98,4 +107,5 @@ function submitBoardForm() {
 	return true;
 }
 </script>
+
 </html>
