@@ -1,3 +1,9 @@
+<%@page import="java.util.List"%>
+<%@page import="vo.Pagination"%>
+<%@page import="util.StringUtil"%>
+<%@page import="dao.NoticeDao"%>
+<%@page import="vo.User"%>
+<%@page import="vo.Notice"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,6 +20,30 @@
 <link rel="stylesheet" href="../css/board.css">
 </head>
 <body class="board-list">
+		<%
+				NoticeDao noticeDao = NoticeDao.getInstance();
+
+				int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
+				int rows = StringUtil.stringToInt(request.getParameter("rows"), 10);
+				String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
+
+				// 전체 데이터 갯수 조회
+				int totalRows = 0;
+				if (keyword.isEmpty()) {
+					totalRows = noticeDao.getTotalRows();
+				} else {
+					totalRows = noticeDao.getTotalRows(keyword);
+				}
+				// 페이징처리에 필요한 정보를 제공하는 객체 생성
+				Pagination pagination = new Pagination(rows, totalRows, currentPage);
+				
+				List<Notice> noticeList = null;
+				if (keyword.isEmpty()) {
+					noticeList = noticeDao.getAllNotices(pagination.getBeginIndex(), pagination.getEndIndex(), keyword);
+				} else {
+					noticeList = noticeDao.getAllNotices(pagination.getBeginIndex(), pagination.getEndIndex());
+				}
+		%>
 	<div id="wrap">
 		<div id="container">
 			<div id="main">
@@ -42,18 +72,18 @@
 							<form name="frmList" action="" onsubmit="">
 								<input type="hidden" name="id" value="notice">
 								<style>
-.notice .layout-pagination {
-	margin: 0
-}
-
-.eng2 {
-	color: #939393
-}
-
-.xans-board-listheader {
-	font-size: 12px
-}
-</style>
+								.notice .layout-pagination {
+									margin: 0
+								}
+								
+								.eng2 {
+									color: #939393
+								}
+								
+								.xans-board-listheader {
+									font-size: 12px
+								}
+								</style>
 								<table width="100%" align="center" cellpadding="0"
 									cellspacing="0">
 									<tbody>
@@ -73,42 +103,22 @@
 															</tr>
 														</thead>
 														<tbody>
+														<%
+														for (Notice notice : noticeList) {
+														%>
 															<tr>
 																<td width="50" nowrap="" align="center">공지</td>
 																<td
 																	style="padding-left: 10px; text-align: left; color: #999">
-																	<a href="view.php?id=notice&amp;no=1591"><b>[마켓컬리]
-																			KURLY BIRTH WEEK 럭키기프트 이벤트 당첨 안내</b></a><b> </b>
+																	<a href="view.jsp?no=<%=notice.getNo()%>&page=<%=currentPage%>"><b><%=notice.getTitle() %></b></a>
 																</td>
-																<td width="100" nowrap="" align="center">
-																	MarketKurly</td>
-																<td width="100" nowrap="" align="center" class="eng2">2022-05-23</td>
-																<td width="30" nowrap="" align="center" class="eng2">7784</td>
+																<td width="100" nowrap="" align="center">MarketKurly</td>
+																<td width="100" nowrap="" align="center" class="eng2"><%=notice.getCreatedDate() %></td>
+																<td width="30" nowrap="" align="center" class="eng2"><%=notice.getViewCount() %></td>
 															</tr>
-															<tr>
-																<td width="50" nowrap="" align="center">공지</td>
-																<td
-																	style="padding-left: 10px; text-align: left; color: #999">
-																	<a href="view.php?id=notice&amp;no=64"><b>마켓컬리
-																			배송 안내</b></a><b> </b>
-																</td>
-																<td width="100" nowrap="" align="center">
-																	MarketKurly</td>
-																<td width="100" nowrap="" align="center" class="eng2">2016-01-08</td>
-																<td width="30" nowrap="" align="center" class="eng2">3173223</td>
-															</tr>
-															<tr>
-																<td width="50" nowrap="" align="center">공지</td>
-																<td
-																	style="padding-left: 10px; text-align: left; color: #999">
-																	<a href="view.php?id=notice&amp;no=931"><b>[마켓컬리]
-																			포장재 회수 서비스 안내</b></a><b> </b>
-																</td>
-																<td width="100" nowrap="" align="center">
-																	MarketKurly</td>
-																<td width="100" nowrap="" align="center" class="eng2">2021-06-18</td>
-																<td width="30" nowrap="" align="center" class="eng2">49407</td>
-															</tr>
+														<%
+														}
+														%>
 														</tbody>
 													</table>
 												</div>
@@ -116,39 +126,47 @@
 										</tr>
 									</tbody>
 								</table>
+								<%
+									User user = null;
+								
+									if ((user = (User) session.getAttribute("LOGINED_USER")) != null) {
+										if("admin@gmail.com".equals(user.getEmail())) {
+								%>
+									<table width="100%">
 
+									<tbody>
+										<tr>
+											<td align="right"><a href="/marketbooks/board/noticeform.jsp?page=<%=currentPage%>">
+													<span class="bhs_button yb" style="float: none;">공지사항 작성하기</span>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+								<%
+										}
+									} else { 
+								%>
+								<%
+									}
+								%>
+								<input type="hidden" name="page" value="<%=currentPage %>" />
 								<div class="layout-pagination">
 									<div class="pagediv">
-										<a href="list.php?id=notice&amp;page=1"
-											class="layout-pagination-button layout-pagination-first-page">맨
-											처음 페이지로 가기</a> 
-										<a href="list.php?id=notice&amp;page=1"
-											class="layout-pagination-button layout-pagination-prev-page">이전
-											페이지로 가기</a> 
-										<strong class="layout-pagination-button layout-pagination-number __active">1</strong>
-										<a href="list.php?id=notice&amp;page=2"
-											class="layout-pagination-button layout-pagination-number">2</a>
-										<a href="list.php?id=notice&amp;page=3"
-											class="layout-pagination-button layout-pagination-number">3</a>
-										<a href="list.php?id=notice&amp;page=4"
-											class="layout-pagination-button layout-pagination-number">4</a>
-										<a href="list.php?id=notice&amp;page=5"
-											class="layout-pagination-button layout-pagination-number">5</a>
-										<a href="list.php?id=notice&amp;page=6"
-											class="layout-pagination-button layout-pagination-number">6</a>
-										<a href="list.php?id=notice&amp;page=7"
-											class="layout-pagination-button layout-pagination-number">7</a>
-										<a href="list.php?id=notice&amp;page=8"
-											class="layout-pagination-button layout-pagination-number">8</a>
-										<a href="list.php?id=notice&amp;page=9"
-											class="layout-pagination-button layout-pagination-number">9</a>
-										<a href="list.php?id=notice&amp;page=10"
-											class="layout-pagination-button layout-pagination-number">10</a>
-										<a href="list.php?id=notice&amp;page=2"
-											class="layout-pagination-button layout-pagination-next-page">다음
-											페이지로 가기</a> <a href="list.php?id=notice&amp;page=145"
-											class="layout-pagination-button layout-pagination-last-page">맨
-											끝 페이지로 가기</a>
+										<a href="list.jsp?page=<%=pagination.getCurrentPage() - 1%>"
+											class="layout-pagination-button layout-pagination-prev-page">
+											</a>
+										<%
+										for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
+										%>
+										<a href="list.jsp?page=<%=num%>"
+											class="layout-pagination-button layout-pagination-number <%=pagination.getCurrentPage() == num ? "__active" : ""%>"><%=num %>
+											</a>
+										<%
+										}
+										%>
+										<a href="list.jsp?page=<%=pagination.getCurrentPage() + 1%>"
+											class="layout-pagination-button layout-pagination-next-page">
+										</a>
 									</div>
 								</div>
 
