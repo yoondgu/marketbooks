@@ -27,18 +27,19 @@
         font-size: 12px;
         max-width: 100%;
     }
-    
+    #content {
+    min-width: 1050px;
+    padding-bottom: 60px;
+	}
     .page_aticle {
     width: 1050px;
-    margin: 0 auto;
+    display: flow-root;
+    padding-top: 65px;
+    margin: auto;
     }
     .page_aticle .page_section {
     float: right;
     width: 820px;
-    }
-
-    .page_aticle{
-    padding-top: 65px;
     }
     
     .page_aticle .head_aticle .tit {

@@ -20,7 +20,8 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
-<link rel="stylesheet" href="../css/board.css?ver=2">
+<link rel="stylesheet" href="../css/board.css?123">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 <style>
 .notice .layout-pagination {
@@ -38,8 +39,8 @@
 <body class="board-list">
 	<!-- header -->
 	<div id="header">
-		<jsp:include page="../common/nav.jsp">
-			<jsp:param name="menu" value="faq" />
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="inquiry" />
 		</jsp:include>
 	</div>
 	<div id="wrap">
@@ -61,7 +62,6 @@
 								class="emph">도움이 필요하신가요 ?</span> 1:1 문의하기</a>
 						</div>
 						<div class="page_section">
-
 							<div class="head_aticle">
 								<h2 class="tit">1:1 문의</h2>
 							</div>
@@ -102,7 +102,6 @@
 														}
 															
 														InquiryDao inquiryDao = InquiryDao.getInstance();
-														// List<InquiryDto> inquiryList = inquiryDao.getAllInquiries(); 전체조회 Test
 
 														int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
 														int rows = StringUtil.stringToInt(request.getParameter("rows"), 10);
@@ -189,9 +188,7 @@
 										</a>
 									</div>
 								</div>
-
 								<table width="100%">
-
 									<tbody>
 										<tr>
 											<td align="right"><a href="/marketbooks/board/form.jsp">
@@ -216,5 +213,7 @@
 	font-weight: bold;
 }
 </style>	
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 </body>
 </html>

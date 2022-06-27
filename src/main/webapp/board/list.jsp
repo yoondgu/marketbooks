@@ -18,8 +18,15 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 <body class="board-list">
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="list" />
+		</jsp:include>
+	</div>
 		<%
 				NoticeDao noticeDao = NoticeDao.getInstance();
 
@@ -198,5 +205,7 @@
 	</div>
 	</div>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 </html>
 
