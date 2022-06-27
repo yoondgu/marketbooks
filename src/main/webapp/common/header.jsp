@@ -49,10 +49,11 @@
 			</h1>
 
 		<!-- 배송안내버튼 -->
+		<!-- 
 		<a href="" onclick="" class="bnr_delivery"> 
 			<img src="https://res.kurly.com/pc/service/common/2011/delivery_210801.png"	alt="샛별, 택배 배송안내" width="121" height="22">
 		</a> 		
-
+		-->
 		</div>
 	</div>
 	
@@ -72,11 +73,11 @@
 									<span class="txt">전체 카테고리</span>
 								</a>
 								<ul class="gnb_sub">
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=인문학'">인문학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=사회과학'">사회과학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=소설'">소설</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=역사'">역사</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=예술/대중문화'">예술/대중문화</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=인문학'">인문학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=사회과학'">사회과학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=소설'">소설</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=역사'">역사</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=예술/대중문화'">예술/대중문화</span></li>
 								</ul>
 							</li>
 							<li class="menu2">
@@ -104,7 +105,7 @@
 			 			<!-- 검색창 -->
 		 				<div id="side_search" class="gnb_search">
 			 				<form action="/marketbooks/book/list.jsp" onsubmit="">
-				 				<input name="keyworkd" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
+				 				<input name="keyword" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
 				 				<input type="image" src="https://res.kurly.com/pc/service/common/1908/ico_search_x2.png" class="btn_search">
 				 				<div class="init">
 				 					<button type="button" id="searchInit" class="btn_delete">검색어 삭제하기</button>
@@ -115,7 +116,7 @@
 						<!-- 장바구니버튼 -->
 						<div class="cart_count">
 							<div class="inner_cartcount">
-								<a href="/marketbooks/cart/list.jsp" class="btn_cart">
+								<a href="/marketbooks/cart/list.jsp" class="btn_cart">							
 									<span class="screen_out">장바구니</span>
 									<span id="cart_item_count" class="num realtime_cartcount" style="display: none;"></span>
 								</a>
@@ -134,7 +135,7 @@
 							</div>
 						</div>
 						
-						<!--  -->
+						<!-- 배송지 설정 버튼 -->
 						<div class="location_set">
 							<button type="button" class="btn_location on">배송지 설정하기</button>
 							<div class="layer_location">
@@ -173,5 +174,4 @@ function bnrHeaderClose() {
 function goLoginPage() {
 	location.href="/marketbooks/loginform.jsp";
 }
-
 </script>

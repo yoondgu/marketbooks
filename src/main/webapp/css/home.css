@@ -1446,6 +1446,7 @@ div, th, td, li, dt, dd, p {
 
 /* bestseller */
 .bookAuthor {
+	width: 140px;
 	white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
