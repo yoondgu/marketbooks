@@ -131,7 +131,7 @@
 				<input type="hidden" name="job" id="hidden-job" />
 				<input type="hidden" name="itemNo" id="hidden-itemNo" />
 				<input type="hidden" name="quantity" id="hidden-quantity" />
-				<table class="table">
+				<table class="table lh-base">
 					<colgroup>
 						<col width="5%">
 						<col width="10%">

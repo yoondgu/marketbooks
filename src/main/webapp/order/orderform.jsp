@@ -107,7 +107,7 @@
 	if (cartItemList.size() == 1) {
 		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "]";
 	} else {
-		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "] 외 " + (cartItemList.size() - 1) + "개";
+		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "] 외 " + (cartItemList.size() - 1) + "건";
 	}
 	
 %>

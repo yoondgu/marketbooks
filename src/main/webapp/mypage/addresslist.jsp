@@ -10,6 +10,7 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../common/header.jsp"></jsp:include>

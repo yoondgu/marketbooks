@@ -67,7 +67,7 @@
 	  			<h5 class="py-3 ps-0 mb-3 fw-bold">주문 내역 상세</h5>
 	  			<div class="row py-3 border-bottom border-2 border-dark">
 	  				<div class="col-6">
-			  			<span class="p-3 ps-0 mb-3 fw-bold">주문번호 <%=orderNo %></span>
+			  			<span class="p-3 ps-0 mb-3 fs-6 fw-bold">주문번호 <%=orderNo %></span>
 	  				</div>
 	  				<div class="col-6 text-end">
 			  			<span>배송 또는 상품에 문제가 있나요?<a href="../board/form.jsp" class="text-end text-decoration-none fw-bold ps-3" style="color:#5f0080;">1:1 문의하기></a></span>
@@ -89,17 +89,20 @@
 								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
-								<a href="../book/detail.jsp?bookNo=<%=item.getBook().getNo() %>" class="py-3 text-decoration-none text-dark">
-									<strong><%=item.getBook().getTitle() %></strong>
-									 <%=item.getBook().getAuthor() %> (<%=item.getBook().getPublisher() %>)
-								</a><br/>
-								<small>
+								<p>
+									<a href="../book/detail.jsp?bookNo=<%=item.getBook().getNo() %>" class="py-3 text-decoration-none text-dark"><br/>
+										<strong><%=item.getBook().getTitle() %></strong><br/>
+										 <%=item.getBook().getAuthor() %><br/>
+										 <%=item.getBook().getPublisher() %>
+									</a>
+								<p/>
+								<span class="px-1 border-end">
 									<%=StringUtil.numberToCurrency(item.getPrice()) %>원
-									<span class="text-decoration-line-through text-muted px-1 border-end <%=item.getPrice() >= item.getBook().getPrice() ? "d-none" : "" %>">
+									<span class="text-decoration-line-through text-muted <%=item.getPrice() >= item.getBook().getPrice() ? "d-none" : "" %>">
 										<%=StringUtil.numberToCurrency(item.getBook().getPrice()) %>원
 									</span>
-									<%=item.getQuantity() %>권
-								</small>
+								</span>
+								<span class="px-1"><%=item.getQuantity() %>권</span>
 							</td>
 							<td class="align-middle">
 								<strong style="color:#5f0080;"><%=order.getStatus() %></strong>
