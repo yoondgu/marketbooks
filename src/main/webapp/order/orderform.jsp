@@ -300,7 +300,7 @@
 								</select>
 								<span class="fw-bold p-3 text-muted">무이자 할부 유의사항: 은행계열/체크/기프트/선불/법인/개인사업자 기업카드는 제외</span>
 							</div>
-							<div class="d-none" id="simplepay">
+							<div class="d-none text-center lh-base" id="simplepay">
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" id="simplepay-1">
 										<label class="form-check-label" for="inlineRadio1">차이</label>
@@ -317,12 +317,12 @@
 										<input class="form-check-input" type="radio" id="simplepay-4">
 										<label class="form-check-label" for="inlineRadio4">페이코</label>
 									</div><br/>
-									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, 결제하신 수단으로만</span><br/>
-									<span class="fw-bold p-3 text-muted">환불되는 점 양해부탁드립니다.</span>
+									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
+									<span class="fw-bold p-3 text-muted">결제하신 수단으로만 환불되는 점 양해부탁드립니다.</span>
 							</div>
-							<div class="d-none" id="mobilepay">
-									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, 결제하신 수단으로만</span><br/>
-									<span class="fw-bold p-3 text-muted">환불되는 점 양해부탁드립니다.</span>
+							<div class="d-none text-center lh-base" id="mobilepay">
+									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
+									<span class="fw-bold p-3 text-muted">결제하신 수단으로만 환불되는 점 양해부탁드립니다.</span>
 							</div>
 						</div>
 					</div>

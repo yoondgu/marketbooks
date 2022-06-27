@@ -1,3 +1,4 @@
+<%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -19,23 +20,42 @@
 	</div>
 
 	<!-- 유저 메뉴 -->
-	<div class="row">
-		<div id="userMenu">
-			<ul class="list_menu">
-				<li class="menu none_sub menu_join"><a href="registerform.jsp"
-					class="link_menu">회원가입</a></li>
-				<li class="menu none_sub menu_login"><a href="/marketbooks/loginform.jsp"
-					class="link_menu">로그인</a></li>
-				<li class="menu lst"><a href="" class="link_menu">고객센터</a>
-					<ul class="sub">
-						<li><a href="/marketbooks/board/list.jsp" onclick="">공지사항</a></li>
-						<li><a href="/marketbooks/board/faq.jsp" onclick="">자주하는 질문</a></li>
-						<li><a href="/marketbooks/board/inquiry.jsp" onclick="">1:1 문의</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-	</div>
+	   <div class="row">
+	      <div id="userMenu">
+	         <ul class="list_menu">
+	               <% 
+	                  User user = (User) session.getAttribute("LOGINED_USER");
+	                  if (user != null) {
+	                     if("admin@gmail.com".equals(user.getEmail())) {
+	               %>
+	                  <li class="menu none_sub menu_login"><a href="/marketbooks/admin/home.jsp"
+	                  class="link_menu"><strong>관리자 홈</strong></a></li>
+	               <%
+	                     }
+	               %>
+	                  <li class="menu none_sub menu_login"><a href="" class="link_menu"><%=user.getName() %>님 환영합니다.</a></li>
+	                  <li class="menu none_sub menu_login"><a href="/marketbooks/logout.jsp"
+	                  class="link_menu">로그아웃</a></li>
+	               <% 
+	                  } else if(user == null) {
+	               %>
+	                  <li class="menu none_sub menu_join"><a href="registerform.jsp"
+	                  class="link_menu">회원가입</a></li>
+	                  <li class="menu none_sub menu_login"><a href="/marketbooks/loginform.jsp"
+	                     class="link_menu">로그인</a></li>
+	               <%
+	                  }
+	               %>
+	            <li class="menu lst"><a href="" class="link_menu">고객센터</a>
+	               <ul class="sub">
+	                  <li><a href="/marketbooks/board/list.jsp" onclick="">공지사항</a></li>
+	                  <li><a href="/marketbooks/board/faq.jsp" onclick="">자주하는 질문</a></li>
+	                  <li><a href="/marketbooks/board/inquiry.jsp" onclick="">1:1 문의</a></li>
+	               </ul>
+	            </li>
+	         </ul>
+	      </div>
+	   </div>
 	
 	<!-- 헤더 로고 -->
 	<div class="row">

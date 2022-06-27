@@ -157,7 +157,7 @@
 								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
-								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
+								<span id="item-title-<%=item.getNo() %>"><a href="../book/detail.jsp?bookNo=<%=item.getBook().getNo() %>"><%=item.getBook().getTitle() %></a></span>
 							</td>
 							<td class="align-middle">
 								<span id="item-author-<%=item.getNo() %>"><%=item.getBook().getAuthor() %></span>
@@ -175,9 +175,9 @@
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
 							%>
 								<strong id="item-total-discount-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalDiscountPrice) %></strong>원<br/>
-								<small class="text-decoration-line-through <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
+								<span class="text-decoration-line-through text-muted <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
-								</small>
+								</span>
 							</td>
 							<td  class="align-middle text-center">
 								<a href="javascript:deleteItem(<%=item.getNo() %>);" >

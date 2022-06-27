@@ -5,6 +5,6 @@
 	session.invalidate();
 
 	// HttpSession객체를 변경(저장/변경/삭제) 후 재요청URL을 응답으로 보낸다.
-	response.sendRedirect("board/faq.jsp");
+	response.sendRedirect("home.jsp");
 	
 %>
