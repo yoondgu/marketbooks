@@ -20,6 +20,7 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 <style type="text/css">
 	
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
@@ -51,14 +52,8 @@
 		throw new RuntimeException("주문정보가 올바르지 않습니다.");
 	}
 %>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<div class="container" style="min-width: 1200px; max-width: 1200px;">
+<jsp:include page="../common/header.jsp"></jsp:include>
+<div class="container mb-5" style="min-width: 1200px; max-width: 1200px;">
    <div class="row">
    		<div class="col-3 p-3">
 	   		<!-- 마이페이지 메뉴리스트 import -->
@@ -75,7 +70,7 @@
 			  			<span class="p-3 ps-0 mb-3 fw-bold">주문번호 <%=orderNo %></span>
 	  				</div>
 	  				<div class="col-6 text-end">
-			  			<small>배송 또는 상품에 문제가 있나요?<a href="../board/form.jsp" class="text-end text-decoration-none fw-bold ps-3" style="color:#5f0080;">1:1 문의하기></a></small>
+			  			<span>배송 또는 상품에 문제가 있나요?<a href="../board/form.jsp" class="text-end text-decoration-none fw-bold ps-3" style="color:#5f0080;">1:1 문의하기></a></span>
 	  				</div>
 	  			</div>
 				<table class="table my-3" id="order-item-list">
@@ -123,7 +118,7 @@
 					<div class="col text-center">
 						<a href="" class="btn btn-sm fw-bold p-3" style="border-color:#5f0080; color:#5f0080; border-color:">전체 상품 다시 담기</a>
 						<a href="" class="btn btn-sm fw-bold p-3 disabled" style="border-color:#5f0080; color:#5f0080;" >전체 상품 주문 취소</a>
-						<p class="p-3"><small class="text-muted fw-bold">주문 취소는 '배송준비중' 이전 상태일 경우에만 가능합니다.</small></p>
+						<p class="p-3"><span class="text-muted fw-bold">주문 취소는 '배송준비중' 이전 상태일 경우에만 가능합니다.</span></p>
 					</div>
 				</div>
    			</div>
@@ -229,13 +224,7 @@
    		</div>
    </div>
 </div>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -14,6 +14,7 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 <style type="text/css">
 	.text-middle-center {
 	    display: flex;
@@ -48,14 +49,8 @@
 	}
 	
 %>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<div class="container" style="min-width: 600px; max-width: 600px; min-height: 700px;">
+<jsp:include page="../common/header.jsp"></jsp:include>
+<div class="container mb-5" style="min-width: 600px; max-width: 600px;">
 	<div class="row align-items-center" style="min-height: 700px;">
 		<div class="col-12">
 		   	<div class="row p-3">
@@ -69,18 +64,18 @@
 			</div>
 			<div class="row text-middle-center fw-bold text-muted mb-5" id="payPrice-info">
 				<div class="col-3">
-					<small>결제금액</small>
+					결제금액
 				</div>
 				<div class="col-3 text-end">
-					<small><%=StringUtil.numberToCurrency(order.getTotalPayPrice()) %>원</small>
+					<%=StringUtil.numberToCurrency(order.getTotalPayPrice()) %>원
 				</div>
 			</div>
 			<div class="row text-middle-center" id="customer-info-list">
-				<div class="col-8 text-muted">
+				<div class="col-8 text-muted lh-base">
 					<ul style="list-style-type: circle;">
-						<li><small>[배송준비중] 이전일 때 주문내역 상세페이지에서 주문 취소가 가능합니다.</small></li>
-						<li><small>엘리베이터 이용이 어려운 경우 6층 이상부터는 공동현관 앞 또는 경비실로 대응 배송될 수 있습니다.</small></li>
-						<li><small>주문 / 배송 및 기타 문의가 있을 경우, 1:1 문의에 남겨주시면 신속히 해결해드리겠습니다.</small></li>
+						<li>[배송준비중] 이전일 때 주문내역 상세페이지에서 주문 취소가 가능합니다.</li>
+						<li>엘리베이터 이용이 어려운 경우 6층 이상부터는 공동현관 앞 또는 경비실로 대응 배송될 수 있습니다.</li>
+						<li>주문 / 배송 및 기타 문의가 있을 경우, 1:1 문의에 남겨주시면 신속히 해결해드리겠습니다.</li>
 					</ul>
 				</div>
 			</div>
@@ -88,20 +83,14 @@
 				<div class="col-12 text-center">
 					<div class="d-grid gap-2 col-6 mx-auto">
 						<a href="../mypage/orderdetail.jsp?orderNo=<%=orderNo %>" class="btn fw-bold" style="border-color:#5f0080; color:#5f0080;">주문 상세보기</a>
-						<a href="../home.jsp" class="btn btn-primary fw-bold" style="background-color:#5f0080; color:white;">쇼핑 계속하기</a>
+						<a href="../home.jsp" class="btn btn-primary fw-bold" style="border-color:#5f0080; background-color:#5f0080; color:white;">쇼핑 계속하기</a>
 					</div>		
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

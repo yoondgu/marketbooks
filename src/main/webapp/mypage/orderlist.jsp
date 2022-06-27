@@ -13,6 +13,7 @@
 <style type="text/css">
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 </style>
+<link href="../css/home.css" rel="stylesheet">
 </head>
 <body>
 <!-- 화면 구성 및 사용자 상호작용 구현
@@ -27,14 +28,8 @@
  	// Pagenation 객체 생성하여 페이징처리에 필요한 값 계산
  	// 페이징 처리에 맞는, 해당 기간의 주문 데이터 조회
  %>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<div class="container" style="min-width: 1200px; max-width: 1200px;">
+<jsp:include page="../common/header.jsp"></jsp:include>
+<div class="container mb-5" style="min-width: 1200px; max-width: 1200px;">
    <div class="row">
    		<div class="col-3 p-3">
    			<!-- 마이페이지 메뉴리스트 import -->
@@ -78,16 +73,16 @@
 									<td></td>
 								</tr>
 								<tr>
-									<td class="align-middle fw-bold text-end text-muted"><small>주문번호</small></td>
-									<td class="align-middle fw-bold text-muted ps-3"><small>111111</small></td>
+									<td class="align-middle fw-bold text-end text-muted"><span>주문번호</span></td>
+									<td class="align-middle fw-bold text-muted ps-3"><span>111111</span></td>
 								</tr>
 								<tr>
-									<td class="align-middle fw-bold text-end text-muted"><small>결제금액</small></td>
-									<td class="align-middle fw-bold text-muted ps-3"><small>111111</small></td>
+									<td class="align-middle fw-bold text-end text-muted"><span>결제금액</span></td>
+									<td class="align-middle fw-bold text-muted ps-3"><span>111111</span></td>
 								</tr>
 								<tr>
-									<td class="align-middle fw-bold text-end text-muted"><small>주문상태</small></td>
-									<td class="align-middle fw-bold text-muted ps-3"><small>111111</small></td>
+									<td class="align-middle fw-bold text-end text-muted"><span>주문상태</span></td>
+									<td class="align-middle fw-bold text-muted ps-3"><span>111111</span></td>
 								</tr>
 								<tr>
 									<td></td>
@@ -128,13 +123,7 @@
   		</div>
    	</div>
 </div>
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
