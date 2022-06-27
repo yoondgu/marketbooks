@@ -28,9 +28,15 @@
 </style>
 </head>
 <body>
+<!-- DB 관련 작업 
+	1. 전체 상품 다시 담기 : 주문아이템 리스트의 모든 아이템번호를 전달 (모달-ajax-모달)
+	2. 전체 상품 주문 취소 : 주문번호르 전달(모달-ajax-모달)
+	3. 특정 상품 다시 담기 : 도서번호, 수량을 전달(모달-ajax-모달)
+-->
 <%
 	OrderDao orderDao = OrderDao.getInstance();
 	OrderItemDao orderItemDao = OrderItemDao.getInstance();
+	
 	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
 	User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
@@ -86,6 +92,8 @@
 					%>
 						<tr>
 							<td class="align-middle">
+								<!-- 상품 다시 담기를 위해 저장하는 도서번호 -->
+								<input type="hidden" name="bookNo" value="<%=item.getBook().getNo() %>"/>
 								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
@@ -108,8 +116,11 @@
 								<strong style="color:#5f0080;"><%=order.getStatus() %></strong>
 							</td>
 							<td class="align-middle text-center">
-								<a href="../board/review.jsp?itemNo=<%=item.getNo() %>" class="btn btn-sm w-100 mb-1" style="background-color:#5f0080; color:#fff;">후기쓰기</a>
-								<a href="../cart/add.jsp?itemNo=<%=item.getNo() %>" class="btn btn-sm w-100" style="color:#5f0080; border-color:#5f0080;">장바구니담기</a>
+								<a href="#" class="btn btn-sm w-100 mb-1" style="background-color:#5f0080; color:#fff;" data-bs-toggle="modal" onclick="writeReview(<%=item.getBook().getNo() %>);">후기쓰기</a>
+								<a href="#addCart" class="btn btn-sm w-100" style="color:#5f0080; border-color:#5f0080;" 
+								onclick="saveBookInfo(<%=item.getBook().getNo() %>, '<%=item.getBook().getTitle() %>', '<%=item.getBook().getAuthor() %>');">
+									장바구니담기
+								</a>
 							</td>
 						</tr>
 					<%
@@ -119,8 +130,11 @@
 				</table>
 				<div class="row p-3 mx-auto">
 					<div class="col text-center">
-						<a href="" class="btn btn-sm fw-bold p-3" style="border-color:#5f0080; color:#5f0080; border-color:">전체 상품 다시 담기</a>
-						<a href="" class="btn btn-sm fw-bold p-3 disabled" style="border-color:#5f0080; color:#5f0080;" >전체 상품 주문 취소</a>
+						<a href="#addAllCarts" class="btn btn-sm fw-bold p-3" style="border-color:#5f0080; color:#5f0080;" data-bs-toggle="modal">전체 상품 다시 담기</a>
+						<a href="#cancelOrder" class="btn btn-sm fw-bold p-3 <%="배송준비중".equals(order.getStatus()) || "배송중".equals(order.getStatus()) || "배송완료".equals(order.getStatus()) ? "d-none" : "" %>" 
+							style="background-color:#5f0080; color:#fff;" onclick="cancelOrder(<%=order.getNo() %>);" onclick="cancelOrder(<%=order.getNo() %>)" >
+							전체 상품 주문 취소
+						</a>
 						<p class="p-3"><span class="text-muted fw-bold">주문 취소는 '배송준비중' 이전 상태일 경우에만 가능합니다.</span></p>
 					</div>
 				</div>
@@ -217,7 +231,7 @@
 								UserAddressDao userAddressDao = UserAddressDao.getInstance();
 								UserAddress address = userAddressDao.getAddressByNo(order.getAddressNo());
 							%>
-							<td class="align-middle text-end p-3"><span><%=address.getAddress() %> <%=address.getDetailAddress() %></span></td>
+							<td class="align-middle text-end p-3"><span><%=address.getAddress() %> <%=StringUtil.nullToBlank(address.getDetailAddress()) %></span></td>
 						</tr>
 						<!-- 추후 배송지 상세정보 추가 -->
 					</tbody>
@@ -226,8 +240,227 @@
   			<!-- 추후 배송 추가 옵션 정보 추가 -->
    		</div>
    </div>
+   
+   	<!-- 전체 상품 다시 담기 모달 -->
+	<div class="modal fade" id="addAllCarts" tabindex="-1" aria-labelledby="addAllCartsModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title fw-bold" id="addAllCartsModalLabel">
+		        	장바구니 담기
+		        </h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body border-bottom">
+				<p class="text-center m-3 fs-6">
+			        주문 상품을 모두 장바구니에 담으시겠습니까?
+				</p>
+		      </div>
+		      <div class="modal-footer border-0 m-auto">
+		        <button type="button" class="btn" data-bs-dismiss="modal" onclick="addAllCarts();">확인</button>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+	
+	<!-- 장바구니 1건 수량 선택 담기 모달 -->
+	<div class="modal fade" id="addCart" tabindex="-1" aria-labelledby="addCartModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		    	<div class="modal-header">
+			        <h5 class="modal-title fw-bold" id="addCartModalLabel">
+			        	장바구니 담기
+			        </h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body border-bottom">
+		      		<div id="bookInfo" class="m-3">
+			      		<input type="hidden" name="addBookNo"/>
+		      			<p class="fs-6"><span id="addBookTitle"></span></p>
+		      			<p class="fs-6 text-muted"><span id="addBookAuthor"></span></p>
+		      		</div>
+					<div class="row d-flex justify-content-center">
+						<div class="col-6 hstack gap-3">
+							<button class="form-control btn btn-sm fs-4" style="color:#5f0080;" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
+							<input class="form-control form-control-lg fs-6 mx-auto" min="1" name="quantity" value="1" type="number">
+							<button class="form-control btn btn-sm fs-4" style="color:#5f0080;" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+						</div>
+					</div>
+		      </div>
+		      <div class="modal-footer border-0 m-auto">
+		        <button type="button" class="btn" data-bs-dismiss="modal" onclick="addCart();">담기</button>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+	
+	<!-- 장바구니 담기 결과 모달 -->
+	<div class="modal fade" id="addCartResult" tabindex="-1" aria-labelledby="addCartResultModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title fw-bold" id="addCartResultModalLabel">
+		        </h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body border-bottom">
+		      	<p class="text-center m-3 fs-6" id="addCartResult-message">
+			        장바구니에 <span id="result-quantity"></span>건의 아이템이 추가되었습니다.
+		      	</p>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+	
+	<!-- 주문 취소 확인 모달 -->
+	<div class="modal fade" id="cancelOrder" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title fw-bold" id="cancelOrderModalLabel">
+		        	전체 주문 취소
+		        </h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body border-bottom">
+				<p class="text-center m-3 fs-6">
+			        전체 상품 주문을 취소하시겠습니까? 취소 후에는 철회가 불가능합니다.
+				</p>
+		      </div>
+		      <div class="modal-footer border-0 m-auto">
+		        <button type="button" class="btn" data-bs-dismiss="modal" onclick="addAllCarts();">확인</button>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+	
 </div>
 <jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+
+	let addAllCartsModal = new bootstrap.Modal(document.getElementById("addAllCarts"));
+	let addCartModal = new bootstrap.Modal(document.getElementById("addCart"));	
+	let resultModal = new bootstrap.Modal(document.getElementById("addCartResult"));
+
+	/*
+		'장바구니 담기' 버튼을 누르면 해당 도서정보를 전달받고, addCartModal 모달 창 태그에 정보를 출력한 뒤, 모달을 연다.
+	*/
+	function saveBookInfo(bookNo, bookTitle, bookAuthor) {
+		
+		let bookNoElement = document.querySelector("input[name=addBookNo]");
+		bookNoElement.value = bookNo;
+		
+		
+		let bookTitleElement = document.getElementById("addBookTitle");
+		bookTitleElement.textContent = bookTitle;
+		let bookAuthorElement = document.getElementById("addBookAuthor");
+		bookAuthorElement.textContent = bookAuthor;
+		
+		addCartModal.show();
+	}
+
+	
+	/*
+		모든 주문아이템의 도서번호를 전달해 장바구니아이템으로 저장하고 모달창을 띄운다.
+		(수량은 모두 1이다.)
+		저장 성공, 실패 여부에 따라 모달창에 다른 내용을 띄운다.
+	*/
+	function addAllCarts() {
+		// 모달을 숨긴다.
+		addAllCartsModal.hide();
+		
+		// bookNo를 전부 쿼리셀렉터로 가져온다.
+		let bookNoElements = document.querySelectorAll("input[name=bookNo]");
+		let queryString = "";
+		for (let i=0; i<bookNoElements.length; i++) {
+			queryString += "bookNo=" + bookNoElements[i].value;
+			if (i < (bookNoElements.length - 1)) {
+				queryString += "&";
+			}
+		}
+		
+		// ajax 요청할 때 bookNo를 json으로 전달한다.
+		let xhr = new XMLHttpRequest();
+		
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				let jsonText = xhr.responseText;
+				let result = JSON.parse(jsonText);
+				// 성공이면 resultModal에 내용 넣기
+				if (result.success) {
+					let span = document.querySelector("#addCartResult #result-quantity");
+					span.textContent = result.quantity;
+				} else {
+					let message = document.querySelector("#addCartResult-message");
+					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+				}
+				resultModal.show();
+			}
+		}
+		
+		xhr.open("GET", "../cart/add.jsp?" + queryString);
+		xhr.send();
+		
+	}
+
+	/*
+		특정 주문아이템을 저장하기 위해 모달창을 띄운다.
+		a태그를 클릭하면 모달창 input 태그에 도서번호를 저장하는 함수가 실행된다.
+		모달 창에서 수량을 받는다.
+		도서번호와 수량 value값을 쿼리셀렉터로 가져와서 ajax 요청한다. 
+		응답을 받으면 모달창을 띄운다. (저장 성공, 실패 여부에 따라 다른 내용을 띄운다.)
+		
+		==> 상세정보 페이지에서도 같은 방식으로 담기
+	*/
+	function addCart() {
+		
+		// 모달을 숨긴다.
+		addCartModal.hide();
+		
+		// 모달 폼입력태그에서 bookNo, quantity를 획득한다.
+		let bookNo = document.querySelector("input[name=addBookNo]").value;
+		let quantity = document.querySelector("input[name=quantity]").value;
+		
+		// ajax 요청할 때 bookNo를 json으로 전달한다.
+		let xhr = new XMLHttpRequest();
+		
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				let jsonText = xhr.responseText;
+				let result = JSON.parse(jsonText);
+				// 성공이면 resultModal에 내용 넣기
+				if (result.success) {
+					let span = document.querySelector("#addCartResult #result-quantity");
+					span.textContent = result.quantity;
+				} else {
+					let message = document.querySelector("#addCartResult-message");
+					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+				}
+				resultModal.show();
+			}
+		}
+		
+		xhr.open("GET", "../cart/add.jsp?bookNo=" + bookNo + "&quantity=" + quantity);
+		xhr.send();
+		
+	}
+	
+	/*
+		특정 주문번호를 전달해 주문상태를 "주문취소"로 변경하고, 성공여부에 따라 모달창을 띄운다.
+	*/
+	function cancelOrder(orderNo) {
+
+	}
+	
+	/*
+		(미구현)
+		특정 주문아이템의 도서번호를 전달해 상품리뷰 작성페이지로 이동한다.
+		배송완료 상태가 아닌 주문아이템일 경우, alert창을 띄우고 실행을 중단한다.
+	*/
+	function writeReview(itemNo) {
+		location.href = "";
+	}
+</script>
 </body>
 </html>
