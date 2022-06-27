@@ -47,7 +47,7 @@
 								<h2 class="tit">1:1 문의</h2>
 							</div>
 								<form name="frmList" class="row g-3 border bg-light mx-1 " method="post"
-									action="add.jsp" enctype="multipart/form-data"
+									action="add.jsp"
 									onsubmit="return submitBoardForm()"
 									style="border-radius: 8px;">
 									
@@ -65,8 +65,7 @@
 										<tr>
 											<td align="center">
 													<button class="bhs_button yb" type="submit"
-														style="float: none;">
-														등록</span>
+														style="float: none;">등록</span>
 											</td>
 										</tr>
 									</tbody>

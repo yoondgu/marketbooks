@@ -30,6 +30,22 @@ public class InquiryDao {
 		helper.insert(sql, inquiry.getTitle(), inquiry.getContent(), inquiry.getUserNo());
 	}
 	
+	
+	/**
+	 * 관리자가 조회하는 경우 모든 문의사항 Rows 조회
+	 * @return
+	 * @throws SQLException
+	 */
+	public int getTotalRows() throws SQLException {
+	      String sql = "select count(*) cnt "
+	               + "from hta_inquiries "
+	               + "where inquiry_deleted = 'N' ";
+	      
+	      return helper.selectOne(sql, rs -> {
+	         return rs.getInt("cnt");
+	      });
+	   }
+	
 	public int getTotalRows(int userNo) throws SQLException {
 	      String sql = "select count(*) cnt "
 	               + "from hta_inquiries "
@@ -57,10 +73,15 @@ public class InquiryDao {
 	 * @return inquiry 게시글 정보
 	 * @throws SQLException
 	 */
-	public List<InquiryDto> getAllInquiries() throws SQLException {
-		String sql = "SELECT I.INQUIRY_NO, I.USER_NO, U.USER_NAME, I.INQUIRY_TITLE, I.INQUIRY_CONTENT, I.INQUIRY_DELETED, I.INQUIRY_CREATED_DATE, I.INQUIRY_UPDATED_DATE, I.INQUIRY_ANSWER_CONTENT,I.INQUIRY_ANSWER_CREATED_DATE, I.INQUIRY_ANSWER_UPDATED_DATE, I.INQUIRY_ANSWER_STATUS "
-				   + "FROM HTA_INQUIRIES I, HTA_USERS U "
-				   + "WHERE I.USER_NO = U.USER_NO ";
+	public List<InquiryDto> getAllInquiries(int beginIndex, int endIndex) throws SQLException {
+		String sql = "SELECT I.INQUIRY_NO, U.USER_NO, U.USER_NAME, I.INQUIRY_TITLE, I.INQUIRY_CONTENT, I.INQUIRY_DELETED, I.INQUIRY_CREATED_DATE, I.INQUIRY_UPDATED_DATE, I.INQUIRY_ANSWER_CONTENT,I.INQUIRY_ANSWER_CREATED_DATE, I.INQUIRY_ANSWER_UPDATED_DATE, I.INQUIRY_ANSWER_STATUS "
+				   + "FROM (SELECT INQUIRY_NO, USER_NO, INQUIRY_TITLE, INQUIRY_CONTENT, INQUIRY_DELETED, INQUIRY_CREATED_DATE, INQUIRY_UPDATED_DATE, INQUIRY_ANSWER_CONTENT, INQUIRY_ANSWER_CREATED_DATE, INQUIRY_ANSWER_UPDATED_DATE, INQUIRY_ANSWER_STATUS, "
+				   + "		ROW_NUMBER() OVER (ORDER BY INQUIRY_NO DESC) ROW_NUMBER "
+				   + "		FROM HTA_INQUIRIES WHERE INQUIRY_DELETED = 'N') I , HTA_USERS U "
+				   + "WHERE I.USER_NO = U.USER_NO "
+				   + "AND I.ROW_NUMBER >= ? AND I.ROW_NUMBER <= ? "
+				   + "ORDER BY I.INQUIRY_NO DESC ";
+		
 		return helper.selectList(sql, rs-> {
 			InquiryDto inquiry = new InquiryDto();
 					
@@ -78,7 +99,7 @@ public class InquiryDao {
 			inquiry.setAnswerStatus(rs.getString("inquiry_answer_status"));
 					
 			return inquiry;
-		});
+		},beginIndex, endIndex);
 	}
 	
 	/**
@@ -97,7 +118,6 @@ public class InquiryDao {
 				   + "		and INQUIRY_DELETED = 'N') I , HTA_USERS U "
 				   + "WHERE I.USER_NO = U.USER_NO "
 				   + "AND I.ROW_NUMBER >= ? AND I.ROW_NUMBER <= ? "
-				 
 				   + "ORDER BY I.INQUIRY_NO DESC ";
 		return helper.selectList(sql, rs-> {
 			InquiryDto inquiry = new InquiryDto();
@@ -197,10 +217,13 @@ public class InquiryDao {
 				   + " 		INQUIRY_TITLE = ?, "
 				   + "		INQUIRY_CONTENT = ?, "
 				   + "		INQUIRY_DELETED = ?, "
+				   + "		INQUIRY_ANSWER_CONTENT = ?, "
+				   + "		INQUIRY_ANSWER_STATUS = ?, "
+				   + "      INQUIRY_ANSWER_CREATED_DATE = SYSDATE, "
 				   + "		INQUIRY_UPDATED_DATE = SYSDATE "
 				   + "WHERE INQUIRY_NO = ? ";
 		
-	    helper.update(sql, inquiry.getTitle(), inquiry.getContent(), inquiry.getDeleted(), inquiry.getNo());
+	    helper.update(sql, inquiry.getTitle(), inquiry.getContent(), inquiry.getDeleted(), inquiry.getAnswerContent(), inquiry.getAnswerStatus(), inquiry.getNo());
 	}
 	
 }

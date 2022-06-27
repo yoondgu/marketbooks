@@ -80,20 +80,12 @@
 										<textarea rows="10" class="form-control" name="content"><%=inquiry.getContent()%></textarea>
 									</div>
 									
-									<table width="100%">
-									<tbody>
-										<tr>
-											<td align="center">
-											<button class="bhs_button yb" type="submit" style="float: none;">등록</button>
-											<a href=inquiry.jsp?page=1" class="bhs_button yb" style="float: none; margin-left:30px;">취소</span></a>
-											</td>
-										</tr>
-										<tr>
-										
-										</tr>
-									</tbody>
-								</table>
 									
+									<div style="margin:0px 0px 0px 0px;">
+									<button class="bhs_button yb" type="submit" style="float: none;">등록</button>
+									<a href=inquiry.jsp?page=<%=currentPage %> class="bhs_button yb" style="float: none; margin-left:30px;">취소</span></a>
+									</div>
+										
 								</form>
 								
 						</div>

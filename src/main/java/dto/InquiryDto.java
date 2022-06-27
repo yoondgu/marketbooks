@@ -96,6 +96,13 @@ public class InquiryDto {
 	public void setAnswerContent(String answerContent) {
 		this.answerContent = answerContent;
 	}
+	
+	public String getHtmlAnswerContent() {
+		if (answerContent == null) {
+			return "";
+		}
+		return answerContent.replace(System.lineSeparator(), "<br />");
+	}
 
 	public String getAnswerStatus() {
 		return answerStatus;

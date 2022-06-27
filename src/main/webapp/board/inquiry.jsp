@@ -22,6 +22,19 @@
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css?ver=2">
 </head>
+<style>
+.notice .layout-pagination {
+	margin: 0
+}
+
+.eng2 {
+	color: #939393
+}
+
+.xans-board-listheader {
+	font-size: 15px
+}
+</style>
 <body class="board-list">
 	<!-- header -->
 	<div id="header">
@@ -54,20 +67,24 @@
 							</div>
 							<form name="frmList" action="" onsubmit="">
 								<input type="hidden" name="id" value="notice">
-								<style>
-.notice .layout-pagination {
-	margin: 0
-}
-
-.eng2 {
-	color: #939393
-}
-
-.xans-board-listheader {
-	font-size: 15px
-}
-</style>
-
+								
+								<div class="modal" tabindex="-1">
+								  <div class="modal-dialog">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title">Modal title</h5>
+								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								      </div>
+								      <div class="modal-body">
+								        <p>Modal body text goes here.</p>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								        <button type="button" class="btn btn-primary">Save changes</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
 								<table width="100%" align="center" cellpadding="0"
 									cellspacing="0">
 									<tbody>
@@ -78,10 +95,12 @@
 													<table width="100%" class="xans-board-listheader"
 														cellpadding="0" cellspacing="0">
 														<%
-														User user = (User) session.getAttribute("LOGINED_USER");
-														
-														System.out.println(user);
-														
+														User user=(User) session.getAttribute("LOGINED_USER");
+														if (user == null) {
+															response.sendRedirect("../loginform.jsp?fail=deny");
+															return;
+														}
+															
 														InquiryDao inquiryDao = InquiryDao.getInstance();
 														// List<InquiryDto> inquiryList = inquiryDao.getAllInquiries(); 전체조회 Test
 
@@ -91,7 +110,9 @@
 
 														// 전체 데이터 갯수 조회
 														int totalRows = 0;
-														if (keyword.isEmpty()) {
+														if ("admin@gmail.com".equals(user.getEmail())) {
+															totalRows = inquiryDao.getTotalRows();
+														} else if (keyword.isEmpty()) {
 															totalRows = inquiryDao.getTotalRows(user.getNo());
 														} else {
 															totalRows = inquiryDao.getTotalRows(keyword, user.getNo());
@@ -101,11 +122,14 @@
 
 														// 요청한 페이지번호에 맞는 데이터 조회하기
 														List<InquiryDto> inquiryList = null;
-														if (keyword.isEmpty()) {
+														if("admin@gmail.com".equals(user.getEmail())) {
+															inquiryList = inquiryDao.getAllInquiries(pagination.getBeginIndex(), pagination.getEndIndex());
+														} else if (keyword.isEmpty()) {
 															inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), user.getNo());
 														} else {
 															inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), keyword, user.getNo());
 														}
+														
 														%>
 														<thead>
 															<tr>
@@ -118,14 +142,22 @@
 														<tbody>
 															<%
 															for (InquiryDto inq : inquiryList) {
+																String status = null;
+																String cl = null;
+																if("Y".equals(inq.getAnswerStatus())) {
+																	status = "답변완료";
+																	cl = "seccess";
+																} else if ("N".equals(inq.getAnswerStatus())) {
+																	status = "답변대기";
+																	cl = "Nonseccess";
+																}
 															%>
 															<tr>
 																<td width="50" nowrap="" align="center"><b> <a
 																		href="detail.jsp?no=<%=inq.getNo()%>&page=<%=pagination.getCurrentPage()%>"><%=inq.getTitle()%></a></b></td>
 																<td width="50" nowrap="" align="center"><b><%=inq.getUserName()%></b></td>
 																<td width="100" nowrap="" align="center" class="eng2"><%=inq.getCreatedDate()%></td>
-																<td width="30" nowrap="" align="center" class="eng2"><%=inq.getAnswerStatus()%></td>
-
+																<td class=<%=cl%> width="30" nowrap="" align="center" class="eng2"><%=status%></td>
 															</tr>
 															<%
 															}
@@ -177,9 +209,12 @@
 		</div>
 	</div>
 	</div>
-<script>
-
-
-</script>	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+.seccess {
+	color: #5f0080;
+	font-weight: bold;
+}
+</style>	
 </body>
 </html>
