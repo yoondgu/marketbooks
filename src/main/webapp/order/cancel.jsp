@@ -21,7 +21,7 @@
 	int orderNo = StringUtil.stringToInt(request.getParameter("orderNo"));
 	Order order = orderDao.getOrderByNo(orderNo);
 	if (order != null && order.getUserNo() == userNo) {
-		order.setStatus("결제취소");
+		order.setStatus("주문취소");
 		orderDao.updateOrder(order);
 	} else {
 		throw new RuntimeException("요청 정보가 올바르지 않습니다.");

@@ -481,7 +481,7 @@
 					return;
 				} 
 				let statusElement = document.getElementById("orderStatus");
-				statusElement.textContent = "(결제취소)"; // 재요청 대신 html 변경하고 모달 띄움..
+				statusElement.textContent = "(주문취소)"; // 재요청 대신 html 변경하고 모달 띄움..
 				cancelResultModal.show();
 			}
 		}
