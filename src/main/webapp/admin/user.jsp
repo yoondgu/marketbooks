@@ -45,12 +45,16 @@
    <form>
    
    <%
-   // 요청 URL : http://localhost/marketbooks/admin/user.jsp?no=101&page=1
+   // -- 페이징처리
+   		// 요청 URL : http://localhost/marketbooks/admin/user.jsp?no=109
    		// 요청파라미터에서 게시글 번호를 조회한다.
    		int userNo = StringUtil.stringToInt(request.getParameter("no"));
-   		int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
    		
    		UserDao userDao = UserDao.getInstance();
+   		
+   		int totalRows = userDao.getTotalRows();
+   		
+   // -- userNo로 User정보 조회
    		User user = userDao.getUserByNo(userNo);
    		
    		if (user == null) {
@@ -103,8 +107,8 @@
    		<div style="height:80px"></div>
  		<div>
 		<%
-			OrderItemDao itemDao = OrderItemDao.getInstance();
-	   		// OrderItem item = itemDao.getItemByUserNo(userNo);
+			OrderDao orderDao = OrderDao.getInstance();
+			
 		%>
  		<h2><strong><%=user.getName() %></strong>님의 최근 주문 내역</h2>
  		<table class="table table-bordered">
@@ -112,7 +116,7 @@
  			<thead>
  				<tr>
  					<th>주문번호</th>
-	   				<th>주문도서</th>
+	   				<th>order_title</th>
 	   				<th>수량</th>
 	   				<th>결제금액</th>
 	   				<th>order_status</th>
@@ -121,57 +125,23 @@
  			</thead>
  			</tbody>
  			<%
- 			List<OrderItem> itemList = null;
- 				for (OrderItem item : itemList) {
+ 				List<Order> orderList = orderDao.getOrdersByUserNo(userNo);
+ 				for (Order order : orderList) {
  			%>
  				<tr>
- 					<th><a href=""><%=item.getOrderNo() %></a>></th>
-	   				<th><%=item.getBook().getTitle() %></th>
-	   				<th><%=item.getQuantity() %></th>
-	   				<th><%=item.getPrice() %>*<%=item.getQuantity() %>원</th>
+ 					<th><a href=""><%=order.getNo() %></a></th>
+	   				<th><%=order.getTitle() %></th>
+	   				<th><%=order.getTotalQuantity() %></th>
+	   				<th><%=order.getTotalPayPrice() %>원</th>
 	   				<!-- 주문 상태 : 주문취소/입금대기/배송완료/입금대기 -->
-	   				<th><%=item.getOrder().getStatus() %></th>
-	   				<th><%=item.getCreatedDate() %></th>
+	   				<th><%=order.getStatus() %></th>
+	   				<th><%=order.getCreatedDate() %></th>
 	 			</tr>
 	 		<%
  				}
 	 		%>
  			</tbody>
- 		</table>
-<%  
-   	    int totalRows = itemDao.getTotalRows();
-		   
-	    Pagination pagination = new Pagination(totalRows, currentPage);
-	  
-%>	
- 
- 		<div class="pagediv">
-  		<!--  
-		요청한 페이지번호에 맞는 페이지번호를 출력한다.
-		요청한 페이지번호와 일치하는 페이지번호는 하이라이트 시킨다.
-		요청한 페이지가 1페이지인 경우 이전 버튼을 비활성화 시킨다.
-		요청한 페이지가 맨 마지막 페이지인 경우 다음 버튼을 비활성화 시킨다. 
-	-->
-	      <nav>
-				<ul class="pagination justify-content-center">
-					<li class="page-item">
-						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="user.jsp?no=<%=user.getNo() %>&page=<%=pagination.getCurrentPage() -1%>">이전</a>
-					</li>
-					<%
-					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
-					%>
-					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
-						<a class="page-link" href="user.jsp?no=<%=user.getNo() %>&page=<%=num %>"><%=num %></a>
-					</li>
-					<%
-					}
-					%>
-					<li>	
-						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="user.jsp?no=<%=user.getNo() %>&page=<%=pagination.getCurrentPage() +1%>">다음</a>
-					</li>
-				</ul>
-	      </nav>
-	   </div>
+ 		</table>	
  		</div>
    </form>
 </div>
@@ -179,9 +149,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-	function changePageNo(pageNo) {
-		
-	}
+
 </script>
 </body>
 </html>

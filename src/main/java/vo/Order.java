@@ -9,10 +9,14 @@ public class Order {
 	private String title;
 	private int totalPrice;
 	private int totalQuantity;
+	private int totalPayPrice;
 	private Date createdDate;
 	private Date updatedDate;
 	private String status;
 	private int addressNo;
+	private String isFreeShipping;
+	private String payMethod;
+	private User user;
 	
 	public Order() {}
 
@@ -55,6 +59,14 @@ public class Order {
 	public void setTotalQuantity(int totalQuantity) {
 		this.totalQuantity = totalQuantity;
 	}
+	
+	public int getTotalPayPrice() {
+		return totalPayPrice;
+	}
+	
+	public void setTotalPayPrice(int totalPayPrice) {
+		this.totalPayPrice = totalPayPrice;
+	}
 
 	public Date getCreatedDate() {
 		return createdDate;
@@ -86,6 +98,30 @@ public class Order {
 
 	public void setAddressNo(int addressNo) {
 		this.addressNo = addressNo;
+	}
+	
+	public String getIsFreeShipping() {
+		return isFreeShipping;
+	}
+	
+	public void setIsFreeShipping(String isFreeShipping) {
+		this.isFreeShipping = isFreeShipping;
+	}
+
+	public String getPayMethod() {
+		return payMethod;
+	}
+	
+	public void setPayMethod(String payMethod) {
+		this.payMethod = payMethod;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	
