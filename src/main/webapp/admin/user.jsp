@@ -81,18 +81,22 @@
  				</tr>
  				<tr scope="row">
  					<th>주소</th>
- 					<th colspan=3>[<%=user.getAddress().getPostalCode() %>]<%=user.getAddress().getAddress() %>
- 					<%
- 						if(user.getAddress().getDetailAddress() != null) {
- 					%>
- 							<%=user.getAddress().getDetailAddress() %>
- 					<%
- 						} else {
- 					%>
+ 					<th colspan=3>
+ 				<%
+ 				// 기본 배송지주소가 없을 때는 빈칸을 출력합니다. 
+ 					if(user.getDefaultAdNo() == 0) {
  						
- 					<%
- 						}
- 					%>
+ 					} else {
+ 				%>	
+ 						[ <%=user.getAddress().getPostalCode() %> ] <%=user.getAddress().getAddress() %>
+ 				<%
+ 						if(user.getAddress().getDetailAddress() != null) {
+ 				%>
+ 							<%=user.getAddress().getDetailAddress() %>
+ 				<%
+ 						} else {	}
+ 					}
+ 				%>
  					</th>
  				</tr>
  				<tr scope="row">

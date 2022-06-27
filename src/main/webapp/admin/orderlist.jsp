@@ -1,5 +1,10 @@
+<%@page import="vo.Order"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.Pagination"%>
+<%@page import="dao.OrderDao"%>
+<%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
+    pageEncoding="UTF-8" %>
     
     <!-- 관리자만 접속할 수 있게 합니다. -->
 <!DOCTYPE html>
@@ -36,6 +41,16 @@
 <form>
    <h2 style="width: 820px">전체주문관리</h2>
    
+   <%	// 페이징처리
+   		int currentPage = StringUtil.stringToInt(request.getParameter("page"),1);
+   		
+   		OrderDao orderDao = OrderDao.getInstance();
+   		int totalRows = orderDao.getTotalRows();
+   		
+   		Pagination pagination = new Pagination(totalRows, currentPage);
+   		List<Order> orders = orderDao.getOrders(pagination.getBeginIndex(), pagination.getEndIndex());
+   %>
+   
    <table class="table">
    		<colgroup>
    			<col width="8%">
@@ -50,7 +65,7 @@
    			<tr>
    				<th>주문번호</th>
    				<th>구매자</th>
-   				<th>주문도서</th>
+   				<th>order_title</th>
    				<th>주문수량</th>
    				<th>결제금액</th>
    				<th>상태</th>
@@ -58,21 +73,26 @@
    			</tr>
    		</thead>
    		<tbody class="table-group-divider">
+   		<%
+   			for(Order order : orders) {
+   		%>
    			<tr>
-   				<th>10001</th>
+   				<th><%=order.getNo() %></th>
    				<!-- 구매자의 이름을 누르면 구매자가 구매한 리스트들을 확인할 수 있다. -->
-   				<th><a href="user.jsp?">오공일</a></th>
-   				<th>작별인사</th>
-   				<th>1</th>
-   				<th>12,600원</th>
+   				<th><a href="user.jsp?no=<%=order.getUserNo()%>"><%=order.getUser().getName() %></a></th>
+   				<th><%=order.getTitle() %></th>
+   				<th><%=order.getTotalQuantity() %></th>
+   				<th><%=order.getTotalPayPrice() %>원</th>
    				<!-- 주문 상태 : 주문취소/입금대기/배송완료/입금대기 -->
-   				<th>order_status</th>
-   				<th>2022-06-15</th>
+   				<th><%=order.getStatus() %></th>
+   				<th><%=order.getCreatedDate() %></th>
    			</tr>
+   		<%
+			}
+		%>
    		</tbody>
     </table>
 
-   
    <div class="pagediv">
   		<!--  
 		요청한 페이지번호에 맞는 페이지번호를 출력한다.
@@ -83,18 +103,23 @@
       <nav>
 			<ul class="pagination justify-content-center">
 				<li class="page-item">
-					<a class="page-link" href="">이전</a>
-					<li class="page-item"><a class="page-link" href="">1</a></li>
-					<li class="page-item"><a class="page-link" href="">2</a></li>
-					<li class="page-item"><a class="page-link" href="">3</a></li>
-					<li class="page-item"><a class="page-link" href="">4</a></li>
-					<li class="page-item"><a class="page-link" href="">5</a></li>
-					<a class="page-link" href="">다음</a>
+					<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="orderlist.jsp?page=<%=pagination.getCurrentPage() -1%>">이전</a>
+				</li>
+			<%
+				for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
+			%>
+				<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
+					<a class="page-link" href="orderlist.jsp?page=<%=num %>"><%=num %></a>
+				</li>
+			<%
+				}
+			%>
+				<li class="page-item">	
+					<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="orderlist.jsp?page=<%=pagination.getCurrentPage() +1%>">다음</a>
 				</li>
 			</ul>
       </nav>
    </div>
-
 </form>
 </div>
 </div>
