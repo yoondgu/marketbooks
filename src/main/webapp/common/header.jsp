@@ -49,10 +49,11 @@
 			</h1>
 
 		<!-- 배송안내버튼 -->
+		<!-- 
 		<a href="" onclick="" class="bnr_delivery"> 
 			<img src="https://res.kurly.com/pc/service/common/2011/delivery_210801.png"	alt="샛별, 택배 배송안내" width="121" height="22">
 		</a> 		
-
+		-->
 		</div>
 	</div>
 	
@@ -134,7 +135,7 @@
 							</div>
 						</div>
 						
-						<!--  -->
+						<!-- 배송지 설정 버튼 -->
 						<div class="location_set">
 							<button type="button" class="btn_location on">배송지 설정하기</button>
 							<div class="layer_location">
