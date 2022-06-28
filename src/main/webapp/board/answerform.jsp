@@ -30,7 +30,7 @@
 <!-- header -->
 	<div id="header">
 		<jsp:include page="../common/header.jsp">
-			<jsp:param name="menu" value="detail" />
+			<jsp:param name="menu" value="answer" />
 		</jsp:include>
 	</div>
 	<div id="wrap">
@@ -98,10 +98,6 @@
 							<div class="head_aticle">
 								<h2 class="tit">1:1 문의</h2>
 							</div>
-								<form name="frmList" class="row"
-									method="post" action="add.jsp"
-									onsubmit="return submitBoardForm()">
-								
 									<table class="table">
 									<colgroup>
 										<col width="15%">
@@ -126,59 +122,26 @@
 										</tr>
 									</tbody>
 									</table>
-										<%  
-										if ("Y".equals(inquiry.getAnswerStatus())) {
-										%>
-									<table class="table">
-										<colgroup>
-											<col width="15%">
-											<col width="85%">
-										</colgroup>
-									<tbody>
-										<tr>
-											<th class="table-light text-center">답변 등록일</th>
-											<td><%=inquiry.getAnswerCreatedDate()%></td>
-										</tr>
-										<tr>
-										<tr>
-											<th class="table-light text-center content">답변내용</th>
-											<td><%=inquiry.getHtmlAnswerContent()%></td>>
-										</tr>
-									</tbody>
-									</table>
-										<%
-										}
-										%>
-								</form>
-								<div class="row">
-									<div class="col">
-										<!--  
-											비로그인 상태일 때 아래 버튼은 전부 비활성화한다.
-											수정/삭제 버튼은 작성자의 사용자번호와 로그인한 사용자의 사용자 번호가 동일할 때만 활성화한다.
-										-->
-									<%
 									
-										// 수정/삭제버튼 비활성화 여부
-										boolean isDisabled = true;
-										
-										// 로그인된 사용자정보가 존재하고, 글의 작성자 번호와 로그인한 사용자 번호가 일치하면 수정/삭제버튼 활성화한다.
-										if (user != null && inquiry.getUserNo() == user.getNo()) {
-											isDisabled = false;
-										}
-										
-									%>
-										<a href="modifyform.jsp?no=<%=inquiryNo %>&page=<%=currentPage %>" class="btn"  <%=isDisabled ? "disabled" : "" %>">수정</a>
-										<a href="delete.jsp?no=<%=inquiryNo %>&page=<%=currentPage %>" class="btn"  <%=isDisabled ? "disabled" : "" %>">삭제</a>
-									<%
-										if ("admin@gmail.com".equals(user.getEmail())) {
-									%>		
-										<a href="answerform.jsp?no=<%=inquiryNo %>&page=<%=currentPage %>" class="btn" style="float:right" <%=isDisabled ? "disabled" : "" %> >답변하기</a>
-									<%
-										}
-									%>	
-									
+								<form name="frmList" class="g-3 border bg-light mx-1 " method="post"
+									method="post" action="answer.jsp"
+									onsubmit="return submitBoardForm()"
+									style="border-radius: 8px;">
+									<input type="hidden" name="no" value="<%=inquiry.getNo() %>" />
+									<input type="hidden" name="page" value="<%=currentPage %>" />
+									<div class="col-12">
+										<label class="form-label" style="font-size: 16px; margin:5px;">답변내용</label>
+										<textarea rows="10" class="form-control" name="answerContent"></textarea>
 									</div>
-								</div>
+									
+									<div style="margin:0px 0px 0px 250px;">
+									<button class="bhs_button yb" type="submit" style="float: none;">등록</button>
+									<a href="detail.jsp?no=<%=inquiry.getNo()%>&page=<%=currentPage%>" class="bhs_button yb" style="float: none; margin-left:30px;">취소</span></a>
+									</div>
+										
+									
+								</form>
+								
 						</div>
 					</div>
 				</div>

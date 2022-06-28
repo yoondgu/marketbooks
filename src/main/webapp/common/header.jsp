@@ -18,45 +18,43 @@
 			</div>
 		</div>
 	</div>
-
 	<!-- 유저 메뉴 -->
-	   <div class="row">
-	      <div id="userMenu">
-	         <ul class="list_menu">
-	               <% 
-	                  User user = (User) session.getAttribute("LOGINED_USER");
-	                  if (user != null) {
-	                     if("admin@gmail.com".equals(user.getEmail())) {
-	               %>
-	                  <li class="menu none_sub menu_login"><a href="/marketbooks/admin/home.jsp"
-	                  class="link_menu"><strong>관리자 홈</strong></a></li>
-	               <%
-	                     }
-	               %>
-	                  <li class="menu none_sub menu_login"><a href="" class="link_menu"><%=user.getName() %>님 환영합니다.</a></li>
-	                  <li class="menu none_sub menu_login"><a href="/marketbooks/logout.jsp"
-	                  class="link_menu">로그아웃</a></li>
-	               <% 
-	                  } else if(user == null) {
-	               %>
-	                  <li class="menu none_sub menu_join"><a href="registerform.jsp"
-	                  class="link_menu">회원가입</a></li>
-	                  <li class="menu none_sub menu_login"><a href="/marketbooks/loginform.jsp"
-	                     class="link_menu">로그인</a></li>
-	               <%
-	                  }
-	               %>
-	            <li class="menu lst"><a href="" class="link_menu">고객센터</a>
-	               <ul class="sub">
-	                  <li><a href="/marketbooks/board/list.jsp" onclick="">공지사항</a></li>
-	                  <li><a href="/marketbooks/board/faq.jsp" onclick="">자주하는 질문</a></li>
-	                  <li><a href="/marketbooks/board/inquiry.jsp" onclick="">1:1 문의</a></li>
-	               </ul>
-	            </li>
-	         </ul>
-	      </div>
-	   </div>
-	
+	<div class="row">
+		<div id="userMenu">
+			<ul class="list_menu">
+					<% 
+						User user = (User) session.getAttribute("LOGINED_USER");
+						if (user != null) {
+							if("admin@gmail.com".equals(user.getEmail())) {
+					%>
+						<li class="menu none_sub menu_login"><a href="/marketbooks/admin/home.jsp"
+						class="link_menu"><strong>관리자 홈</strong></a></li>
+					<%
+							}
+					%>
+						<li class="menu none_sub menu_login"><a href="" class="link_menu"><%=user.getName() %>님 환영합니다.</a></li>
+						<li class="menu none_sub menu_login"><a href="/marketbooks/logout.jsp"
+						class="link_menu">로그아웃</a></li>
+					<% 
+						} else if(user == null) {
+					%>
+						<li class="menu none_sub menu_join"><a href="registerform.jsp"
+						class="link_menu">회원가입</a></li>
+						<li class="menu none_sub menu_login"><a href="/marketbooks/loginform.jsp"
+							class="link_menu">로그인</a></li>
+					<%
+						}
+					%>
+				<li class="menu lst"><a href="" class="link_menu">고객센터</a>
+					<ul class="sub">
+						<li><a href="/marketbooks/board/list.jsp" onclick="">공지사항</a></li>
+						<li><a href="/marketbooks/board/faq.jsp" onclick="">자주하는 질문</a></li>
+						<li><a href="/marketbooks/board/inquiry.jsp" onclick="">1:1 문의</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<!-- 헤더 로고 -->
 	<div class="row">
 		<div id="headerLogo" class="layout-wrapper">
@@ -69,10 +67,11 @@
 			</h1>
 
 		<!-- 배송안내버튼 -->
+		<!-- 
 		<a href="" onclick="" class="bnr_delivery"> 
 			<img src="https://res.kurly.com/pc/service/common/2011/delivery_210801.png"	alt="샛별, 택배 배송안내" width="121" height="22">
 		</a> 		
-
+		-->
 		</div>
 	</div>
 	
@@ -92,11 +91,11 @@
 									<span class="txt">전체 카테고리</span>
 								</a>
 								<ul class="gnb_sub">
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=인문학'">인문학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=사회과학'">사회과학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=소설'">소설</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=역사'">역사</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?keyworkd=예술/대중문화'">예술/대중문화</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=인문학'">인문학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=사회과학'">사회과학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=소설'">소설</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=역사'">역사</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=예술/대중문화'">예술/대중문화</span></li>
 								</ul>
 							</li>
 							<li class="menu2">
@@ -124,7 +123,7 @@
 			 			<!-- 검색창 -->
 		 				<div id="side_search" class="gnb_search">
 			 				<form action="/marketbooks/book/list.jsp" onsubmit="">
-				 				<input name="keyworkd" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
+				 				<input name="keyword" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
 				 				<input type="image" src="https://res.kurly.com/pc/service/common/1908/ico_search_x2.png" class="btn_search">
 				 				<div class="init">
 				 					<button type="button" id="searchInit" class="btn_delete">검색어 삭제하기</button>
@@ -135,7 +134,7 @@
 						<!-- 장바구니버튼 -->
 						<div class="cart_count">
 							<div class="inner_cartcount">
-								<a href="/marketbooks/cart/list.jsp" class="btn_cart">
+								<a href="/marketbooks/cart/list.jsp" class="btn_cart">							
 									<span class="screen_out">장바구니</span>
 									<span id="cart_item_count" class="num realtime_cartcount" style="display: none;"></span>
 								</a>
@@ -154,7 +153,7 @@
 							</div>
 						</div>
 						
-						<!--  -->
+						<!-- 배송지 설정 버튼 -->
 						<div class="location_set">
 							<button type="button" class="btn_location on">배송지 설정하기</button>
 							<div class="layer_location">
@@ -193,5 +192,4 @@ function bnrHeaderClose() {
 function goLoginPage() {
 	location.href="/marketbooks/loginform.jsp";
 }
-
 </script>
