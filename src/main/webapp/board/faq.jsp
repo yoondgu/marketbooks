@@ -36,10 +36,10 @@
 							<h2 class="tit_snb">고객센터</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li><a href="/marketbooks/board/list.jsp">공지사항</a></li>
-									<li class="on"><a href="/marketbooks/board/faq.jsp">자주하는
+									<li><a href="/marketbooks/board/list.jsp?page=1">공지사항</a></li>
+									<li class="on"><a href="/marketbooks/board/faq.jsp?page=1">자주하는
 											질문</a></li>
-									<li><a href=/marketbooks/board/inquiry.jsp>1:1 문의</a></li>
+									<li><a href=/marketbooks/board/inquiry.jsp?page=1>1:1 문의</a></li>
 								</ul>
 							</div>
 							<a href="/marketbooks/board/form.jsp" class="link_inquire"><span
@@ -562,7 +562,7 @@
 										</tr>
 									</tbody>
 								</table>
-
+								<!-- 
 								<div class="layout-pagination">
 									<div class="pagediv">
 										<a href="list.php?id=notice&amp;page=1"
@@ -610,6 +610,7 @@
 										</tr>
 									</tbody>
 								</table>
+								 -->
 							</form>
 						</div>
 					</div>
