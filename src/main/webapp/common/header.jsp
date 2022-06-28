@@ -122,7 +122,7 @@
 			 			
 			 			<!-- 검색창 -->
 		 				<div id="side_search" class="gnb_search">
-			 				<form action="/marketbooks/book/list.jsp" onsubmit="">
+			 				<form action="/marketbooks/book/list.jsp?page=1" onsubmit="">
 				 				<input name="keyword" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
 				 				<input type="image" src="https://res.kurly.com/pc/service/common/1908/ico_search_x2.png" class="btn_search">
 				 				<div class="init">
