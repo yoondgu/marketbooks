@@ -29,7 +29,7 @@ public class BookDao {
 				   + "where B.row_number >= ? and B.row_number <= ? " 
 				   + "and B.category_no = C.category_no "
 				   + "and to_char(book_created_date, 'YYYYMMDD')>'20220301' "
-				   + "order by B.book_no asc ";
+				   + "order by book_created_date desc ";
 
 		return helper.selectList(sql, rs -> {
 			Book book = new Book();
