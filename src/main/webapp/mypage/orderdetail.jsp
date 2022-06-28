@@ -408,7 +408,7 @@
 					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
-					let message = document.querySelector("#addCartResult-message");
+					let message = document.getElementById("addCartResult-message");
 					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
 				}
 				addResultModal.show();
@@ -450,7 +450,7 @@
 					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
-					let message = document.querySelector("#addCartResult-message");
+					let message = document.getElementById("addCartResult-message");
 					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
 				}
 				addResultModal.show();
