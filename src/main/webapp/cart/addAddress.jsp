@@ -60,5 +60,13 @@
 	}
 	
 	// 추가폼에서 '기본배송지로 저장'에 체크했고, selectedAddress가 기본 배송지였을 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
-	response.sendRedirect((isCheckedDefAddr && wasDefaultSelected? "list.jsp" : "addressList.jsp") + queryString);
+	// 요청파라미터 location=mypage 값을 받았을 경우 무조건 mypage/addressList.jsp로 이동한다.
+	
+	String location = StringUtil.nullToBlank(request.getParameter("location"));
+	if ("mypage".equals(location)) {
+		response.sendRedirect("/marketbooks/mypage/addressList.jsp" + queryString);
+	} else {
+		response.sendRedirect((isCheckedDefAddr && wasDefaultSelected? "/marketbooks/cart/list.jsp" : "/marketbooks/cart/addressList.jsp") + queryString);
+	}
+	
 %>

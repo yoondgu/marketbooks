@@ -50,8 +50,7 @@
 		defAddressNo = user.getAddress().getNo();
 	}
 	 
-	// 사용자가 주문제출을 위해 선택한 배송지 번호 획득
-	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	// 선택 배송지번호는 로컬스토리지를 통해 태그에 담고 꺼낸다.
 	
 	// 해당 사용자의 배송지 정보 리스트 획득
 	UserAddressDao userAddressDao = UserAddressDao.getInstance();
@@ -63,7 +62,6 @@
    </div>
    <form id="address-form" method="get" action="">
    		<!-- form 전달값 -->
-			<!-- 부모창에서 재요청 시 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
 	 	<%
 	 		// 부모창에서 전달받은, list.jsp페이지에서 체크된 아이템번호 값을 getParameters로 꺼내서 반복문으로 hidden타입의 input태그를 만든다.
 	 		// form 전송 시 이 값이 함께 전달된다.
@@ -76,8 +74,9 @@
 	 			}
 	 		}
 		%>
+		<!-- 로컬스토리지, ajax에서 사용하기 위한 배송지번호 저장 -->
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
-		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo" value="<%=selectedAddressNo %>"/>
+		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo" value="<%=defAddressNo %>"/>
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -99,9 +98,8 @@
 	   			%>
 	   				<tr id="item-row-<%=addr.getNo() %>">
 	   					<td class="align-middle">
-   						<!-- 선택한 배송지 정보만 checked 상태로 출력한다. -->
-	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>"
-	   						<%=selectedAddressNo == addr.getNo() ? "checked" : "" %> onchange="changeSelectedAddress(<%=addr.getNo() %>);"/>
+   						<!-- 스크립트에서 선택한 배송지 정보만 checked 상태로 출력한다. -->
+	   						<input type="checkbox" id="item-checkbox-<%=addr.getNo() %>" onchange="changeSelectedAddress(<%=addr.getNo() %>);"/>
 	   					</td>
 	   					<td class="text-start align-middle">
    						<!-- 기본 배송지 정보에만 '기본배송지' 텍스트를 추가한다. -->
@@ -150,6 +148,33 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
 
+	// 모든 체크박스의 클래스 중 checked를 모두 false로 만든다. 
+	let checkboxElements = document.querySelectorAll("input[id^='item-checkbox-']");
+	if (checkboxElements != null) {
+		for (let element of checkboxElements) {
+			element.checked = false;
+		}
+		
+		// 로컬스토리지에 선택배송지 번호가 존재한다면, 그 번호를 선택배송지로 설정한다.
+		// 배송지 번호에 해당하는 체크박스만 checked 클래스를 추가한다.
+		let selectedAddrNo = localStorage.getItem('selectedAddressNo');
+		if (selectedAddrNo != null) {
+			let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
+			selectedCheckboxElement.checked = true;
+		} else {
+			// 로컬스토리지에 선택배송지 번호가 없을 경우 기본배송지를 로컬스토리지에 저장하고 checked 클래스를 추가한다.
+			let defAddressNo = document.getElementById("defAddressNo").value;
+			if (defAddressNo != 0) {
+				
+				selectedAddrNo = defAddressNo;
+				localStorage.setItem('selectedAddressNo', selectedAddrNo);
+				
+				let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
+				selectedCheckboxElement.checked = true;
+			}
+		}
+	}
+
 
 	// 주문 폼에 제출할 선택 배송지를 변경한다. 부모창의 화면이 바뀌므로 부모창으로 폼 제출, 이 화면은 닫는다.
 	function changeSelectedAddress(addressNo) {
@@ -157,6 +182,8 @@
 		
 		// 히든태그 값 수정
 		document.getElementById("hidden-changeSelectedAddressNo").value = addressNo;
+		// 이 때 다른 페이지에서도 선택배송지를 반영하도록 로컬스토리지에 값을 저장한다.
+		localStorage.setItem('selectedAddressNo', addressNo);
 		
 		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 		// 다른 페이지를 거칠 필요 없이, 체크박스아이템번호와 변경된 선택된 배송지번호가 제출되어 화면에 반영된다.
