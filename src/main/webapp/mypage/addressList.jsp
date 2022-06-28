@@ -157,9 +157,13 @@
 				
 				let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
 				selectedCheckboxElement.checked = true;
+				
+				// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
+				document.querySelector("input[name=selectedAddressNo]").value = selectedAddressNo;
 			}
 		}
 	}
+	
 
 	// 주문 폼에 제출할 선택 배송지를 변경한다. 
 	function changeSelectedAddress(addressNo) {

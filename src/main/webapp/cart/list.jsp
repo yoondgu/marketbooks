@@ -114,7 +114,7 @@
 			<div class="col-9 mb-3 pb-3 border-bottom border-dark">
 				<div class="row">
 					<div class="col-1">
-						<!-- 로컬스토리지, ajax에서 사용하기 위한 배송지번호 저장 -->
+						<!-- orderform으로 폼 제출 시에 전달을 위해 로컬스토리지에서 selectedAddressNo 값을 꺼내서 저장할 것 -->
 						<input type="hidden" name="selectedAddressNo" />
 						<input type="hidden" name="defaultAddressNo" value="<%=defAddressNo %>"/>
 						<!-- 체크된 아이템 url로 전달 -->
@@ -272,8 +272,6 @@
 			defAddrTag.classList.add("d-none");
 			addressInfo.classList.add("d-none");
 			
-			console.log(defAddrTag);
-			
 			let addr = result.address;
 			if (addr != null) {
 				
@@ -294,6 +292,8 @@
 				}
 				addressInfo.textContent = addr.address + " " + addr.detailAddress;
 				
+				// 검사가 완료된 배송지번호를 input태그에 저장한다.
+				document.querySelector("input[name=selectedAddressNo]").value = selectedAddressNo;
 				
 			} else {
 					// 존재x, 배송지정보 안받은 경우: 존재하지않습니다. 메시지 태그만 활성화
