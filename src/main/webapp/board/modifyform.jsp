@@ -19,7 +19,14 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="modify" />
+		</jsp:include>
+	</div>
 <%  User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
 		throw new RuntimeException("새 게시글 작성은 로그인 후 사용가능한 서비스입니다.");
@@ -80,20 +87,12 @@
 										<textarea rows="10" class="form-control" name="content"><%=inquiry.getContent()%></textarea>
 									</div>
 									
-									<table width="100%">
-									<tbody>
-										<tr>
-											<td align="center">
-											<button class="bhs_button yb" type="submit" style="float: none;">등록</button>
-											<a href=inquiry.jsp?page=1" class="bhs_button yb" style="float: none; margin-left:30px;">취소</span></a>
-											</td>
-										</tr>
-										<tr>
-										
-										</tr>
-									</tbody>
-								</table>
 									
+									<div style="margin:0px 0px 0px 0px;">
+									<button class="bhs_button yb" type="submit" style="float: none;">등록</button>
+									<a href=inquiry.jsp?page=<%=currentPage %> class="bhs_button yb" style="float: none; margin-left:30px;">취소</span></a>
+									</div>
+										
 								</form>
 								
 						</div>
@@ -104,6 +103,8 @@
 	</div>
 	</div>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script>
 function submitBoardForm() {
 	let titleField = document.querySelector("input[name=title]");

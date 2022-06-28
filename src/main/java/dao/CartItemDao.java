@@ -56,6 +56,21 @@ public class CartItemDao {
 			return cartItem;
 		}, itemNo);
 	}
+
+	/**
+	 * 도서번호를 전달받아 해당하는 장바구니아이템이 존재할 경우 장바구니 수량을 반환한다.
+	 * @param bookNo 도서번호
+	 * @return 장바구니 수량, 장바구니 아이템이 존재하지 않을 경우 0을 반환한다.
+	 */
+	public Integer getCartItemQuantityByBookNo(int bookNo) throws SQLException {
+		String sql = "SELECT CART_ITEM_QUANTITY QTY "
+					+ "FROM HTA_CART_ITEMS "
+					+ "WHERE BOOK_NO = ? ";
+		
+		return helper.selectOne(sql, rs -> {
+			return rs.getInt("QTY");
+		}, bookNo);
+	}
 	
 	/**
 	 * 사용자 번호를 전달받아 해당하는 장바구니아이템을 모두 반환한다.

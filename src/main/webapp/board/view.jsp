@@ -1,3 +1,9 @@
+<%@page import="vo.Notice"%>
+<%@page import="java.util.List"%>
+<%@page import="vo.Pagination"%>
+<%@page import="util.StringUtil"%>
+<%@page import="dao.NoticeDao"%>
+<%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,9 +18,47 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 
 <body>
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="view" />
+		</jsp:include>
+	</div>
+				<%
+				NoticeDao noticeDao = NoticeDao.getInstance();
+
+				int noticeNo = StringUtil.stringToInt(request.getParameter("no"));
+				int nextNoticeNo = noticeNo + 1;
+				int beforeNoticeNo = noticeNo - 1;
+				int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
+				int rows = StringUtil.stringToInt(request.getParameter("rows"), 10);
+				String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
+
+				// 전체 데이터 갯수 조회
+				int totalRows = 0;
+				if (keyword.isEmpty()) {
+					totalRows = noticeDao.getTotalRows();
+				} else {
+					totalRows = noticeDao.getTotalRows(keyword);
+				}
+				// 페이징처리에 필요한 정보를 제공하는 객체 생성
+				Pagination pagination = new Pagination(rows, totalRows, currentPage);
+			
+				// no를 받아 notice 정보 조회
+				Notice notice = noticeDao.getNoticeByNo(noticeNo);
+				Notice nextNotice = noticeDao.getNoticeByNo(nextNoticeNo);
+				Notice beforeNotice = noticeDao.getNoticeByNo(beforeNoticeNo);
+				
+				// 조회수 증가시키기
+				notice.setViewCount(notice.getViewCount() + 1);
+				noticeDao.updateNotice(notice);
+				
+				%>
+				
 	<div id="wrap">
 		<div id="container">
 			<div id="header">
@@ -40,7 +84,7 @@
 																<tbody>
 																	<tr>
 																		<th scope="row" style="border: none;">제목</th>
-																		<td>[시스템] NICE평가정보 시스템 점검 안내 (2022.6.18)</td>
+																		<td><%=notice.getTitle() %></td>
 																	</tr>
 																	<tr>
 																		<th scope="row">작성자</th>
@@ -50,9 +94,9 @@
 																		<td colspan="2">
 																			<ul>
 																				<li class="date "><strong class="th">작성일</strong>
-																					<span class="td">2022-06-15</span></li>
+																					<span class="td"><%=notice.getCreatedDate() %></span></li>
 																				<li class="hit "><strong class="th">조회수</strong>
-																					<span class="td">9</span></li>
+																					<span class="td"><%=notice.getViewCount() %></span></li>
 																			</ul>
 																		</td>
 																	</tr>
@@ -72,90 +116,7 @@
 																		<td class="board_view_content"
 																			style="word-wrap: break-word; word-break: break-all"
 																			id="contents_1650" valign="top">
-																			<div>
-																				<br>
-																			</div>
-																			<div>
-																				<br>
-																			</div>
-																			<div>
-																				<font face="Tahoma">마켓컬리를 이용해 주시는 고객님께 감사
-																					드립니다.</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">NICE아이디 시스템 작업으로 인해 서비스
-																					일시 순단 예정으로 안내 드립니다.</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">아래 내용 확인하시어 이용에 불편 없으시기를
-																					바랍니다.</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">- 아래 -</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><b>■ 작업 내용</b> </font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">-&nbsp; NICE아이디 시스템 점검</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">■ 일시</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">-&nbsp; 2022년 6월 18일 (토)
-																					pm 21:00 ~ 24:00 (3시간)</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">&nbsp; * 점검 기간은 작업 진행 상황에
-																					따라서 변동 될 수 있습니다.</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><b>■ 영향</b></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">&nbsp;- 작업시간 중 NICE아이디 전체
-																					서비스 일시순단 (2~3분내외, 총2회) </font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">&nbsp; * 대상 서비스 :
-																					휴대폰본인확인, 실명확인, 계좌확인, 법인실명확인, PASS인증서, 모바일면허증,
-																					CI/DI변환 등</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">작업 중에는 서비스의 이용이 일시적으로 불가
-																					한 점 양해 부탁 드립니다.&nbsp; </font>
-																			</div>
-																			<div>
-																				<font face="Tahoma"><br></font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">감사합니다.&nbsp;</font>
-																			</div>
-																			<div>
-																				<font face="Tahoma">마켓컬리 드림.</font>
-																			</div>
+																			<%=notice.getContent() %>
 																		</td>
 																	</tr>
 																</tbody>
@@ -175,9 +136,27 @@
 														<td align="center" style="padding-top: 10px;">
 															<table width="100%">
 																<tbody>
-																	<tr>
-																		<td align="right"><a href="list.php?id=notice">
-																				<span class="bhs_button yb" style="float: none;">목록</span>
+																	<tr scope="rows">
+																	<%
+																		User user = null;
+																	
+																		if ((user = (User) session.getAttribute("LOGINED_USER")) != null) {
+																			if("admin@gmail.com".equals(user.getEmail())) {
+																	%>
+																		<td align="left"><a href="noticemodifyform.jsp?no=<%=notice.getNo()%>&page=<%=currentPage%>">
+																				<span class="bhs_button yb" style="float: left;">수정</span>
+																		</a><a href="noticedelete.jsp?no=<%=notice.getNo()%>&page=<%=currentPage%>">
+																				<span class="bhs_button yb" style="float: none; margin-left:10px;">삭제</span>
+																		</a></td>
+																	<%
+																			}
+																		} else {
+																	%>
+																	<%
+																		}
+																	%>
+																		<td align="right"><a href="list.jsp?page=<%=currentPage %>">
+																				<span class="bhs_button yb" style="float: right;">목록</span>
 																		</a></td>
 																	</tr>
 																</tbody>
@@ -189,14 +168,22 @@
 											<div
 												class="xans-element- xans-board xans-board-movement-1002 xans-board-movement xans-board-1002 ">
 												<ul>
+												<% 
+												 if (nextNotice != null) {
+												%>
 													<li class="prev "><strong>이전글</strong><a
-														href="/board/free/read.html?no=27121&amp;board_no=1&amp;page="></a><a
-														href="view.php?id=notice&amp;no=1649">[가격인상공지] [피코크]
-															너비아니, 떡갈비 (2종) (2022 6. 17 ~)</a></li>
+														href="view.jsp?no=<%=nextNotice.getNo()%>"><%=nextNotice.getTitle()%></a></li>
+												<%
+												 }
+												%>
+												<%
+												 if (beforeNotice != null) {
+												%>
 													<li class="next "><strong>다음글</strong><a
-														href="/board/free/read.html?no=22443&amp;board_no=1&amp;page="></a><a
-														href="view.php?id=notice&amp;no=1651">[가격인상공지] [더
-															조선호텔] 구스베개 50*70 외 9건 (2022 6. 20 ~)</a></li>
+														href="view.jsp?no=<%=beforeNotice.getNo()%>"><%=beforeNotice.getTitle() %></a></li>
+												<%
+												 }
+												%>
 												</ul>
 											</div>
 										</td>
@@ -210,5 +197,7 @@
 		</div>
 	</div>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 
 </html>

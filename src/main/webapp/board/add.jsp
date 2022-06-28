@@ -18,13 +18,15 @@
 	}
 	
 	// multipart/form-data 요청을 처리하는 MultipartRequest 객체 생성하기
-	MultipartRequest mr = new MultipartRequest(request, "C:\\eclipse\\workspace-web\\attached-file");	
+	//MultipartRequest mr = new MultipartRequest(request, "C:\\eclipse\\workspace-web\\attached-file");	
 	
 	// 요청파라미터값을 조회한다.
-	String title = mr.getParameter("title");
-	String content = mr.getParameter("content");
+	String title = request.getParameter("title");
+	String content = request.getParameter("content");
 	// 업로드된 파일의 이름을 조회하다.
 	// String filename = mr.getParameter("upfile");
+	System.out.println(title);
+	System.out.println(content);
 	
 	// inquiry 객체를 생성해서 게시글 정보를 저장한다.
 	Inquiry inquiry = new Inquiry();

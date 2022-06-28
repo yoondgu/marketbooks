@@ -32,8 +32,8 @@ public class CategoryDao {
 			return category;
 		}, bookNo);
 	}
-	
-	/**
+  
+  /**
 	 * 모든 카테고리 정보 객체를 반환한다.
 	 * @return 모든 카테고리 정보 객체
 	 * @throws SQLException
@@ -52,4 +52,5 @@ public class CategoryDao {
 		});
 				   
 	}
+}
 }

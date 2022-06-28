@@ -18,6 +18,7 @@
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
+<link rel="stylesheet" href="../css/home.css">
 </head>
 <%  User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
@@ -25,6 +26,12 @@
 	}
 %>
 <body class="board-list">
+<!-- header -->
+	<div id="header">
+		<jsp:include page="../common/header.jsp">
+			<jsp:param name="menu" value="form" />
+		</jsp:include>
+	</div>
 	<div id="wrap">
 		<div id="container">
 			<div id="main">
@@ -47,7 +54,7 @@
 								<h2 class="tit">1:1 문의</h2>
 							</div>
 								<form name="frmList" class="row g-3 border bg-light mx-1 " method="post"
-									action="add.jsp" enctype="multipart/form-data"
+									action="add.jsp"
 									onsubmit="return submitBoardForm()"
 									style="border-radius: 8px;">
 									
@@ -65,8 +72,7 @@
 										<tr>
 											<td align="center">
 													<button class="bhs_button yb" type="submit"
-														style="float: none;">
-														등록</span>
+														style="float: none;">등록</span>
 											</td>
 										</tr>
 									</tbody>
@@ -82,6 +88,8 @@
 	</div>
 	</div>
 </body>
+<!-- footer include -->
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script>
 function submitBoardForm() {
 	let titleField = document.querySelector("input[name=title]");
@@ -99,4 +107,5 @@ function submitBoardForm() {
 	return true;
 }
 </script>
+
 </html>

@@ -20,6 +20,7 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 <style>
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 	input { width: 80%; }
@@ -31,14 +32,14 @@
 </style>
 </head>
 <body>
-<!-- common 파일 import (nav, footer) -->
 <!-- 사용자 상호작용 관련 작업 
 	 1. 체크박스 토글 (재요청시에도 상태 유지)
 	 2. 수량 버튼 클릭 시 modify.jsp 요청 -> list.jsp 재요청받음
 	 3. 삭제 버튼 클릭 시 delete.jsp 요청 -> list.jsp 재요청받음
 	 3. 배송지 입력 클릭시 address/list.jsp를 요청 -> 팝업으로 해당 사용자의 배송지 리스트를 조회하는 새 페이지가 뜬다.
 	 4. 카트리스트 정보, 수량 반영해서 결제금액 정보 띄우기
-	 4. 주문 버튼 클릭하면 입력값 + order.jsp 요청
+	 5. 주문 버튼 클릭하면 입력값 + order.jsp 요청
+	 * 선택배송지는 로컬스토리지에 담고 꺼내는 것으로 변경함.
  -->
 <!-- DB 관련 작업
 	 1. 세션에서 사용자정보 획득, 로그인 체크
@@ -49,14 +50,8 @@
 	 5. 장바구니 아이템 수량변경
 	 6. 장바구니 아이템 한 개 삭제, 여러 개 삭제
 	 -->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<div class="container" style="min-width: 1200px; max-width: 1200px">
+<jsp:include page="../common/header.jsp"></jsp:include>
+<div class="container mb-5" style="min-width: 1200px; max-width: 1200px">
    	<div class="row">
 		<div class="col">
 			<h1 class="fs-3 p-5 mb-3 text-center"><strong>장바구니</strong></h1>
@@ -71,7 +66,7 @@
 		}
 		int userNo = user.getNo();
 		
-		// 해당 사용자의 장바구니아이템 Dto 리스트, 리스트 내 객체 개수 획득
+		// 해당 사용자의 장바구니아이템 리스트, 리스트 내 객체 개수 획득
 		CartItemDao cartItemDao = CartItemDao.getInstance();
 		List<CartItem> cartItemList = cartItemDao.getCartItemsByUser(userNo);
 		int cartItemListSize = cartItemList.size();
@@ -80,6 +75,12 @@
 		String[] checkedValues = request.getParameterValues("checkedItemNo");
 		// null일 경우 빈 list 객체를 대입한다.
 		List<String> checkedItemNos = checkedValues == null ? new ArrayList<>() : Arrays.asList(checkedValues);
+		
+		// 사용자의 기본 배송지 번호 획득
+		int defAddressNo = 0;
+		if (user.getAddress() != null) {
+			defAddressNo = user.getAddress().getNo();
+		}
 	%>
 	<!-- 잘못된 수량, 번호로 update.jsp, delete.jsp 를 요청했을 경우 fail값 획득하여 경고메시지 표시-->
 	<%	
@@ -95,7 +96,7 @@
 	%>
 	<div class="alert alert-danger">
 		<strong>입력하신 수량보다 재고가 부족합니다.</strong>
-	</div>	
+	</div>		
 	<%		
 		}
 		if ("invalid".equals(fail)) {
@@ -113,7 +114,10 @@
 			<div class="col-9 mb-3 pb-3 border-bottom border-dark">
 				<div class="row">
 					<div class="col-1">
-						<!-- TO DO : 카트아이템 dao 작업으로 인한 재요청 시 checked 상태 유지 구현하기 -->
+						<!-- orderform으로 폼 제출 시에 전달을 위해 로컬스토리지에서 selectedAddressNo 값을 꺼내서 저장할 것 -->
+						<input type="hidden" name="selectedAddressNo" />
+						<input type="hidden" name="defaultAddressNo" value="<%=defAddressNo %>"/>
+						<!-- 체크된 아이템 url로 전달 -->
 						<input type="checkbox" id="all-toggle-checkbox" onchange="toggleCheckbox(); changeCheckBoxNumber(<%=cartItemListSize %>);"/>
 					</div>
 					<div class="col-5" >
@@ -137,10 +141,10 @@
 				<input type="hidden" name="job" id="hidden-job" />
 				<input type="hidden" name="itemNo" id="hidden-itemNo" />
 				<input type="hidden" name="quantity" id="hidden-quantity" />
-				<table class="table">
+				<table class="table lh-base">
 					<colgroup>
 						<col width="5%">
-						<col width="5%">
+						<col width="10%">
 						<col width="*">
 						<col width="15%">
 						<col width="12%">
@@ -163,7 +167,7 @@
 								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
-								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
+								<span id="item-title-<%=item.getNo() %>"><a href="../book/detail.jsp?bookNo=<%=item.getBook().getNo() %>"><%=item.getBook().getTitle() %></a></span>
 							</td>
 							<td class="align-middle">
 								<span id="item-author-<%=item.getNo() %>"><%=item.getBook().getAuthor() %></span>
@@ -181,9 +185,9 @@
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
 							%>
 								<strong id="item-total-discount-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalDiscountPrice) %></strong>원<br/>
-								<small class="text-decoration-line-through" style="<%=totalPrice == totalDiscountPrice ? "display:none" : "" %>">
+								<span class="text-decoration-line-through text-muted <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
-								</small>
+								</span>
 							</td>
 							<td  class="align-middle text-center">
 								<a href="javascript:deleteItem(<%=item.getNo() %>);" >
@@ -191,9 +195,6 @@
 										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
 									</svg>
 								</a>
-								<!-- 
-								<button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem(<%=item.getNo() %>);">삭제</button>
-								-->
 							</td>
 						</tr>
 					<%
@@ -214,43 +215,10 @@
 							기본 배송지가 없을 경우, 안내메시지가 출력된다.
 							이 배송지번호는 히든 태그에 저장되어 주문 폼 제출 시 전달된다.-->
 						<h6 class="card-title mb-3"><strong>배송지</strong></h6>
-					<%
-						// 해당 사용자의 기본 배송지 획득
-						UserAddress defAddr = user.getAddress();
-			   			// 해당 사용자가 선택한 배송지 정보 획득
-			   			int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
-						UserAddressDao userAddressDao = UserAddressDao.getInstance();
-						UserAddress addr = userAddressDao.getAddressByNo(selectedAddressNo);
-						
-						// addr== null, defAddress== null : 배송지 선택하세요
-						// addr== null, defAddress !== null : addr=defAddress 기본 배송지 출력, 기본배송지태그 추가
-						// addr !=null, addr != defAddress: 선택 배송지 출력
-						// addr != null, addr == defAddress : 선택 배송지 출력, 기본배송지태그 추가
-						
-					%>
-					<%
-						if (addr == null && defAddr == null) {
-					%>
-						<p>배송지를 선택하세요.</p>
-					<%
-						} else if (addr == null && defAddr != null) {
-							addr = defAddr;
-						}
-					
-						if (addr != null && defAddr != null && addr.getNo() == defAddr.getNo()) {
-					%>
-						<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
-					<%
-						} 
-					%>
-					<%
-						if (addr != null) {
-					%>
-			   			<input type="hidden" name="selectedAddressNo" value="<%=addr.getNo() %>" />
-						<p><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></p>
-					<%
-						}
-					%>
+					<!-- 스크립트에서 로컬스토리지에 저장된 선택배송지번호에 대한 검사를 ajax로 실행해서 주문번호 객체를 획득후 태그에 정보를 출력한다. -->
+						<p class="d-none" id="none-selected-message">배송지를 선택하세요.</p>
+						<div class="d-none ms-0" id="defAddress-tag"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
+						<p class="d-none my-3 lh-base" id="address-info"></p>
 						<div class="d-grid gap-2">
 							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
@@ -264,18 +232,76 @@
 					</div>
 				</div>
 				<div class="d-grid gap-2">
-					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitForm('../order/orderform.jsp');" >주문하기</button>
+					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호, 선택된 배송지 번호가 orderform.jsp로 전달된다. -->
+				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitOrderForm();">주문하기</button>
 				</div>
 			</div>
 		</div>
 	</form>
 </div>
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 	// 주문정보, 전체 토글박스 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)
-	changeOrderInfo();
+	changeCartInfo();
 	changeCheckbox();
+	
+	
+	// 로컬스토리지에 저장된 선택배송지번호를 전달해 ajax로 검사 후 선택지배송지 정보를 전달받는다.
+	let selectedAddressNo = localStorage.getItem('selectedAddressNo');
+	if (selectedAddressNo == null) {
+		selectedAddressNo = document.querySelector("input[name=defaultAddressNo]").value;
+	}
+	
+	// 서버에서는 사용자가 해당 배송지번호를 가지고 있는지 검사해서, 존재여부와 배송지정보를 응답한다.
+	// 유효하면 그 배송지정보를, 유효하지 않으면 기본배송지정보를, 기본배송지정보도 없을 경우 존재여부만 전달한다.
+	let noneSelected = document.getElementById("none-selected-message");
+	let defAddrTag = document.getElementById("defAddress-tag");
+	let addressInfo = document.getElementById("address-info");
+	
+	let xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4 && xhr.status === 200) {
+			let jsonText = xhr.responseText;
+			let result = JSON.parse(jsonText);
+			
+			// 존재, 배송지정보 받은 경우: 배송지정보 내용입력, 태그 활성화
+			//		이 때 배송지번호가 input에 저장된 기본배송지번호랑 같으면 기본배송지태그 활성화
+			// 존재x, 배송지정보 받은 경우: 로컬스토리지에 저장, 기본배송지태그, 배송지정보 내용입력, 활성화
+			let addr = result.address;
+			if (addr != null) {
+				
+				if (result.exist === "no") {
+					// 로컬스토리지에 주소 저장 (exist === "yes"이면 다시 저장할 필요가 없다.)
+					localStorage.setItem('selectedAddressNo', addr.no);
+				}
+				
+				if (result.defaddress === "yes" ) {
+					// 기본배송지 태그 활성화
+					defAddrTag.classList.remove("d-none");
+				}
+				
+				// 배송지 내용 입력
+				addressInfo.classList.remove("d-none");
+				if (addr.detailAddress == 'undefined' || addr.detailAddress == null) {
+					addr.detailAddress = "";
+				}
+				addressInfo.innerHTML = addr.address + "<br/>" + addr.detailAddress;
+				
+				// 검사가 완료된 배송지번호를 input태그에 저장한다.
+				document.querySelector("input[name=selectedAddressNo]").value = selectedAddressNo;
+				
+			} else {
+					// 존재x, 배송지정보 안받은 경우: 존재하지않습니다. 메시지 태그만 활성화
+					noneSelected.classList.remove("d-none");
+			}
+		}
+	}
+	
+	xhr.open("GET", "../cart/addresscheck.jsp?selectedAddressNo=" + selectedAddressNo);
+	xhr.send();
+	
+	
 	
 	/*
 		all-toggle-checkbox의 체크상태가 변경되는 이벤트 핸들러 함수
@@ -290,7 +316,7 @@
 			checkbox.checked = allToggleCheckboxCheckedStatus;
 		}
 		
-		changeOrderInfo();
+		changeCartInfo();
 	}
 	
 	/*
@@ -308,35 +334,56 @@
 			allToggleCheckboxElement.checked = false;
 		}
 		
-		changeOrderInfo();
+		changeCartInfo();
 	}
 	
 	/*
 		폼 입력값의 변화에 따라 화면에 출력된 전체 주문정보를 페이지 이동 없이 변경한다.(실제 order 객체의 값이 아니다) (ajax)
 		체크박스 선택, 카트아이템 삭제, 수량 변경 시 각각 해당하는 이벤트핸들러함수 내에서 이 함수를 실행시킨다.
+		계산한 값은 JSON형식으로 로컬스토리지에 저장하여 주문서 페이지에서 사용할 수 있게끔 한다.
 	*/
-	function changeOrderInfo() {
+	function changeCartInfo() {
 		// 내용을 출력할 DOM객체
 		let totalPriceElement = document.getElementById("order-total-price"); 
-		let discountAmountElement = document.getElementById("order-discount-amount"); 
+		let discountAmountElement = document.getElementById("order-discount-amount");
+		let shipPriceElement = document.getElementById("order-ship-price");
 		let payPriceElement = document.getElementById("order-pay-price"); 
 		
 		// 체크박스가 checked 상태인 카트아이템의 번호를 모두 획득 후, for문으로 전체 계산
+		// 
 		let checkedBookCheckboxList = document.querySelectorAll(".book-checkbox:checked");
 		let totalPrice = 0;
-		let payPrice = 0;
+		let discountedPrice = 0;
 		for (let bookCheckbox of checkedBookCheckboxList) {
 			let itemNo = bookCheckbox.value;
 		// 일반 금액 합계
 			totalPrice += parseInt(document.getElementById("item-total-price-" + itemNo).textContent.replaceAll(",",""));
-		// 할인된 금액 합계 (결제예정금액)
-			payPrice += parseInt(document.getElementById("item-total-discount-price-" + itemNo).textContent.replaceAll(",",""));
+		// 할인된 금액 합계 
+			discountedPrice += parseInt(document.getElementById("item-total-discount-price-" + itemNo).textContent.replaceAll(",",""));
 		}
 		
-		// 할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계
+		// 배송비는 2만원 이상 구매 시 무료이다.
+		let shipPrice = (discountedPrice >= 20000) || totalPrice == 0 ? 0 : 2500;
+		
+		// 전체 주문금액을 화면에 출력
 		totalPriceElement.textContent = totalPrice.toLocaleString();
-		discountAmountElement.textContent = (totalPrice - payPrice).toLocaleString();
-		payPriceElement.textContent = payPrice.toLocaleString(); // 현재는 배송비, 쿠폰, 적립금 등 적용이 없어 주문할인금액 = 결제 예정 금액이다.
+		// 할인받는 금액을 주문에 출력 (할인받는 금액 합계 = 일반 금액 합계 - 할인된 금액 합계)
+		discountAmountElement.textContent = (totalPrice - discountedPrice).toLocaleString();
+		// 배송비를 화면에 출력
+		shipPriceElement.textContent = "+ " + shipPrice.toLocaleString();
+		// 결제예정금액을 화면에 출력
+		let payPrice = discountedPrice + shipPrice; // 현재는 쿠폰, 적립금 등 적용이 없어 (할인된 금액 + 배송비)가 결제 예정 금액이다.
+		payPriceElement.textContent = payPrice.toLocaleString();
+		
+		// 계산한 값들을 객체로 만들고 JSON형식으로 변환해서 로컬스토리지에 저장한다.
+		let cartInfo = {};
+		cartInfo.totalPrice = totalPrice;
+		cartInfo.discountedPrice = discountedPrice;
+		cartInfo.shipPrice = shipPrice;
+		cartInfo.payPrice = payPrice;
+		
+		// 이 값은 다른 페이지에서도 꺼내쓸 수 있다.
+		localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
 	}
 	
 	/*
@@ -412,6 +459,40 @@
 		form.submit();
 	}
 	
+	/*
+		주문하기 버튼을 클릭하면 실행되는 함수
+		선택한 장바구니아이템 또는 선택한 배송지가 존재하지 않을 경우 alert창을 띄우고 폼을 제출하지 않는다. 
+	*/
+	function checkParameters() {
+		let checkedItemsElement = document.querySelectorAll(".book-checkbox:checked");
+		let selectedAddressNoElement = document.querySelector("input[name=selectedAddressNo]");
+
+		if (checkedItemsElement.length === 0) {
+			alert("주문할 상품을 선택해주세요.");
+			return false;
+		}
+		
+		if (selectedAddressNoElement == null) {
+			alert("배송지를 선택해주세요.");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/*
+		주문폼 제출 시 전달값 체크를 위해, 다른 폼 제출과 이벤트핸들러 함수를 분리한다.
+	
+	*/
+	function submitOrderForm() {
+		if (!checkParameters()) {
+			return;
+		}
+		
+		submitForm('../order/orderform.jsp');
+	}
+
 </script>
+<script type="text/javascript"></script>
 </body>
 </html>

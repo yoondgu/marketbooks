@@ -132,6 +132,7 @@
 	   				<!-- 주문 상태 : 주문취소/입금대기/배송완료/입금대기 -->
 	   				<th><%=order.getStatus() %></th>
 	   				<th><%=order.getCreatedDate() %></th>
+
 	 			</tr>
 	 		<%
  				}
