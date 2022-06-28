@@ -12,7 +12,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자페이지</title>
+<title>마켓북스 - 관리자페이지</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png" type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
@@ -68,6 +68,7 @@
 		<div id="main">
 			<div class="container">
 				<div class="page_aticle">
+					<!-- side bar -->
 					<div id="snb" class="snb_cc">
 						<h2 class="tit_snb">관리자메뉴</h2>
 						<div class="inner_snb">
@@ -79,7 +80,7 @@
 							</ul>
 						</div>
 					</div>
-						
+						<!-- main -->
 						<div class="page_section">
 							<div class="head_aticle">
 								<h2 class="tit">전체주문관리<span class="tit_sub">모든 주문을 관리할 수 있는 페이지 입니다.</span>
