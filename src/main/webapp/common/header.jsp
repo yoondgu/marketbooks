@@ -55,7 +55,6 @@
 			</ul>
 		</div>
 	</div>
-	
 	<!-- 헤더 로고 -->
 	<div class="row">
 		<div id="headerLogo" class="layout-wrapper">

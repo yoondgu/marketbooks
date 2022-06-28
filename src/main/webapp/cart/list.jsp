@@ -20,6 +20,7 @@
 <link rel="shortcut icon"
 	href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"
 	type="image/x-icon">
+<link href="../css/home.css" rel="stylesheet">
 <style>
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
 	input { width: 80%; }
@@ -31,7 +32,6 @@
 </style>
 </head>
 <body>
-<!-- common 파일 import (nav, footer) -->
 <!-- 사용자 상호작용 관련 작업 
 	 1. 체크박스 토글 (재요청시에도 상태 유지)
 	 2. 수량 버튼 클릭 시 modify.jsp 요청 -> list.jsp 재요청받음
@@ -49,14 +49,8 @@
 	 5. 장바구니 아이템 수량변경
 	 6. 장바구니 아이템 한 개 삭제, 여러 개 삭제
 	 -->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<div class="container" style="min-width: 1200px; max-width: 1200px">
+<jsp:include page="../common/header.jsp"></jsp:include>
+<div class="container mb-5" style="min-width: 1200px; max-width: 1200px">
    	<div class="row">
 		<div class="col">
 			<h1 class="fs-3 p-5 mb-3 text-center"><strong>장바구니</strong></h1>
@@ -137,10 +131,10 @@
 				<input type="hidden" name="job" id="hidden-job" />
 				<input type="hidden" name="itemNo" id="hidden-itemNo" />
 				<input type="hidden" name="quantity" id="hidden-quantity" />
-				<table class="table">
+				<table class="table lh-base">
 					<colgroup>
 						<col width="5%">
-						<col width="5%">
+						<col width="10%">
 						<col width="*">
 						<col width="15%">
 						<col width="12%">
@@ -163,7 +157,7 @@
 								<img alt="cover image" src="../images/bookcover/book-<%=item.getBook().getNo() %>.jpg" class="rounded coverimage"/>
 							</td>
 							<td class="align-middle">
-								<span id="item-title-<%=item.getNo() %>"><%=item.getBook().getTitle() %></span>
+								<span id="item-title-<%=item.getNo() %>"><a href="../book/detail.jsp?bookNo=<%=item.getBook().getNo() %>"><%=item.getBook().getTitle() %></a></span>
 							</td>
 							<td class="align-middle">
 								<span id="item-author-<%=item.getNo() %>"><%=item.getBook().getAuthor() %></span>
@@ -181,9 +175,9 @@
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
 							%>
 								<strong id="item-total-discount-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalDiscountPrice) %></strong>원<br/>
-								<small class="text-decoration-line-through <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
+								<span class="text-decoration-line-through text-muted <%=totalPrice == totalDiscountPrice ? "d-none" : "" %>">
 									<span id="item-total-price-<%=item.getNo() %>"><%=StringUtil.numberToCurrency(totalPrice) %></span>원
-								</small>
+								</span>
 							</td>
 							<td  class="align-middle text-center">
 								<a href="javascript:deleteItem(<%=item.getNo() %>);" >
@@ -236,7 +230,7 @@
 					
 						if (addr != null && defAddr != null && addr.getNo() == defAddr.getNo()) {
 					%>
-						<div class="mb-1 ms-0"><small class="text-muted text-bg-light rounded p-1">기본 배송지</small></div>
+						<div class="mb-1 ms-0"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
 					<%
 						} 
 					%>
@@ -244,7 +238,7 @@
 						if (addr != null) {
 					%>
 			   			<input type="hidden" name="selectedAddressNo" value="<%=addr.getNo() %>" />
-						<p><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></p>
+						<p class="lh-base"><%=addr.getAddress() %> <%=StringUtil.nullToBlank(addr.getDetailAddress()) %></p>
 					<%
 						}
 					%>
@@ -268,6 +262,7 @@
 		</div>
 	</form>
 </div>
+<jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 	// 주문정보, 전체 토글박스 DOM객체 리프레쉬 (Dao 작업으로 인한 재요청 시 필요)

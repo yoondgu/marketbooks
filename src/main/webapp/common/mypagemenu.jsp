@@ -24,7 +24,7 @@
 </style>
 
 <div>
-	<h4 class="p-3 ps-0 mb-3 fw-bold">마이북스</h4>
+	<h5 class="p-3 ps-0 mb-3 fw-bold">마이북스</h5>
 	<div class="list-group fw-bold me-3" id="menu">
 		<a href="/marketbooks/mypage/orderlist.jsp" class="<%="order".equals(menu)? "active" : "" %> list-group-item list-group-item-action p-3 d-flex justify-content-between align-items-center" aria-current="true">
 			<span>주문내역</span>
