@@ -217,8 +217,8 @@
 						<h6 class="card-title mb-3"><strong>배송지</strong></h6>
 					<!-- 스크립트에서 로컬스토리지에 저장된 선택배송지번호에 대한 검사를 ajax로 실행해서 주문번호 객체를 획득후 태그에 정보를 출력한다. -->
 						<p class="d-none" id="none-selected-message">배송지를 선택하세요.</p>
-						<div class="d-none mb-1 ms-0" id="defAddress-tag"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
-						<p class="d-none lh-base" id="address-info"></p>
+						<div class="d-none ms-0" id="defAddress-tag"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
+						<p class="d-none my-3 lh-base" id="address-info"></p>
 						<div class="d-grid gap-2">
 							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
@@ -286,7 +286,7 @@
 				if (addr.detailAddress == 'undefined' || addr.detailAddress == null) {
 					addr.detailAddress = "";
 				}
-				addressInfo.textContent = addr.address + " " + addr.detailAddress;
+				addressInfo.innerHTML = addr.address + "<br/>" + addr.detailAddress;
 				
 				// 검사가 완료된 배송지번호를 input태그에 저장한다.
 				document.querySelector("input[name=selectedAddressNo]").value = selectedAddressNo;
