@@ -2,7 +2,7 @@
 <%@page import="dao.UserDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
+    pageEncoding="UTF-8" %>
 <%
 	// 요청파라미터에서 사용자번호를 조회한다.
 	int userNo = StringUtil.stringToInt(request.getParameter("no"));
@@ -23,5 +23,5 @@
 	userDao.updateUser(user);
 	
 	// 유저목록을 재요청하는 URL을 응답으로 보낸다.
-	response.sendRedirect("../userlist.jsp");
+	response.sendRedirect("home.jsp");
 %>

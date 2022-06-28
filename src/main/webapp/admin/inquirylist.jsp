@@ -35,7 +35,9 @@
 <div class="col-10">
 <form>
    <h2 style="width: 820px">1:1문의내역 전체리스트</h2>
-      
+   <%
+   		int currentPage =StringUtil.stringToInt
+   %>   
    <table class="table">
    		<colgroup>
    			<col width="7%">
@@ -49,8 +51,8 @@
    			<tr>
    				<th>번호</th>
    				<th>문의제목</th>
-   				<th>회원명</th>
-   				<th>작성날짜</th>
+   				<th>작성자</th>
+   				<th>작성일</th>
    				<th>답변날짜</th>
    				<th>답변유무</th>
    			</tr>

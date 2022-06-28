@@ -13,6 +13,7 @@ public class User {
 	private String deleted;
 	private Date createdDate;
 	private Date updatedDate;
+	private int defaultAdNo;
 	private UserAddress address;
 	
 	public User() {}
@@ -89,6 +90,14 @@ public class User {
 		this.updatedDate = updatedDate;
 	}
   
+	public int getDefaultAdNo() {
+		return defaultAdNo;
+	}
+
+	public void setDefaultAdNo(int defaultAdNo) {
+		this.defaultAdNo = defaultAdNo;
+	}
+
 	public UserAddress getAddress() {
 		return address;
 	}

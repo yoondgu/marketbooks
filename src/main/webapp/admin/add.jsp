@@ -1,17 +1,24 @@
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.util.Date"%>
+<%@page import="util.StringUtil"%>
+<%@page import="util.MultipartRequest"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap demo</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-   
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<%
+	//	multipart/form-data 요청을 처리하는 MultipartRequest 객체 생성하기
+	MultipartRequest mr = new MultipartRequest(request, "C:\\eclipse\\workspace-web\\atteched-file");
+	
+	// 요청파라미터값을 조회한다.
+	int categoryNo = StringUtil.stringToInt(mr.getParameter("categoryNo"));
+	String title = mr.getParameter("title");
+	String author = mr.getParameter("author");
+	String publisher = mr.getParameter("publisher");
+	Date createdDate = DateFormat.parse(mr.getParameter("created-date"));
+	int price = StringUtil.stringToInt(mr.getParameter("price"));
+	int discountPrice = StringUtil.stringToInt(mr.getParameter("discount-price"));
+	int stock = StringUtil.stringToInt(mr.getParameter("stock"));
+	String discription = mr.getParameter("discription");
+			
+	
+%>
