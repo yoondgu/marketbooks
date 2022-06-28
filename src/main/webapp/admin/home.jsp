@@ -15,7 +15,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자페이지</title>
+<title>마켓북스 - 관리자페이지</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png" type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
@@ -109,7 +109,7 @@
 	   		</form>
 			<form class="col-12 g-3 bg-light mx-1">
 				<div class="head_aticle">
-					<h2 class="tit"><a href="inquirylist.jsp">게시판관리</a></h2>
+					<h2 class="tit"><a href="inquirylist.jsp">문의관리</a></h2>
 				</div>
 				<div class="board">
 					<div class="head_aticle text-center"><h6 class="tit">1:1문의</h6></div>
@@ -226,7 +226,7 @@
 	   		<div class="col-12 d-flex px-0">
 	   		<form class="col-6 g-3 bg-light mx-1 flex-fill px-2">
 				<div class="head_aticle">
-					<h2 class="tit"><a href="orderlist.jsp">도서관리</a></h2>
+					<h2 class="tit"><a href="booklist.jsp">도서관리</a></h2>
 				</div>
 				<table width="100%" class="xans-board-listheader" cellpadding="0" cellspacing="0">
 			   		<colgroup>
@@ -267,7 +267,7 @@
 	   		
 	   		<form class="col-6 g-3 bg-light mx-1 flex-fill px-2">
 				<div class="head_aticle">
-					<h2 class="tit"><a href="orderlist.jsp">회원관리</a></h2>
+					<h2 class="tit"><a href="userlist.jsp">회원관리</a></h2>
 				</div>
 				<table width="100%" class="xans-board-listheader" cellpadding="0" cellspacing="0">
 			   		<colgroup>
