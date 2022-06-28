@@ -28,7 +28,18 @@
 				<img src="/marketbooks/images/bookcover/book-<%=book.getNo()%>.jpg"
 					class="card-img-top .img-fluid" id="book-cover-img" />
 				<div class="card-body">
-					<h5 id="book-title" class="card-title lh-sm mb-4"><%=book.getTitle()%></h5>
+					<%
+						String title = book.getTitle();
+						String maintitle;
+						String subtitle;
+						if (title.contains("-")) {
+							maintitle = title.substring(0, title.lastIndexOf(" - "));
+							subtitle = title.substring(title.lastIndexOf(" - ")+1);
+						} else {
+							maintitle = title;
+						}
+					%>
+					<h5 id="book-title" class="card-title lh-sm mb-4"><%=maintitle%></h5>
 					<span class="bookAuthor card-text lh-sm float-start" ><%=book.getAuthor()%></span>
 					<span class="fw-semibold lh-sm float-end fw-bold"><%=book.getDiscountPrice()%></span>
 					<span class="text-decoration-line-through lh-sm float-end me-3"><%=book.getPrice()%></span>			

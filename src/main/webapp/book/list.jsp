@@ -21,10 +21,10 @@
 	<jsp:param name="menu" value="list" />
 </jsp:include>
 
-<div class="layout-wrapper">
+<div class="container">
 	<%
 		int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
-		int rows = StringUtil.stringToInt(request.getParameter("rows"), 4);
+		int rows = StringUtil.stringToInt(request.getParameter("rows"), 12);
 		String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
 		String categoryName = StringUtil.nullToBlank(request.getParameter("category"));
 	
@@ -70,15 +70,23 @@
 					</div>
 					<div class="card-body">
 					<%
-		
+						String title = book.getTitle();
+						String maintitle;
+						String subtitle;
+						if (title.contains("-")) {
+							maintitle = title.substring(0, title.lastIndexOf(" - "));
+							subtitle = title.substring(title.lastIndexOf(" - ")+1);
+						} else {
+							maintitle = title;
+						}
 					%>
-						<h5 id="book-title" class="card-title lh-sm mb-4"><%=book.getTitle()%></h5>
+						<h5 id="book-title" class="card-title lh-sm mb-4"><%=maintitle%></h5>					
 						<span class="bookAuthor card-text lh-sm float-start" ><%=book.getAuthor()%></span>
 						<span class="fw-semibold lh-sm float-end fw-bold"><%=book.getDiscountPrice()%></span>
 						<span class="text-decoration-line-through lh-sm float-end me-3"><%=book.getPrice()%></span>			
 						<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class="stretched-link"></a>
 					</div>
-				</div><
+				</div>
 			</div>
 		<%
 			}
