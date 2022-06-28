@@ -24,6 +24,9 @@
         font-size: 12px;
         max-width: 100%;
 	}
+	a :hover {
+		background-color:red;
+	}
 	.pagediv {
 		font-family: noto sans,malgun gothic,AppleGothic,dotum;
         line-height: 1;
@@ -86,6 +89,7 @@
 						<div class="page_section">
 							<div class="head_aticle">
 								<h2 class="tit">전체도서관리<span class="tit_sub">모든 도서를 관리할 수 있는 페이지 입니다.</span>
+									<a href="form.jsp" class="btn btn-outline-warning btn-sm float-end mt-1">도서 등록</a>
 								</h2>
 							</div>
 							
@@ -99,11 +103,9 @@
 	   		
 	   		List<Book> bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
 	   %> 
-						   <div>   
-						   		<a href="form.jsp" class="btn btn-outline-warning btn-sm float-end mb-2">도서 등록</a>
-						   </div>
+						  
 						   
-		    <table width="100%" align="center" cellpadding="0" cellspacing="0">
+	<table width="100%" align="center" cellpadding="0" cellspacing="0">
    		<tbody>
 			<tr>
 				<td>
@@ -116,11 +118,11 @@
 					   			<col width="10%">
 					   			<col width="12%">
 					   			<col width="5%">
-					   			<col width="20%">
+					   			<col width="15%">
 					   		</colgroup>
 					   		<thead>
 					   			<tr>
-					   				<!-- 간략한 도서리스트만 보이도록합니다. 상세한 도서정보 페이지는 따로 만들지 않고 상품페이지로 연결합니다. -->
+					   				<!-- 간략한 도서리스트만 보이도록합니다. 상세한 도서정보 페이지는 따로 만들지 않고 도서상세페이지로 연결합니다. -->
 					   				<th>도서번호</th>
 					   				<th>카테고리</th>
 					   				<th>도서명</th>
@@ -140,16 +142,16 @@
 					   				<td><%=book.getCategory().getName() %></td>
 					   				<!-- 도서명을 클릭하면 해당 도서페이지로 넘어가도록 링크를 설정한다. -->
 					   				<td>
-					   				<a href=""><%=book.getTitle() %></a>
+					   					<a href="../book/detail.jsp?bookNo=<%=book.getNo() %>"><%=book.getTitle() %></a>
 					 				</td>
 					   				<td><%=book.getAuthor() %></td>
 					   				<td><%=book.getPublisher() %></td>
 					   				<td><%=book.getStock() %></td>
-					   				<td class="align-middle"><strong><%=book.getDiscountPrice() %></strong>원<p>(<%=book.getPrice() %>원)</p></td>
-					   				<td class="py-0">
-						   				<div id="button">
-						   					<div><a href="modifyform.jsp" class="btn btn-outline-secondary btn-sm mb-1">수정</a></div>
-						 					<div><a href="userdelete.jsp" class="btn btn-outline-danger btn-sm">삭제</a></div>
+					   				<td><strong><%=book.getDiscountPrice() %>원</strong><div><small><%=book.getPrice() %>원</small></div></td>
+					   				<td>
+						   				<div id="button" class="">
+						   					<div><a href="modifyform.jsp" class="btn btn-outline-secondary btn-sm mb-1" style="width:41px">수정</a></div>
+						 					<div><a href="userdelete.jsp" class="btn btn-outline-danger btn-sm" style="width:41px">삭제</a></div>
 						   				</div>
 					   				</td>
 					   			</tr>

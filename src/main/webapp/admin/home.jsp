@@ -118,7 +118,7 @@
 			    </table>
 	   		</form>
 			<form class="col-12 g-3 border bg-light mx-1 ">
-				<div class="text-center"></a><a href="inquirylist.jsp">게시판관리</a></div>
+				<div class="text-center"><a href="inquirylist.jsp">게시판관리</a></div>
 				<div>
 				<div class="text-center">1:1문의</div>
 				<table class="table">

@@ -67,15 +67,6 @@
 	</div>
 	
 	<div id="wrap">
-	<!--  
-	<div class="align-middle text-center">
-	<nav></nav>
-		<div style="height:200px">
-			<p><h6 class="align-middle text-end">관리자 홈 | 관리자님 안녕하세요 | 로그아웃  </h6></p>
-			<h1><p>market</p><p>books</p></h1>
-		</div>
-	</div>
-	-->
 		<div class="container">
 			<div id="main">
 				<div id="content">
@@ -162,8 +153,8 @@
 					   				%>
 					   				</td>
 					   				<td>
-					   					<div id="button" class="d-flex flex-nowrap">
-					   						<span><a href="user.jsp?no=<%=user.getNo() %>&page=<%=currentPage %>" class="btn btn-outline-secondary btn-sm me-1">회원정보</a></span>
+					   					<div id="button">
+					   						<span><a href="user.jsp?no=<%=user.getNo() %>&page=<%=currentPage %>" class="btn btn-outline-secondary btn-sm me-1">상세보기</a></span>
 					   						<span><a href="userdelete.jsp?no=<%=user.getNo() %>&page=<%=currentPage %>" class="btn btn-outline-danger btn-sm">삭제</a></span>
 					   					</div>
 					   				</td>
