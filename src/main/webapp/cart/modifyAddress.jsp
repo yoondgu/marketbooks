@@ -22,7 +22,6 @@
 	
 	// 선택된 배송지번호를 전달받아서 재요청URL에 반영해둔다.
 	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
-	queryString += (queryString.isEmpty()? "?" : "&") + "selectedAddressNo=" + selectedAddressNo;
 	// 선택된 배송지가 현재 기본배송지인지 확인한다.
 	int defaultAddressNo = 0;
 	if (user.getAddress() !=null) {
@@ -62,5 +61,11 @@
 	
 	// 수정폼에서 '기본배송지로 저장'에 체크했을 경우 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
 	// 기본배송지를 삭제할 경우에도 부모창에 제출할 것이므로 list.jsp, 아닐 경우 address.list.jsp를 요청한다.
-	response.sendRedirect((addrNo == selectedAddressNo || (isCheckedDefAddr && wasDefaultSelected)? "list.jsp" : "addressList.jsp") + queryString);
+	// 요청파라미터 location=mypage 값을 받았을 경우 무조건 mypage/addressList.jsp로 이동한다.
+	String location = StringUtil.nullToBlank(request.getParameter("location"));
+	if ("mypage".equals(location)) {
+		response.sendRedirect("/marketbooks/mypage/addressList.jsp" + queryString);
+	} else {
+		response.sendRedirect((addrNo == selectedAddressNo || (isCheckedDefAddr && wasDefaultSelected)? "/marketbooks/cart/list.jsp" : "/marketbooks/cart/addressList.jsp") + queryString);
+	}
 %>

@@ -32,21 +32,14 @@
 					<%
 							}
 					%>
-						<li class="menu lst"><a href="" class="link_menu"><%=user.getName() %>님</a>
+						<li class="menu lst"><a href="" class="link_menu"><%=user.getName() %>님 환영합니다.</a>
 							<ul class="sub">
-								<li><a href="/marketbooks/mypage/orderlist.jsp" onclick="">주문 내역</a></li>
-								<li><a href="/marketbooks/mypage/addressList.jsp" onclick="">선문 내역</a></li>
-								<li><a href="" onclick="">찜한 상품</a></li>
-								<li><a href="" onclick="">배송지 관리</a></li>
-								<li><a href="" onclick="">상품 후기</a></li>
-								<li><a href="" onclick="">상품 문의</a></li>
-								<li><a href="" onclick="">적립금</a></li>
-								<li><a href="" onclick="">쿠폰</a></li>
-								<li><a href="" onclick="">개인 정보 수정</a></li>
-								<li><a href="/marketbooks/logout.jsp" onclick="">로그아웃</a></li>
+								<li><a href="/marketbooks/mypage/orderlist.jsp" onclick="">주문내역</a></li>
+								<li><a href="/marketbooks/mypage/addressList.jsp" onclick="">배송지 관리</a></li>
+								<li><a href="" onclick="">상품 리뷰</a></li>
+								<li><a href="" onclick="">개인정보 수정</a></li>
 							</ul>
 						</li>
-						
 						<li class="menu none_sub menu_login"><a href="/marketbooks/logout.jsp"
 						class="link_menu">로그아웃</a></li>
 					<% 

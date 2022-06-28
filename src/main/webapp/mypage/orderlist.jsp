@@ -87,7 +87,7 @@
    		</div>
    		<div class="col-9 p-3">
 	  			<div class="row py-3 border-bottom border-2 border-dark mb-3">
-	  				<div class="col-6">
+	  				<div class="col-6 ps-0">
 			  			<span class="fs-5 py-3 align-middle ps-0 mb-3 fw-bold">주문 내역</span>
 			  			<span class="px-3 align-middle text-muted fw-bold">지난 3년 간의 주문 내역 조회가 가능합니다</span>
 	  				</div>

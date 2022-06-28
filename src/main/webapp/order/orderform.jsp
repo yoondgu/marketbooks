@@ -30,7 +30,7 @@
 		box-shadow: none;
 		border: none;
 		color: black;
-		background-color: white;
+		background-color: #fff;
 	}
 	
 	.btn-group input:checked + label, .btn-group input:hover + label {
@@ -317,7 +317,7 @@
 										<input class="form-check-input" type="radio" id="simplepay-4">
 										<label class="form-check-label" for="inlineRadio4">페이코</label>
 									</div><br/>
-									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
+									<span class="fw-bold p-3 text-center text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
 									<span class="fw-bold p-3 text-muted">결제하신 수단으로만 환불되는 점 양해부탁드립니다.</span>
 							</div>
 							<div class="d-none text-center lh-base" id="mobilepay">
@@ -411,7 +411,7 @@
 		<!-- 6. %%원 결제하기 버튼, 안내 텍스트 -->
 		<div class="row mb-5" id="order-button-row">
 			<div class="col-5 mx-auto text-center">
-				<button class="btn fs-6 fw-bold" style="background-color:#5f0080; color:white; --bs-btn-padding-y: 1em; --bs-btn-padding-x: 4em;"><span id="button-pay-price">0</span> 원 결제하기</button>	
+				<button class="btn fs-6 fw-bold" style="background-color:#5f0080; color:#fff; --bs-btn-padding-y: 1em; --bs-btn-padding-x: 4em;"><span id="button-pay-price">0</span> 원 결제하기</button>	
 				<p class="text-muted my-3 fw-bold lh-base">
 					<span>[배송준비중] 이전까지 주문취소 가능합니다.</span><br>
 					<span>미성년자가 결제 시 법정대리인이 그 거래를 취소할 수 있습니다.</span><br>
