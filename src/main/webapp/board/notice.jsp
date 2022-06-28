@@ -15,9 +15,6 @@
 	String content = request.getParameter("content");
 	int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
 
-	System.out.println(title);
-	System.out.println(content);
-	
 	// notice 객체를 생성해서 공지사항 정보를 저장한다.
 	Notice notice = new Notice();
 	notice.setTitle(title);

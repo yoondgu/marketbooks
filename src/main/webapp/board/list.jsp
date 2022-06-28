@@ -60,10 +60,10 @@
 							<h2 class="tit_snb">고객센터</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li class="on"><a href="/marketbooks/board/list.jsp">공지사항</a>
+									<li class="on"><a href="/marketbooks/board/list.jsp?page=1">공지사항</a>
 									</li>
-									<li><a href="/marketbooks/board/faq.jsp">자주하는 질문</a></li>
-									<li><a href="/marketbooks/board/inquiry.jsp">1:1 문의</a></li>
+									<li><a href="/marketbooks/board/faq.jsp?page=1">자주하는 질문</a></li>
+									<li><a href="/marketbooks/board/inquiry.jsp?page=1">1:1 문의</a></li>
 								</ul>
 							</div>
 							<a href="/marketbooks/board/form.jsp" class="link_inquire"><span
@@ -79,17 +79,9 @@
 							<form name="frmList" action="" onsubmit="">
 								<input type="hidden" name="id" value="notice">
 								<style>
-								.notice .layout-pagination {
-									margin: 0
-								}
-								
-								.eng2 {
-									color: #939393
-								}
-								
-								.xans-board-listheader {
-									font-size: 12px
-								}
+								.notice .layout-pagination {margin: 0}
+								.eng2 {color: #939393}
+								.xans-board-listheader {font-size: 12px}
 								</style>
 								<table width="100%" align="center" cellpadding="0"
 									cellspacing="0">
@@ -181,11 +173,9 @@
 									<tbody>
 										<tr>
 											<td class="input_txt">검색어</td>
-											<td class="stxt"><input type="checkbox"
-												name="search[name]">이름 <input type="checkbox"
-												name="search[subject]">제목 <input type="checkbox"
-												name="search[contents]">내용&nbsp;</td>
-											<td class="input_txt">&nbsp;</td>
+											<td class="stxt">
+											<input type="checkbox" name="search[subject]">제목 
+											<input type="checkbox" name="search[contents]">내용</td>
 											<td>
 												<div class="search_bt">
 													<a href="javascript:document.frmList.submit()"><img

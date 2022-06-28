@@ -264,7 +264,8 @@ ol, ul {
 	overflow: hidden;
 	float: left;
 	width: 124px;
-	height: 55px; padding : 16px 0 0;
+	height: 55px;
+	padding: 16px 0 0;
 	font-size: 16px;
 	color: #333;
 	line-height: 20px;
@@ -1044,6 +1045,7 @@ div, th, td, li, dt, dd, p {
 #userMenu {
 	width: 1050px;
 	margin: 0 auto;
+	user-select: none
 }
 
 #userMenu * {
@@ -1441,13 +1443,62 @@ div, th, td, li, dt, dd, p {
 
 /* 홈페이지 메인영역 */
 .homeMain {
-	max-width:1900px !important;
+	max-width: 1900px !important;
+	user-select: none;
 }
 
 /* bestseller */
 .bookAuthor {
 	width: 140px;
 	white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* 상품검색목록 */
+.cartImageDiv {
+	position: absolute;
+	z-index: 300;
+	display: block;
+	right: 16px;
+	bottom: 160px;
+	width: 45px;
+	height: 45px;
+}
+
+.cartImageBtn {
+	display: block;
+	border: 0px;
+	background: none;
+	outline: 0px;
+	user-select: none;
+}
+
+.cartImage {
+	display: block;
+	width: 45px;
+	height: 45px;
+	vertical-align: top;
+	max-width: 100%;
+}
+
+/* 개별상품페이지 */
+.btn_share {
+	display: block;
+	position: relative;
+}
+
+#btnShare {
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 40px;
+	height: 40px;
+	border: 0;
+	background:
+		url(https://res.kurly.com/mobile/service/goodsview/1910/ico_view_sns.png)
+		no-repeat 50% 50%;
+	font-size: 0;
+	text-indent: -9999px;
 }
