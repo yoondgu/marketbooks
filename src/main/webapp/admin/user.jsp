@@ -129,8 +129,8 @@
 	   				<th><%=item.getBook().getTitle() %></th>
 	   				<th><%=item.getQuantity() %></th>
 	   				<th><%=item.getPrice() %>*<%=item.getQuantity() %>원</th>
-	   				<!-- 주문 상태 : 주문취소/입금대기/배송완료/입금대기
-	   				<th><%--=item.getOrder().getStatus() --%></th> -->
+	   				<!-- 주문 상태 : 주문취소/입금대기/배송완료/입금대기 -->
+	   				<th><%=item.getOrder().getStatus()%></th> 
 	   				<th><%=item.getCreatedDate() %></th>
 	 			</tr>
 	 		<%
