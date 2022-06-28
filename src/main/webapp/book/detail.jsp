@@ -169,8 +169,8 @@
 			
   			<!-- 장바구니, 구매버튼 -->
 			<div class="m-3 float-end">
-				<button class="btn btn-primary me-2" href="/marketbooks/cart/list.jsp" onclick="">장바구니 담기</button>
-				<button class="btn btn-primary" href="" onclick="">바로구매</button>
+				<button class="btn btn-primary me-2" onclick="location.href='/marketbooks/cart/list.jsp'" onclick="">장바구니 담기</button>
+				<button class="btn btn-primary" onclick="location.href=''">바로구매</button>
 			</div>
   			
    		</div>
