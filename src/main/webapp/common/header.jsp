@@ -113,8 +113,8 @@
 								</ul>
 							</li>
 							<li class="menu2">
-							 	<a href="/marketbooks/book/newlist.jsp" class="link new ">
-							 		<span class="txt">신상품</span>
+							 	<a href="/marketbooks/book/new.jsp" class="link new ">
+							 		<span class="txt">신작</span>
 								</a>
 							 </li>
 							 <li class="menu3">

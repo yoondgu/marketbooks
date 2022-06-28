@@ -53,6 +53,13 @@
 	<div class="">
 		<div class="row m-5">
 			<span class="text-center fs-2"><%=categoryName %></span>
+		<%
+			if (!keyword.isEmpty()) {
+		%>
+			<span class="text-end">"<%=keyword %>" 총 <%=bookDao.getTotalRows(keyword) %> 개가 검색되었습니다.</span>
+		<%
+			}
+		%>
 		</div>
 	
 		<div class="row">

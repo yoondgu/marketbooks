@@ -19,6 +19,36 @@ public class BookDao {
 	}
 
 	private DaoHelper helper = DaoHelper.getInstance();
+	
+	public List<Book> getNewBooks(int beginIndex, int endIndex) throws SQLException {
+		String sql = "select B.book_no, B.category_no, C.category_name, B.book_title, B.book_author, B.book_discount_price, B.book_price, B.book_created_date "
+				   + "from (select book_no, category_no, book_title, book_author, book_discount_price, book_price, book_created_date, "
+				   + "             row_number() over (order by book_no desc) row_number " 
+				   + "      from hta_books "
+				   + "      where book_deleted = 'N') B, hta_book_categories C "
+				   + "where B.row_number >= ? and B.row_number <= ? " 
+				   + "and B.category_no = C.category_no "
+				   + "and to_char(book_created_date, 'YYYYMMDD')>'20220301' "
+				   + "order by B.book_no asc ";
+
+		return helper.selectList(sql, rs -> {
+			Book book = new Book();
+			book.setNo(rs.getInt("book_no"));
+
+			Category category = new Category();
+			category.setNo(rs.getInt("category_no"));
+			category.setName(rs.getString("category_name"));
+
+			book.setCategoryNo(rs.getInt("category_no"));
+			book.setTitle(rs.getString("book_title"));
+			book.setAuthor(rs.getString("book_author"));
+			book.setPrice(rs.getInt("book_price"));
+			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setCreatedDate(rs.getDate("book_created_date"));
+
+			return book;
+		}, beginIndex, endIndex);
+	}
 
 	public List<Book> getBooks(int beginIndex, int endIndex) throws SQLException {
 		String sql = "select B.book_no, B.category_no, C.category_name, B.book_title, B.book_author, B.book_discount_price, B.book_price, B.book_created_date "
