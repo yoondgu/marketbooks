@@ -205,4 +205,56 @@ public class OrderDao {
 			
 			return orderList;
 	}
+	
+	/**
+	 * 최근 주문정보 객체 3개를 반환합니다.
+	 * @return 최근 주문정보 객체 3개
+	 * @throws SQLException
+	 */
+	public List<Order> getRecentOrders() throws SQLException {
+		String sql = "select o.order_no, o.order_title, o.order_total_price, o.order_total_quantity, o.order_created_date, o.order_updated_date, o.order_status, o.address_no, o.order_total_pay_price, o.is_free_shipping, o.order_pay_method, "
+				   + "u.user_no, u.user_name, u.user_email "
+				   + "from (select order_no, user_no, order_title, order_total_price, order_total_quantity, order_created_date, order_updated_date, order_status, address_no, order_total_pay_price, is_free_shipping, order_pay_method, "
+				   + "             row_number() over (order by order_no desc) row_number\r\n"
+				   + "      from hta_orders) o, hta_users u "
+				   + "where o.user_no = u.user_no "
+				   + "and row_number >= ? and row_number <= ? ";
+		
+		List<Order> recentOrder = new ArrayList<>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(sql);
+		pstmt.setInt(1, 1);
+		pstmt.setInt(2, 3);
+		ResultSet rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+			Order order = new Order();
+			order.setNo(rs.getInt("order_no"));
+			order.setUserNo(rs.getInt("user_no"));
+			order.setTitle(rs.getString("order_title"));
+			order.setTotalPrice(rs.getInt("order_total_price"));
+			order.setTotalPayPrice(rs.getInt("order_total_pay_price"));
+			order.setTotalQuantity(rs.getInt("order_total_quantity"));
+			order.setCreatedDate(rs.getDate("order_created_date"));
+			order.setUpdatedDate(rs.getDate("order_updated_date"));
+			order.setStatus(rs.getString("order_status"));
+			order.setPayMethod(rs.getString("order_pay_method"));
+			order.setAddressNo(rs.getInt("address_no"));
+			order.setIsFreeShipping(rs.getString("is_free_shipping"));
+			
+			User user = new User();
+			user.setName(rs.getString("user_name"));
+			user.setEmail(rs.getString("user_email"));
+			order.setUser(user);
+		
+			recentOrder.add(order);
+		}
+		
+		rs.close();
+		connection.close();
+		pstmt.close();
+		
+		return recentOrder;
+}
 }

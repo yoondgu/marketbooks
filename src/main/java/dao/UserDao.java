@@ -1,8 +1,13 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import helper.DaoHelper;
+import util.ConnectionUtil;
 import vo.User;
 import vo.UserAddress;
 
@@ -84,6 +89,9 @@ public class UserDao {
 				address.setDetailAddress(rs.getString("user_detail_address"));
 				address.setPostalCode(rs.getInt("postal_code"));
 				user.setAddress(address);
+			} else {
+				// 배송정보가 없는 경우에 어떻게 처리할까..?
+				
 			}
 			
 			return user;
@@ -138,7 +146,50 @@ public class UserDao {
 				   + "		user_default_ad_no = ? "
 				   + "where user_no = ?";
 		
+		helper.update(sql, user.getEmail(), user.getPassword(), user.getName(), user.getTel(), user.getDeleted(), user.getCreatedDate(), 
+				user.getAddress() == null ? null : user.getAddress().getNo(), user.getNo());
 
-				   
+	}
+	
+	/**
+	 * 최근에 가입한 회원정보 객체 3개를 반환합니다.
+	 * @return 최근 회원정보 객체 3개
+	 * @throws SQLException
+	 */
+	public List<User> getRecentUsers() throws SQLException {
+		String sql = "select user_no, user_email, user_name, user_tel, user_deleted, user_created_date, user_updated_date "
+				   + "from (select row_number() over (order by user_no desc) row_number, user_no, user_email, "
+				   + "		 user_name, user_tel, user_deleted, user_created_date, user_updated_date "
+				   + "		from hta_users "
+				   + "		where user_email != 'admin@gmail.com' "
+				   + "		and user_deleted = 'N') "
+				   + "where row_number >= ? and row_number <= ? ";
+		
+		List<User> recentUser = new ArrayList<>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(sql);
+		pstmt.setInt(1, 1);
+		pstmt.setInt(2, 3);
+		ResultSet rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+			User user = new User();
+			user.setNo(rs.getInt("user_no"));
+			user.setEmail(rs.getString("user_email"));
+			user.setName(rs.getString("user_name"));
+			user.setTel(rs.getString("user_tel"));
+			user.setDeleted(rs.getString("user_deleted"));
+			user.setCreatedDate(rs.getDate("user_created_date"));
+			user.setUpdatedDate(rs.getDate("user_updated_date"));
+			
+			recentUser.add(user);
+		}
+		
+		rs.close();
+		connection.close();
+		pstmt.close();
+		
+		return recentUser;
 	}
 }
