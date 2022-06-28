@@ -216,9 +216,9 @@
 							이 배송지번호는 히든 태그에 저장되어 주문 폼 제출 시 전달된다.-->
 						<h6 class="card-title mb-3"><strong>배송지</strong></h6>
 					<!-- 스크립트에서 로컬스토리지에 저장된 선택배송지번호에 대한 검사를 ajax로 실행해서 주문번호 객체를 획득후 태그에 정보를 출력한다. -->
-						<p id="none-selcted-message">배송지를 선택하세요.</p>
-						<div class="mb-1 ms-0" id="defAddress-tag"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
-						<p class="lh-base" id="address-info"></p>
+						<p class="d-none" id="none-selected-message">배송지를 선택하세요.</p>
+						<div class="d-none mb-1 ms-0" id="defAddress-tag"><span class="text-muted text-bg-light rounded p-1">기본 배송지</span></div>
+						<p class="d-none lh-base" id="address-info"></p>
 						<div class="d-grid gap-2">
 							<button class="btn btn-sm" style="border-color:#5f0080; color:#5f0080;"
 							onclick="submitFormNewWindow('addressList.jsp', 'addressList');">배송지 변경</button>
@@ -255,7 +255,7 @@
 	
 	// 서버에서는 사용자가 해당 배송지번호를 가지고 있는지 검사해서, 존재여부와 배송지정보를 응답한다.
 	// 유효하면 그 배송지정보를, 유효하지 않으면 기본배송지정보를, 기본배송지정보도 없을 경우 존재여부만 전달한다.
-	let noneSelected = document.getElementById("none-selcted-message");
+	let noneSelected = document.getElementById("none-selected-message");
 	let defAddrTag = document.getElementById("defAddress-tag");
 	let addressInfo = document.getElementById("address-info");
 	
@@ -268,10 +268,6 @@
 			// 존재, 배송지정보 받은 경우: 배송지정보 내용입력, 태그 활성화
 			//		이 때 배송지번호가 input에 저장된 기본배송지번호랑 같으면 기본배송지태그 활성화
 			// 존재x, 배송지정보 받은 경우: 로컬스토리지에 저장, 기본배송지태그, 배송지정보 내용입력, 활성화
-			noneSelected.classList.add("d-none");
-			defAddrTag.classList.add("d-none");
-			addressInfo.classList.add("d-none");
-			
 			let addr = result.address;
 			if (addr != null) {
 				
