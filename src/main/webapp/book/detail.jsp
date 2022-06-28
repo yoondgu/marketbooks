@@ -178,7 +178,7 @@
    
    <!-- 설명글 -->
    <div class="row m-3">
-   		<p class="fs-6">설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.설명글이 적히는 공간입니다.</p>
+   		<span class="ms-3 mt-2 book-description"><%=book.getDescription() %></span>
    </div>
    
    <!-- 리뷰 -->   

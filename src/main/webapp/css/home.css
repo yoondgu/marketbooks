@@ -1502,3 +1502,9 @@ div, th, td, li, dt, dd, p {
 	font-size: 0;
 	text-indent: -9999px;
 }
+.book-description {
+	overflow: hidden;
+    font-size: 17px;
+    line-height: 26px;
+    word-break: keep-all;
+}
