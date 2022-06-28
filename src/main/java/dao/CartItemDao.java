@@ -62,7 +62,7 @@ public class CartItemDao {
 	 * @param bookNo 도서번호
 	 * @return 장바구니 수량, 장바구니 아이템이 존재하지 않을 경우 0을 반환한다.
 	 */
-	public int getCartItemQuantityByBookNo(int bookNo) throws SQLException {
+	public Integer getCartItemQuantityByBookNo(int bookNo) throws SQLException {
 		String sql = "SELECT CART_ITEM_QUANTITY QTY "
 					+ "FROM HTA_CART_ITEMS "
 					+ "WHERE BOOK_NO = ? ";

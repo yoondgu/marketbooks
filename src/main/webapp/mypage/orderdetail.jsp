@@ -115,7 +115,7 @@
 								<span class="px-1"><%=item.getQuantity() %>권</span>
 							</td>
 							<td class="align-middle text-center">
-								<a href="#" class="btn btn-sm w-100 mb-1" style="background-color:#5f0080; color:#fff;" data-bs-toggle="modal" onclick="writeReview(<%=item.getBook().getNo() %>);">후기쓰기</a>
+								<a href="#" class="btn btn-sm w-100 mb-1" style="background-color:#5f0080; color:#fff;" data-bs-toggle="modal">후기쓰기</a>
 								<a href="#addCart" class="btn btn-sm w-100" style="color:#5f0080; border-color:#5f0080;" 
 								onclick="saveBookInfo(<%=item.getBook().getNo() %>, '<%=item.getBook().getTitle() %>', '<%=item.getBook().getAuthor() %>');">
 									장바구니담기
@@ -130,7 +130,7 @@
 				<div class="row p-3 mx-auto">
 					<div class="col text-center">
 						<a href="#addAllCarts" class="btn btn-sm fw-bold p-3" style="border-color:#5f0080; color:#5f0080;" data-bs-toggle="modal">전체 상품 다시 담기</a>
-						<a href="#cancelOrder" class="btn btn-sm fw-bold p-3 <%="배송준비중".equals(order.getStatus()) || "배송중".equals(order.getStatus()) || "배송완료".equals(order.getStatus()) ? "d-none" : "" %>" 
+						<a href="#cancelOrder" class="btn btn-sm fw-bold p-3 <%="배송준비중".equals(order.getStatus()) || "배송중".equals(order.getStatus()) || "배송완료".equals(order.getStatus()) || "주문취소".equals(order.getStatus()) ? "disabled" : "" %>" 
 							style="background-color:#5f0080; color:#fff;" data-bs-toggle="modal">
 							전체 상품 주문 취소
 						</a>
@@ -405,7 +405,7 @@
 				let result = JSON.parse(jsonText);
 				// 성공이면 addResultModal에 내용 넣기
 				if (result.success) {
-					let span = document.querySelector("#addCartResult #result-quantity");
+					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
 					let message = document.querySelector("#addCartResult-message");
@@ -447,7 +447,7 @@
 				let result = JSON.parse(jsonText);
 				// 성공이면 addResultModal에 내용 넣기
 				if (result.success) {
-					let span = document.querySelector("#addCartResult #result-quantity");
+					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
 					let message = document.querySelector("#addCartResult-message");
@@ -480,8 +480,11 @@
 				if (!result.success) {
 					return;
 				} 
+				// 재요청 대신 html 변경하고 모달 띄움..
 				let statusElement = document.getElementById("orderStatus");
-				statusElement.textContent = "(주문취소)"; // 재요청 대신 html 변경하고 모달 띄움..
+				statusElement.textContent = "(주문취소)"; 
+				let buttonElement = document.querySelector("a[href='#cancelOrder']");
+				buttonElement.classList.add("disabled");
 				cancelResultModal.show();
 			}
 		}

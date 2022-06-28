@@ -51,7 +51,12 @@
 			}
 
 			// 기존 담겨있는 것을 포함해서 총 변경될, 장바구니에 담긴 수량이 재고보다 크면 실패로 응답해서, 모달창에서 내용을 알린다.
-			int totalQuantity = cartItemDao.getCartItemQuantityByBookNo(bookNo) + quantity;
+			int previousQuantity = 0;
+			if (cartItemDao.getCartItemQuantityByBookNo(bookNo) != null) {
+				previousQuantity = cartItemDao.getCartItemQuantityByBookNo(bookNo);
+			}
+			
+			int totalQuantity = previousQuantity + quantity;
 			if (totalQuantity > book.getStock()) {
 				result.put("success", false);
 				break;
