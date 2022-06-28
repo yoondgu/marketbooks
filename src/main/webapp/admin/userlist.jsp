@@ -70,8 +70,8 @@
 		<div class="container">
 			<div id="main">
 				<div id="content">
-				
 					<div class="page_aticle">
+						<!-- side bar -->
 						<div id="snb" class="snb_cc">
 							<h2 class="tit_snb">관리자메뉴</h2>
 							<div class="inner_snb">
@@ -83,7 +83,7 @@
 								</ul>
 							</div>
 						</div>
-						
+						<!-- main -->
 						<div class="page_section">
 							<div class="head_aticle">
 								<h2 class="tit">전체회원관리<span class="tit_sub">모든 회원을 관리할 수 있는 페이지 입니다.</span>

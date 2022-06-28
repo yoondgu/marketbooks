@@ -74,7 +74,7 @@
 							<h2 class="tit_snb">관리자메뉴</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li class="on"><a href="userlist.jsp">회원관리</a></li>
+									<li><a href="userlist.jsp">회원관리</a></li>
 									<li><a href="booklist.jsp">도서관리</a></li>
 									<li><a href="inquirylist.jsp">문의관리</a></li>
 									<li><a href="orderlist.jsp">주문관리</a></li>
