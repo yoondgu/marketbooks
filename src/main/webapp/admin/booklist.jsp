@@ -33,9 +33,6 @@
         font-size: 12px;
         max-width: 100%;
 	}
-	a :hover {
-		background-color:red;
-	}
 	.pagediv {
 		font-family: noto sans,malgun gothic,AppleGothic,dotum;
         line-height: 1;
@@ -106,13 +103,13 @@
 							</div>
 							
 	   <%
+	   		// 페이징처리
 	   		int currentPage = StringUtil.stringToInt(request.getParameter("page"));
-	   		BookDao bookDao = BookDao.getInstance();
 	   		
+	   		BookDao bookDao = BookDao.getInstance();
 	   		int totalRows = bookDao.getTotalRows();
 	   		
 	   		Pagination pagination = new Pagination(totalRows, currentPage);
-	   		
 	   		List<Book> bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
 	   %> 
 						  
@@ -191,49 +188,28 @@
 			<nav>
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
-						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() -1%>)">이전</a>
+						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="booklist.jsp?page=<%=pagination.getCurrentPage() -1%>">이전</a>
 					</li>
 				<%
 					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
 				%>
 					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
-						<a class="page-link" href="javascript:changePageNo(<%=num %>)"><%=num %></a>
+						<a class="page-link" href="booklist.jsp?page=<%=num %>"><%=num %></a>
 					</li>
 				<%
 					}
 				%>
 					<li class="page-item">	
-						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() +1%>)">다음</a>
+						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="booklist.jsp?page=<%=pagination.getCurrentPage() +1%>">다음</a>
 					</li>
 				</ul>
-			</nav>
+	      </nav>
 		</div>
 	</div>
-		<form id = "search-form" method="get" action="booklist.jsp">
-			<input type="hidden" name="page" />
-	  		<div class="d-flex mb-3">
-				<div class="me-auto p-2"></div>
-				<div class="p-2">
-					<input class="form-control" style="width: 220px" type="text" name="keyword" value="" placeholder="검색어를 입력하세요." />
-				</div>
-				<div class="p-2">
-					<button type="button" style="width: 60px" class="btn btn-outline-primary" onclick="searchKeyword()">검색</button>
-				</div>
-			</div>
-		</form>
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-	function changePageNo(pageNo) {
-		document.querySelector("input[name=page]").value = pageNo;
-		document.getElementById("search-form").submit();
-	}
-	function searchKeyword() {
-		document.querySelector("input[name=page]").value = 1;
-		document.getElementById("search-form").submit();
-	}
-</script>
+
 				</div>
 			</div>
 		</div>

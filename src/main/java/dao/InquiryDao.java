@@ -9,6 +9,7 @@ import java.util.List;
 
 import dto.InquiryDto;
 import helper.DaoHelper;
+import util.ConnectionUtil;
 import vo.Inquiry;
 
 public class InquiryDao {
@@ -286,4 +287,45 @@ public class InquiryDao {
 	    helper.update(sql, inquiry.getTitle(), inquiry.getContent(), inquiry.getDeleted(), inquiry.getAnswerContent(), inquiry.getAnswerStatus(), inquiry.getNo());
 	}
 	
+	public List<InquiryDto> getRecentInquiries() throws SQLException {
+		String sql = "SELECT I.INQUIRY_NO, U.USER_NO, U.USER_NAME, I.INQUIRY_TITLE, I.INQUIRY_CONTENT, I.INQUIRY_DELETED, I.INQUIRY_CREATED_DATE, I.INQUIRY_UPDATED_DATE, I.INQUIRY_ANSWER_CONTENT,I.INQUIRY_ANSWER_CREATED_DATE, I.INQUIRY_ANSWER_UPDATED_DATE, I.INQUIRY_ANSWER_STATUS "
+				   + "FROM (SELECT INQUIRY_NO, USER_NO, INQUIRY_TITLE, INQUIRY_CONTENT, INQUIRY_DELETED, INQUIRY_CREATED_DATE, INQUIRY_UPDATED_DATE, INQUIRY_ANSWER_CONTENT, INQUIRY_ANSWER_CREATED_DATE, INQUIRY_ANSWER_UPDATED_DATE, INQUIRY_ANSWER_STATUS, "
+				   + "		ROW_NUMBER() OVER (ORDER BY INQUIRY_NO DESC) ROW_NUMBER "
+				   + "		FROM HTA_INQUIRIES WHERE INQUIRY_DELETED = 'N') I , HTA_USERS U "
+				   + "WHERE I.USER_NO = U.USER_NO "
+				   + "AND I.ROW_NUMBER >= ? AND I.ROW_NUMBER <= ? "
+				   + "ORDER BY I.INQUIRY_NO DESC ";
+		
+		List<InquiryDto> recentInq = new ArrayList<>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(sql);
+		pstmt.setInt(1, 1);
+		pstmt.setInt(2, 3);
+		ResultSet rs = pstmt.executeQuery();
+
+		while (rs.next()) {
+			InquiryDto inquiry = new InquiryDto();
+					
+			inquiry.setNo(rs.getInt("inquiry_no"));
+			inquiry.setUserNo(rs.getInt("user_no"));
+			inquiry.setUserName(rs.getString("user_name"));
+			inquiry.setTitle(rs.getString("inquiry_title"));
+			inquiry.setContent(rs.getString("inquiry_content"));
+			inquiry.setDeleted(rs.getString("inquiry_deleted"));
+			inquiry.setCreatedDate(rs.getDate("inquiry_created_date"));
+			inquiry.setUpdatedDate(rs.getDate("inquiry_updated_date"));
+			inquiry.setAnswerContent(rs.getString("inquiry_answer_content"));
+			inquiry.setAnswerCreatedDate(rs.getDate("inquiry_answer_created_date"));
+			inquiry.setAnswerUpdatedDate(rs.getDate("inquiry_answer_updated_date"));
+			inquiry.setAnswerStatus(rs.getString("inquiry_answer_status"));
+			
+			recentInq.add(inquiry);
+		}
+		rs.close();
+		connection.close();
+		pstmt.close();
+		
+		return recentInq;
+	}
 }
