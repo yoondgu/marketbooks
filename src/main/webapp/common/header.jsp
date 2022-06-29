@@ -210,7 +210,7 @@ function goLoginPage() {
 }
 
 function goAddressPage() {
-	location.href="/marketbooks/mypage/addressList.jsp";
+	window.open("/marketbooks/cart/addressList.jsp?location=mypage", 'addressForm', 'width=500,height=750');
 }
 
 

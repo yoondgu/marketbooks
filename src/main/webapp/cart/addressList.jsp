@@ -44,6 +44,9 @@
 	}
 	int userNo = user.getNo();
 	
+	// 홈 화면에서 이 페이지를 요청했을 때는 location=mypage 값을 전달받아서 창이 닫히면 mypage의 addressList로 가도록 한다.
+	String location = StringUtil.nullToBlank(request.getParameter("location"));
+	
 	// 사용자의 기본 배송지 번호 획득
 	int defAddressNo = 0;
 	if (user.getAddress() != null) {
@@ -78,6 +81,7 @@
 		<!-- 배송지 변경, 저장, 삭제 창에서는 선택 배송지번호를 폼으로 주고받을 것이므로 저장해야 한다. -->
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
 		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo"/>
+		<input type="hidden" name="location" id="hidden-location" value="<%=location %>"/>
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -148,7 +152,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
-
+	
 	// 로컬스토리지에 저장된 선택배송지번호를 전역변수로 선언 
 	let selectedAddrNo = localStorage.getItem('selectedAddressNo');
 	
@@ -198,9 +202,17 @@
 		
 		// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 		// 다른 페이지를 거칠 필요 없이, 체크박스아이템번호와 변경된 선택된 배송지번호가 제출되어 화면에 반영된다.
-		window.opener.name = 'parentName'
-		form.setAttribute("target", 'parentName');
-		form.setAttribute("action", 'list.jsp');
+		// location=mypage일 경우에는 마이페이지의 addressList.jsp로 제출한다.
+		let location = document.getElementById("hidden-location").value;
+		if (location === "mypage") {
+			window.opener.name = 'parentName'
+			form.setAttribute("target", 'parentName');
+			form.setAttribute("action", '../mypage/addressList.jsp');
+		} else {
+			window.opener.name = 'parentName'
+			form.setAttribute("target", 'parentName');
+			form.setAttribute("action", 'list.jsp');
+		}
 
 		form.submit();
 		window.close();
