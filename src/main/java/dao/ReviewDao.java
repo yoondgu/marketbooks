@@ -79,8 +79,8 @@ private DaoHelper helper = DaoHelper.getInstance();
 	 * @throws SQLException
 	 */
 	public List<Review> getReviewsByNo(int bookNo, int beginIndex, int endIndex) throws SQLException {
-		String sql = "SELECT R.REVIEW_NO, R.REVIEW_TITLE, R.REVIEW_CONTENT, R.BOOK_NO, R.USER_NO, U.USER_NAME, R.REVIEW_DELETED, R.REVIEW_CREATED_DATE, R.REVIEW_UPDATED_DATE, R.REVIEW_VIEWCOUNT "
-				   + "FROM (SELECT REVIEW_NO, REVIEW_TITLE, REVIEW_CONTENT, BOOK_NO, USER_NO, REVIEW_DELETED, REVIEW_CREATED_DATE, REVIEW_UPDATED_DATE, REVIEW_VIEWCOUNT, "
+		String sql = "SELECT R.REVIEW_NO, R.REVIEW_TITLE, R.REVIEW_CONTENT, R.BOOK_NO, R.USER_NO, U.USER_NAME, R.REVIEW_DELETED, R.REVIEW_CREATED_DATE, R.REVIEW_UPDATED_DATE "
+				   + "FROM (SELECT REVIEW_NO, REVIEW_TITLE, REVIEW_CONTENT, BOOK_NO, USER_NO, REVIEW_DELETED, REVIEW_CREATED_DATE, REVIEW_UPDATED_DATE, "
 				   + "ROW_NUMBER() OVER (ORDER BY REVIEW_NO DESC) R "
 				   + "FROM HTA_BOOK_REVIEWS "
 				   + "WHERE REVIEW_DELETED ='N' "
@@ -105,7 +105,6 @@ private DaoHelper helper = DaoHelper.getInstance();
 			review.setDeleted(rs.getString("review_deleted"));
 			review.setReviewCreatedDate(rs.getDate("review_created_date"));
 			review.setReviewUpdatedDate(rs.getDate("review_updated_date"));
-			review.setReviewViewcount(rs.getInt("review_viewcount"));
 			
 			return review;
 		},bookNo, beginIndex, endIndex);

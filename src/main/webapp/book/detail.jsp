@@ -20,53 +20,6 @@
 <link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"	type="image/x-icon">
 <link href="../css/home.css" rel="stylesheet">
 <link href="../css/board.css" rel="stylesheet">
-<style>
-#modal_btn {
-    width: 500px;
-    height: 100px;
-}
-
-.modal_wrap {
-    display: none;
-    width: 500px;
-    height: 500px;
-    position: absolute;
-    border: 2px solid black;
-    top:50%;
-    left: 50%;
-    margin: -250px 0 0 -250px;
-    background:#eee;
-    z-index: 2;
-}
-.modal_background {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color:rgba(0, 0,0, 0.5);
-    top:0;
-    left: 0;
-    z-index: 1;
-}
-.modal_close {
-    width: 26px;
-    height: 26px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.modal_wrap .text {
-    margin-top: 45px;
-    margin-left: 5px;
-}
-
-.modal_close .closeImg {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-</style>
 </head>
 <body>
 <!-- header -->
@@ -199,7 +152,7 @@
    </div>
    
    <!-- 리뷰 -->   
-   	<div class="page_section">
+   	<div class="row">
 							<div class="head_aticle">
 								<h2 class="tit">
 									PRODUCT REVIEW <span class="tit_sub">상품에 대한 문의를 남기는 공간입니다. 해당 게시판의 성격과 다른 글은 사전동의 없이 담당 게시판으로 이동될 수 있습니다.</span>
@@ -298,12 +251,10 @@
 										</a>
 									</div>
 								</div>
+							</form>
+	</div>
 </div>
-
-<!-- footer -->
-<jsp:include page="../common/footer.jsp">
-	<jsp:param name="menu" value="home" />
-</jsp:include>
+<div style="height:20px"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 	/*
