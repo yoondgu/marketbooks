@@ -19,7 +19,54 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png"	type="image/x-icon">
 <link href="../css/home.css" rel="stylesheet">
-<link href="../css/board.css?" rel="stylesheet">
+<link href="../css/board.css" rel="stylesheet">
+<style>
+#modal_btn {
+    width: 500px;
+    height: 100px;
+}
+
+.modal_wrap {
+    display: none;
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    border: 2px solid black;
+    top:50%;
+    left: 50%;
+    margin: -250px 0 0 -250px;
+    background:#eee;
+    z-index: 2;
+}
+.modal_background {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0, 0,0, 0.5);
+    top:0;
+    left: 0;
+    z-index: 1;
+}
+.modal_close {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.modal_wrap .text {
+    margin-top: 45px;
+    margin-left: 5px;
+}
+
+.modal_close .closeImg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+</style>
 </head>
 <body>
 <!-- header -->
@@ -232,10 +279,9 @@
 														<thead>
 															<tr>
 																<th>번호</th>
-																<th>제목</th>
+																<th>한줄리뷰</th>
 																<th>작성자</th>
 																<th>작성일</th>
-																<th>조회</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -244,13 +290,9 @@
 														%>
 															<tr>
 																<td width="50" nowrap="" align="center"><%=review.getNo()%></td>
-																<td
-																	style="padding-left: 10px; text-align: left; color: #999">
-																	<a href=""><b><%=review.getTitle() %></b></a>
-																</td>
+																<td style="padding-left: 10px; color: #999"><b><%=review.getTitle() %></b></td>
 																<td width="100" nowrap="" align="center"><%=review.getWriter().getName() %></td>
 																<td width="100" nowrap="" align="center" class="eng2"><%=review.getReviewCreatedDate()%></td>
-																<td width="30" nowrap="" align="center" class="eng2"><%=review.getReviewViewcount()%></td>
 															</tr>
 														<%
 														}
@@ -262,13 +304,16 @@
 										</tr>
 									</tbody>
 								</table>
+								
 								<table width="100%">
 
 									<tbody>
 										<tr>
-											<td align="right"><a href="/marketbooks/book/reviewform.jsp">
-													<span class="bhs_button yb" style="float: none;">후기작성</span>
-											</a></td>
+											<td align="right">
+											<a href="">
+											<span class="bhs_button yb" style="float: none;">후기작성</span>
+											</a>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -292,7 +337,6 @@
 										</a>
 									</div>
 								</div>
-   
    <!-- 기본정보 -->
    <!-- 이벤트 -->
    <!-- 책소개 -->
@@ -310,20 +354,12 @@
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-  
-function clickPageNo(pageNo) {
-	document.querySelector("input[name=bookNo]").value = document.querySelector("input[name=bookNo]").value;
-	document.querySelector("input[name=page]").value = pageNo;
-	document.getElementById("frmList").submit();
-}
-
 	/*
 	'장바구니 담기' 버튼을 누르면 해당 도서정보를 전달받고, addCartModal 모달 창 태그에 정보를 출력한 뒤, 모달을 연다.
 	해당 모달은 수량을 입력받기 위한 창이다.
 	*/
 	function saveBookInfo(bookNo, bookTitle, bookAuthor, discountPrice) {
-	
-		let bookNoElement = document.querySelector("input[name=addBookNo]");
+		bookNoElement = document.querySelector("input[name=addBookNo]");
 		bookNoElement.value = bookNo;
 		let bookPriceElement = document.querySelector("input[name=discountPrice]");
 		bookPriceElement.value = discountPrice;
@@ -339,7 +375,11 @@ function clickPageNo(pageNo) {
 		
 		addCartModal.show();
 	}
-
+	function clickPageNo(pageNo) {
+		document.querySelector("input[name=bookNo]").value = document.querySelector("input[name=bookNo]").value;
+		document.querySelector("input[name=page]").value = pageNo;
+		document.getElementById("frmList").submit();
+	}
 </script>
 <!-- 장바구니 모달 파일 : 모달 html, script 포함되어있으므로 가장 아래에 include할 것 -->
 <jsp:include page="../common/cartModal.jsp"/>
