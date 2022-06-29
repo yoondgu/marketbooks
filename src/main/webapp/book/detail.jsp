@@ -176,7 +176,9 @@
 			
   			<!-- 장바구니, 구매버튼 -->
 			<div class="m-3 float-end">
-				<button class="btn btn-primary me-2" href="/marketbooks/cart/list.jsp" onclick="">장바구니 담기</button>
+				<!-- 장바구니 담기 : cartModal.jsp로 임포트한 #addCart 모달을 열고, 책 정보를 전달한다. 모달에서 수량 입력 후 담기 누르면 cart/add.jsp로 이동 -->
+				<button class="btn btn-primary me-2" href="#addCart" onclick="saveBookInfo(<%=book.getNo() %>, '<%=book.getTitle() %>', '<%=book.getAuthor() %>', <%=book.getDiscountPrice() %>);">장바구니 담기</button>
+				<!-- 바로구매 기능은 제공하지 않는다. -->
 				<button class="btn btn-primary" href="" onclick="">바로구매</button>
 			</div>
   			
@@ -307,12 +309,39 @@
 	<jsp:param name="menu" value="home" />
 </jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
+<script type="text/javascript">
+  
 function clickPageNo(pageNo) {
 	document.querySelector("input[name=bookNo]").value = document.querySelector("input[name=bookNo]").value;
 	document.querySelector("input[name=page]").value = pageNo;
 	document.getElementById("frmList").submit();
 }
+
+	/*
+	'장바구니 담기' 버튼을 누르면 해당 도서정보를 전달받고, addCartModal 모달 창 태그에 정보를 출력한 뒤, 모달을 연다.
+	해당 모달은 수량을 입력받기 위한 창이다.
+	*/
+	function saveBookInfo(bookNo, bookTitle, bookAuthor, discountPrice) {
+	
+		let bookNoElement = document.querySelector("input[name=addBookNo]");
+		bookNoElement.value = bookNo;
+		let bookPriceElement = document.querySelector("input[name=discountPrice]");
+		bookPriceElement.value = discountPrice;
+		
+		let img = document.getElementById("addBookImg");
+		img.src = "/marketbooks/images/bookcover/book-" + bookNo + ".jpg";
+		let bookTitleElement = document.getElementById("addBookTitle");
+		bookTitleElement.textContent = bookTitle;
+		let bookAuthorElement = document.getElementById("addBookAuthor");
+		bookAuthorElement.textContent = bookAuthor;
+		let totalPriceElement = document.getElementById("totalPrice");
+		totalPriceElement.textContent = discountPrice.toLocaleString();
+		
+		addCartModal.show();
+	}
+
 </script>
+<!-- 장바구니 모달 파일 : 모달 html, script 포함되어있으므로 가장 아래에 include할 것 -->
+<jsp:include page="../common/cartModal.jsp"/>
 </body>
 </html>

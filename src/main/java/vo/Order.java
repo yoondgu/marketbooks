@@ -16,6 +16,8 @@ public class Order {
 	private int addressNo;
 	private String isFreeShipping;
 	private String payMethod;
+	private User user;
+
 	
 	public Order() {}
 
@@ -113,6 +115,14 @@ public class Order {
 	
 	public void setPayMethod(String payMethod) {
 		this.payMethod = payMethod;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

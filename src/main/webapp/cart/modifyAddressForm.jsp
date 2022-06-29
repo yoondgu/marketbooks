@@ -4,7 +4,7 @@
 <%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,16 +37,17 @@
 		}
 		int userNo = user.getNo();
 		
-		// 수정할 배송지 번호 획득
-		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
-		
 		// 사용자의 기본 배송지 번호 획득
 		int defAddressNo = 0;
 		if (user.getAddress() != null) {
 			defAddressNo = user.getAddress().getNo();
 		}
 		
-   		// addressNo로 배송지 객체 획득하기
+		
+		// 수정할 배송지 번호 획득
+		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
+
+		// addressNo로 배송지 객체 획득하기
   		UserAddressDao userAddressDao = UserAddressDao.getInstance();
    		UserAddress userAddr = userAddressDao.getAddressByNo(addressNo);
    		

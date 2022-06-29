@@ -75,8 +75,9 @@
 	 		}
 		%>
 		<!-- 로컬스토리지, ajax에서 사용하기 위한 배송지번호 저장 -->
+		<!-- 배송지 변경, 저장, 삭제 창에서는 선택 배송지번호를 폼으로 주고받을 것이므로 저장해야 한다. -->
 		<input type="hidden" name="modifyAddressNo" id="hidden-modifyAddressNo"/>
-		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo" value="<%=defAddressNo %>"/>
+		<input type="hidden" name="selectedAddressNo" id="hidden-changeSelectedAddressNo"/>
 	   <div class="tablewrapper text-middle-center text-center">
 	   		<table class="table">
 	   			<colgroup>
@@ -148,6 +149,9 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
 
+	// 로컬스토리지에 저장된 선택배송지번호를 전역변수로 선언 
+	let selectedAddrNo = localStorage.getItem('selectedAddressNo');
+	
 	// 모든 체크박스의 클래스 중 checked를 모두 false로 만든다. 
 	let checkboxElements = document.querySelectorAll("input[id^='item-checkbox-']");
 	if (checkboxElements != null) {
@@ -157,10 +161,12 @@
 		
 		// 로컬스토리지에 선택배송지 번호가 존재한다면, 그 번호를 선택배송지로 설정한다.
 		// 배송지 번호에 해당하는 체크박스만 checked 클래스를 추가한다.
-		let selectedAddrNo = localStorage.getItem('selectedAddressNo');
 		if (selectedAddrNo != null) {
 			let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
 			selectedCheckboxElement.checked = true;
+			
+			// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
+			document.querySelector("input[name=selectedAddressNo]").value = selectedAddrNo;
 		} else {
 			// 로컬스토리지에 선택배송지 번호가 없을 경우 기본배송지를 로컬스토리지에 저장하고 checked 클래스를 추가한다.
 			let defAddressNo = document.getElementById("defAddressNo").value;
@@ -171,10 +177,15 @@
 				
 				let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
 				selectedCheckboxElement.checked = true;
+				
+				// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
+				document.querySelector("input[name=selectedAddressNo]").value = selectedAddrNo;
+			} else {
+				// 기본배송지도 존재하지 않을 경우 이 변수에는 null 대신 0을 저장한다.
+				selectedAddrNo = 0;
 			}
 		}
 	}
-
 
 	// 주문 폼에 제출할 선택 배송지를 변경한다. 부모창의 화면이 바뀌므로 부모창으로 폼 제출, 이 화면은 닫는다.
 	function changeSelectedAddress(addressNo) {

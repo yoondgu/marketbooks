@@ -146,9 +146,9 @@
 						<col width="5%">
 						<col width="10%">
 						<col width="*">
-						<col width="15%">
 						<col width="12%">
-						<col width="8%">
+						<col width="10%">
+						<col width="20%">
 						<col width="12%">
 						<col width="8%">
 					</colgroup>
@@ -176,9 +176,16 @@
 								<span id="item-publisher-<%=item.getNo() %>"><%=item.getBook().getPublisher() %></span>
 							</td>
 							<td class="align-middle">
-								<!-- 추후 레퍼런스와 유사한 + - 버튼 방식으로 수정 예정 -->
-								<input type="number" class="form-control w-100 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
+							<!-- 
+								<input type="number" class="form-control w-80 mb-3" min="1" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);"/>
+							 -->
+								<div class="col d-flex flex-start">
+									<button class="form-control btn btn-sm btn-light" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); updateQuantity(<%=item.getNo() %>);">-</button>
+									<input class="form-control form-control-lg mx-1" min="1" name="quantity" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" type="number" >
+									<button class="form-control btn btn-sm btn-light" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); updateQuantity(<%=item.getNo() %>);">+</button>						
+								</div>
 							</td>
+							
 							<td class="align-middle">
 							<%
 								int totalDiscountPrice = item.getBook().getDiscountPrice() * item.getQuantity();
@@ -233,7 +240,7 @@
 				</div>
 				<div class="d-grid gap-2">
 					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호, 선택된 배송지 번호가 orderform.jsp로 전달된다. -->
-				    <button type="button" class="btn" style="background-color:#5f0080; color:white;" onclick="submitOrderForm();">주문하기</button>
+				    <button type="button" class="btn" style="background-color:#5f0080; color:#fff;" onclick="submitOrderForm();">주문하기</button>
 				</div>
 			</div>
 		</div>
@@ -302,7 +309,13 @@
 	xhr.send();
 	
 	
-	
+	// 수량 입력폼에 엔터키를 누르면 브라우저 기본 이벤트로 submit이 발생된다. 이를 방지하기 위해 모든 엘리먼트의 keydown이벤트에 아래 함수 등록
+	document.addEventListener('keydown', function(event) {
+	  if (event.keyCode === 13) {
+	    event.preventDefault();
+	  };
+	}, true);
+
 	/*
 		all-toggle-checkbox의 체크상태가 변경되는 이벤트 핸들러 함수
         all-toggle-checkbox의 체크상태가 변경되면 input[name="book-checkbox"]의 상태를 같이 변경한다.
@@ -402,6 +415,7 @@
 		사용자가 input[type=number] 태그에서 수량을 변경할 때마다 실행되는 이벤트핸들러 함수
 	*/
 	function updateQuantity(updateItemNo) {
+		
 		// td 태그에 표시된 금액 정보를 변경한다.
 		// dao 작업: modify.jsp에 요청을 보내 DB의 카트아이템 정보를 변경한다.
 		let quantityElement = document.getElementById("item-quantity-" + updateItemNo);

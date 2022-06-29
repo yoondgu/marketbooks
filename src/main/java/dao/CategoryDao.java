@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import helper.DaoHelper;
 import vo.Category;
@@ -30,5 +31,25 @@ public class CategoryDao {
 			category.setNo(rs.getInt("category_no"));
 			return category;
 		}, bookNo);
+	}
+  
+  /**
+	 * 모든 카테고리 정보 객체를 반환한다.
+	 * @return 모든 카테고리 정보 객체
+	 * @throws SQLException
+	 */
+	public List<Category> getAllCategories() throws SQLException {
+		String sql = "select category_name, category_no "
+				   + "from HTA_BOOK_CATEGORIES "
+				   + "order by category_no asc ";
+		
+		return helper.selectList(sql, rs-> {
+			Category category = new Category();
+			category.setNo(rs.getInt("category_no"));
+			category.setName(rs.getString("category_name"));
+			
+			return category;
+		});
+				   
 	}
 }
