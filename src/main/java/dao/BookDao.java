@@ -229,15 +229,27 @@ public class BookDao {
 	}
 
 	public int getTotalRows() throws SQLException {
-		String sql = "select count(*) cnt " + "from hta_books " 
-				   + "where book_deleted = 'N' ";
-
+		String sql = "select count(*) cnt " + "from hta_books "
+				   + "where book_deleted = 'N'" ;
+		
 		return helper.selectOne(sql, rs -> {
 			return rs.getInt("cnt");
 		});
 	}
+	
+	public int getTotalRowsByCategoryName(String categoryName) throws SQLException {
+		String sql = "select count(*) cnt " + "from hta_books " 
+				   + "where book_deleted = 'N' "
+				   + "and category_no = (select category_no "
+				   + "					 from hta_book_categories "
+				   + "					 where category_name like '%' || ? || '%') ";
+		
+		return helper.selectOne(sql, rs -> {
+			return rs.getInt("cnt");
+		}, categoryName);
+	}
 
-	public int getTotalRows(String keyword) throws SQLException {
+	public int getTotalRowsByKeyword(String keyword) throws SQLException {
 		String sql = "select count(*) cnt " + "from hta_books "
 				   + "where book_deleted = 'N' and book_title like '%' || ? || '%' ";
 

@@ -1449,8 +1449,8 @@ div, th, td, li, dt, dd, p {
 
 /* 책 카드 */
 .book-card {
-	width: 330px;
-	max-width: 330px;
+	width: 320px;
+	max-width: 320px;
 }
 
 .image-box {
@@ -1472,30 +1472,14 @@ div, th, td, li, dt, dd, p {
 }
 
 /* 상품검색목록 */
-.cartImageDiv {
-	position: absolute;
-	z-index: 300;
-	display: block;
-	right: 16px;
-	bottom: 160px;
-	width: 45px;
-	height: 45px;
-}
-
-.cartImageBtn {
-	display: block;
-	border: 0px;
-	background: none;
-	outline: 0px;
-	user-select: none;
-}
-
-.cartImage {
-	display: block;
-	width: 45px;
-	height: 45px;
-	vertical-align: top;
-	max-width: 100%;
+.alignlist li:after {
+	content: "";
+    position: absolute;
+    right: 0;
+    top: 6px;
+    width: 1px;
+    height: 10px;
+    background-color: #e5e5e5;
 }
 
 /* 개별상품페이지 */
