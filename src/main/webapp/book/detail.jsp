@@ -199,7 +199,7 @@
    </div>
    
    <!-- 리뷰 -->   
-   	<div class="page_section">
+   	<div class="page_section row d-block m-3">
 							<div class="head_aticle">
 								<h2 class="tit">
 									PRODUCT REVIEW <span class="tit_sub">상품에 대한 문의를 남기는 공간입니다. 해당 게시판의 성격과 다른 글은 사전동의 없이 담당 게시판으로 이동될 수 있습니다.</span>
@@ -298,8 +298,10 @@
 										</a>
 									</div>
 								</div>
+							</form>
+	</div>
 </div>
-
+<div style="height:20px"></div>
 <!-- footer -->
 <jsp:include page="../common/footer.jsp">
 	<jsp:param name="menu" value="home" />

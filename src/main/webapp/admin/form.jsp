@@ -127,12 +127,10 @@
 								<label class="form-label">도서 설명</label>
 								<textarea rows="10" class="form-control" name="discription"></textarea>
 							</div>
-						<!--  책 이미지 업로드
 							<div class="col-12">
 								<label class="form-label">책 이미지 업로드</label>
 								<input class="form-control" type="file" name="upfile"/>
 							</div>
-						-->
 							<div class="col-12 text-end mb-3">
 								<a href="booklist.jsp" class="btn btn-secondary">취소</a>
 								<button type="submit" class="btn btn-primary">등록</button>

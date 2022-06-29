@@ -44,14 +44,13 @@
 		<div class="col mb-2 book-card" >
 			<div class="image-box mb-2">
 				<img src="/marketbooks/images/bookcover/book-<%=book.getNo()%>.jpg"
-				class="image-thumbnail" id="book-cover-img" />
+				class="image-thumbnail" id="book-cover-img" onclick="location.href='/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>'" />
 			</div>
-			<div class="text-box mb-5">
+			<div class="text-box mb-5" onclick="location.href='/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>'">
 				<h5 class="row px-4"><%=maintitle%></h5>
 				<span class="fs-6 ps-3 float-start text-danger"><%=dc%>%</span>
 				<span class="fs-6 fw-semibold fw-bold ms-3"><%=book.getDiscountPrice()%>원</span>
 				<span class="text-decoration-line-through ps-1"><%=book.getPrice()%>원</span>
-				<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class=""></a>
 			</div>
 		</div>
 	<%

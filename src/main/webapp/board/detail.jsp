@@ -142,7 +142,7 @@
 										<tr>
 										<tr>
 											<th class="table-light text-center content">답변내용</th>
-											<td><%=inquiry.getHtmlAnswerContent()%></td>>
+											<td><%=inquiry.getHtmlAnswerContent()%></td>
 										</tr>
 									</tbody>
 									</table>
