@@ -4,9 +4,19 @@
 <%@page import="java.util.List"%>
 <%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
     
     <!-- 관리자만 접속할 수 있게 합니다. -->
+<%     
+	//세션에 저장된 사용자정보를 조회한다.
+	User logineduser = (User) session.getAttribute("LOGINED_USER");
+	if(logineduser == null) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+	if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	} 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,15 +100,13 @@
 								</h2>
 							</div>
    <%
-   
+	   // 페이징처리
 	   int currentPage = StringUtil.stringToInt(request.getParameter("page"),1);
 	   
 	   UserDao userDao = UserDao.getInstance();
-	   
 	   int totalRows = userDao.getTotalRows();
 	   
 	   Pagination pagination = new Pagination(totalRows, currentPage);
-	   
 	   List<User> users = userDao.getUsers(pagination.getBeginIndex(), pagination.getEndIndex());
   
    %>
@@ -180,53 +188,29 @@
 			<nav>
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
-						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() -1%>)">이전</a>
+						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="userlist.jsp?page=<%=pagination.getCurrentPage() -1%>">이전</a>
 					</li>
-					<%
+				<%
 					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
-					%>
+				%>
 					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
-						<a class="page-link" href="javascript:changePageNo(<%=num %>)"><%=num %></a>
+						<a class="page-link" href="userlist.jsp?page=<%=num %>"><%=num %></a>
 					</li>
-					<%
+				<%
 					}
-					%>
+				%>
 					<li class="page-item">	
-						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() +1%>)">다음</a>
+						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="userlist.jsp?page=<%=pagination.getCurrentPage() +1%>">다음</a>
 					</li>
 				</ul>
-			</nav>
+	      </nav>
 		</div>
 	</div>
-   <form id = "search-form" method="get" action="userlist.jsp">
-	<div class="d-flex mb-3">
-		<div class="me-auto p-2"></div>
-		<div class="p-2">
-			<input class="form-control" style="width: 220px" type="text" name="keyword" value="" placeholder="검색어를 입력하세요." />
-		</div>
-		<div class="p-2">
-			<button type="button" style="width: 60px" class="btn btn-outline-primary" onclick="searchKeyword()">검색</button>
-		</div>
-	</div>
-	
-			<input type="hidden" name="page" />
-	</form>
 	
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-	// 페이지 변경
-	function changePageNo(pageNo) {
-		document.querySelector("input[name=page]").value = pageNo;
-		document.getElementById("search-form").submit();
-	}
-	function searchKeyword() {
-		document.querySelector("input[name=page]").value = 1;
-		document.getElementById("search-form").submit();
-	}
-</script>
-		
+
 					</div>
 				</div>
 			</div>

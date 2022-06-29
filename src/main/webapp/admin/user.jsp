@@ -8,10 +8,19 @@
 <%@page import="dao.UserDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
     
     <!-- 관리자만 접속할 수 있게 합니다. -->
-    
+<%     
+	//세션에 저장된 사용자정보를 조회한다.
+	User logineduser = (User) session.getAttribute("LOGINED_USER");
+	if(logineduser == null) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+	if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	} 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -129,6 +138,9 @@
 				 				</tr>
 				 				<tr scope="row">
 				 					<th style="font-size:14px">주소</th>
+				 				<%
+				 					if (user.getAddress() != null) {
+				 				%>
 				 					<td colspan=3 class="text-start">[ <%=user.getAddress().getPostalCode() %> ] <%=user.getAddress().getAddress() %>
 				 				<%
 				 						if(user.getAddress().getDetailAddress() != null) {
@@ -138,6 +150,13 @@
 				 						} else {	}
 				 				%>
 				 					</td>
+				 				<%
+				 					} else {
+				 				%>
+				 					  <td colspan=3 class="text-start"></td>			 				
+				 				<%		
+				 					}
+				 				%>
 				 				</tr>
 				 				<tr scope="row">
 				 					<th style="font-size:14px">가입일</th>
@@ -199,4 +218,4 @@
 
 </script>
 </body>
-</html>
+</html> 

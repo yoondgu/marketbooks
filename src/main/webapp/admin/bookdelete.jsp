@@ -23,5 +23,5 @@
 	bookDao.updateBook(book);
 	
 	// 도서목록을 재요청하는 URL을 응답으로 보낸다.
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("booklist.jsp");
 %>

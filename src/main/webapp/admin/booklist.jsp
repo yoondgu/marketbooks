@@ -1,12 +1,23 @@
+<%@page import="vo.User"%>
 <%@page import="vo.Book"%>
 <%@page import="java.util.List"%>
 <%@page import="vo.Pagination"%>
 <%@page import="dao.BookDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
     
-    <!-- 관리자만 접속할 수 있게 합니다. -->
+   <!-- 관리자만 접속할 수 있게 합니다. -->
+<%     
+	//세션에 저장된 사용자정보를 조회한다.
+	User logineduser = (User) session.getAttribute("LOGINED_USER");
+	if(logineduser == null) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+	if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	} 
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,9 +34,6 @@
         letter-spacing: -.05em;
         font-size: 12px;
         max-width: 100%;
-	}
-	a :hover {
-		background-color:red;
 	}
 	.pagediv {
 		font-family: noto sans,malgun gothic,AppleGothic,dotum;
@@ -97,13 +105,13 @@
 							</div>
 							
 	   <%
+	   		// 페이징처리
 	   		int currentPage = StringUtil.stringToInt(request.getParameter("page"));
-	   		BookDao bookDao = BookDao.getInstance();
 	   		
+	   		BookDao bookDao = BookDao.getInstance();
 	   		int totalRows = bookDao.getTotalRows();
 	   		
 	   		Pagination pagination = new Pagination(totalRows, currentPage);
-	   		
 	   		List<Book> bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
 	   %> 
 						  
@@ -153,9 +161,8 @@
 					   				<td><strong><%=book.getDiscountPrice() %>원</strong><div><small><%=book.getPrice() %>원</small></div></td>
 					   				<td>
 						   				<div id="button" class="">
-						   				
-						   				<!--  도서 수정은 추가구현으로 남겨두겠습니다.
-						   					<div><a href="modifyform.jsp" class="btn btn-outline-secondary btn-sm mb-1" style="width:41px">수정</a></div>
+						   				<!--  
+						   					<div><a href="modifyform.jsp?bookNo=" class="btn btn-outline-secondary btn-sm mb-1" style="width:41px">수정</a></div>
 						   				-->
 						 					<div><a href="bookdelete.jsp?no=<%=book.getNo() %>" class="btn btn-outline-danger btn-sm" style="width:41px">삭제</a></div>
 						   				</div>
@@ -182,49 +189,28 @@
 			<nav>
 				<ul class="pagination justify-content-center">
 					<li class="page-item">
-						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() -1%>)">이전</a>
+						<a class="page-link <%=pagination.getCurrentPage() == 1 ? "disabled" : "" %>" href="booklist.jsp?page=<%=pagination.getCurrentPage() -1%>">이전</a>
 					</li>
 				<%
 					for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
 				%>
 					<li class="page-item <%=pagination.getCurrentPage() == num ? "active" : "" %>">
-						<a class="page-link" href="javascript:changePageNo(<%=num %>)"><%=num %></a>
+						<a class="page-link" href="booklist.jsp?page=<%=num %>"><%=num %></a>
 					</li>
 				<%
 					}
 				%>
 					<li class="page-item">	
-						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="javascript:changePageNo(<%=pagination.getCurrentPage() +1%>)">다음</a>
+						<a class="page-link <%=pagination.getCurrentPage() == pagination.getTotalPages() ? "disabled" : "" %>" href="booklist.jsp?page=<%=pagination.getCurrentPage() +1%>">다음</a>
 					</li>
 				</ul>
-			</nav>
+	      </nav>
 		</div>
 	</div>
-		<form id = "search-form" method="get" action="booklist.jsp">
-			<input type="hidden" name="page" />
-	  		<div class="d-flex mb-3">
-				<div class="me-auto p-2"></div>
-				<div class="p-2">
-					<input class="form-control" style="width: 220px" type="text" name="keyword" value="" placeholder="검색어를 입력하세요." />
-				</div>
-				<div class="p-2">
-					<button type="button" style="width: 60px" class="btn btn-outline-primary" onclick="searchKeyword()">검색</button>
-				</div>
-			</div>
-		</form>
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-	function changePageNo(pageNo) {
-		document.querySelector("input[name=page]").value = pageNo;
-		document.getElementById("search-form").submit();
-	}
-	function searchKeyword() {
-		document.querySelector("input[name=page]").value = 1;
-		document.getElementById("search-form").submit();
-	}
-</script>
+
 				</div>
 			</div>
 		</div>

@@ -1,3 +1,5 @@
+<%@page import="dao.InquiryDao"%>
+<%@page import="dto.InquiryDto"%>
 <%@page import="vo.Book"%>
 <%@page import="dao.BookDao"%>
 <%@page import="vo.User"%>
@@ -6,10 +8,17 @@
 <%@page import="vo.Order"%>
 <%@page import="dao.OrderDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" %>
-    
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
     <!-- 관리자만 접속할 수 있게 합니다. -->
-    
+<%     
+	// 세션에 저장된 사용자정보를 조회한다.
+	User logineduser = null;
+	if((logineduser = (User) session.getAttribute("LOGINED_USER")) != null) {
+		if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+			throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+		} else {
+%>
+  
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,6 +66,9 @@
    		
    		UserDao userDao = UserDao.getInstance();
    		List<User> users = userDao.getRecentUsers();
+   		
+   		InquiryDao inquiryDao = InquiryDao.getInstance();
+   		List<InquiryDto> inquiries = inquiryDao.getRecentInquiries();
 	%>
 		<div class="row">
 			<form class="col-12 g-3 bg-light mx-1">
@@ -106,13 +118,13 @@
 			   			
 			   		</tbody>
 			    </table>
+			    <hr>
 	   		</form>
 			<form class="col-12 g-3 bg-light mx-1">
 				<div class="head_aticle">
 					<h2 class="tit"><a href="inquirylist.jsp">문의관리</a></h2>
 				</div>
 				<div class="board">
-					<div class="head_aticle text-center"><h6 class="tit">1:1문의</h6></div>
 					<table width="100%" class="xans-board-listheader" cellpadding="0" cellspacing="0">
 				   		<colgroup>
 				   			<col width="7%">
@@ -133,39 +145,29 @@
 				   			</tr>
 				   		</thead>
 				   		<tbody class="table-group-divider">
+				   		<%
+				   			for(InquiryDto inq : inquiries) {
+				   		%>
 				   			<tr>
-				   				<td>1</td>
+				   				<td><%=inq.getNo() %></td>
 				   				<!-- 문의제목을 누르면 1:1문의페이지로 넘어갑니다. 1:1 답변은 댓글 작성으로 처리 -->
-				   				<td><a href="inquiry.jsp">디자인은 어떻게 하는게 좋을까요?</a></td>
-				   				<td>홍길동</td>
-				   				<td>2022-06-13</td>
-				   				<td>2022-06-13</td>
+				   				<td><a href="../board/detail.jsp?no=<%=inq.getNo() %>"><%=inq.getTitle() %></a></td>
+				   				<td><%=inq.getUserName() %></td>
+				   				<td><%=inq.getCreatedDate() %></td>
+				   				<td><%=inq.getAnswerCreatedDate() %></td>
 				   				<!-- 답변대기 상태일 때는 다른색 글씨로(빨간색 혹은 회색) -->
-				   				<td>답변완료</td>
+				   				<td><%=inq.getAnswerStatus() %></td>
 				   			</tr>
-				   			<tr>
-				   				<td>1</td>
-				   				<!-- 문의제목을 누르면 1:1문의페이지로 넘어갑니다. 1:1 답변은 댓글 작성으로 처리 -->
-				   				<td><a href="inquiry.jsp">디자인은 어떻게 하는게 좋을까요?</a></td>
-				   				<td>홍길동</td>
-				   				<td>2022-06-13</td>
-				   				<td>2022-06-13</td>
-				   				<!-- 답변대기 상태일 때는 다른색 글씨로(빨간색 혹은 회색) -->
-				   				<td>답변완료</td>
-				   			</tr><tr>
-				   				<td>1</td>
-				   				<!-- 문의제목을 누르면 1:1문의페이지로 넘어갑니다. 1:1 답변은 댓글 작성으로 처리 -->
-				   				<td><a href="inquiry.jsp">디자인은 어떻게 하는게 좋을까요?</a></td>
-				   				<td>홍길동</td>
-				   				<td>2022-06-13</td>
-				   				<td>2022-06-13</td>
-				   				<!-- 답변대기 상태일 때는 다른색 글씨로(빨간색 혹은 회색) -->
-				   				<td>답변완료</td>
-				   			</tr>
+				   		<%
+							}
+						%>
 				   		</tbody>
 				   </table>
 			   </div>
 			   <hr>
+			   
+			   <!-- 상품문의관리 -->
+			   <!--  
 			   <div style="height:50px"></div>
 			   <div>
 			   <div class="head_aticle text-center"><h6>상품문의</h6></div>
@@ -191,7 +193,7 @@
 			   		<tbody class="table-group-divider">
 			   			<tr>
 			   				<td>1</td>
-			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 -->
+			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 --> <!-- 
 			   				<td><a href="bookinquiry.jsp">상품문의 답변은 1:1답변과 다른 방식으로 나오게 하는게 좋을까요?</a></td>
 			   				<td>홍길동</td>
 			   				<td>2022-06-13</td>
@@ -200,7 +202,7 @@
 			   			</tr>
 			   			<tr>
 			   				<td>1</td>
-			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 -->
+			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 --> <!-- 
 			   				<td><a href="bookinquiry.jsp">상품문의 답변은 1:1답변과 다른 방식으로 나오게 하는게 좋을까요?</a></td>
 			   				<td>홍길동</td>
 			   				<td>2022-06-13</td>
@@ -208,7 +210,7 @@
 			   				<td>답변대기</td>
 			   			</tr><tr>
 			   				<td>1</td>
-			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 -->
+			   				<!-- 문의제목을 누르면 상품문의페이지로 넘어갑니다. 상품문의답변은 댓글 작성으로 처리 --> <!-- 
 			   				<td><a href="bookinquiry.jsp">상품문의 답변은 1:1답변과 다른 방식으로 나오게 하는게 좋을까요?</a></td>
 			   				<td>홍길동</td>
 			   				<td>2022-06-13</td>
@@ -218,6 +220,7 @@
 			   		</tbody>
 			   </table>
 			   <hr>
+			   -->
 			   </div>
 			</form>
 			
@@ -263,6 +266,7 @@
 			   		%>
 			   		</tbody>
 			   </table>
+			   <hr>
 			</form>
 	   		
 	   		<form class="col-6 g-3 bg-light mx-1 flex-fill px-2">
@@ -299,6 +303,7 @@
 		   			%>
 			   		</tbody>
 			   </table>
+			   <hr>
   			</form>
   			</div>
   		</div>
@@ -309,3 +314,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<%			
+		}
+	} else {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+%>  

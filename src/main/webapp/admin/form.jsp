@@ -1,14 +1,26 @@
+<%@page import="vo.User"%>
 <%@page import="vo.Category"%>
 <%@page import="java.util.List"%>
 <%@page import="dao.CategoryDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
+    <!-- 관리자만 접속할 수 있게 합니다. -->
+<%     
+	// 세션에 저장된 사용자정보를 조회한다.
+	User logineduser = (User) session.getAttribute("LOGINED_USER");
+	if(logineduser == null) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+	if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	} 
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자페이지</title>
+<title>마켓컬리 - 관리자페이지</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="shortcut icon" href="https://res.kurly.com/images/marketkurly/logo/favicon_v2.png" type="image/x-icon">
 <link rel="stylesheet" href="../css/board.css">
@@ -61,7 +73,7 @@
 				<div id="content">
 					<div class="page_aticle">
 						<div class="head_aticle">
-							<h2 class="tit">새 도서 등록<span class="tit_sub">모든 도서를 관리할 수 있는 페이지 입니다.</span>
+							<h2 class="tit">새 도서 등록<span class="tit_sub">새로운 도서정보를 입력하여 도서 목록을 업데이트하세요.</span>
 							</h2>
 						</div>
 					<div>
@@ -83,7 +95,7 @@
 								</select>
 							</div>
 							
-							<div class="col-6">
+							<div class="col-12">
 								<label class="form-label">책이름</label>
 								<input class="form-control" type="text" name="title" />
 							</div>
@@ -96,23 +108,19 @@
 								<label class="form-label">출판사</label>
 								<input class="form-control" type="text" name="publisher" />
 							</div>
-							<div class="col-6">
-								<label class="form-label">출간일시</label>
-								<input class="form-control" type="date" name="created-date" />
-							</div>
 							
 							<div class="col-5">
 								<label class="form-label">정가</label>
-								<input class="form-control" type="text" name="price" />
+								<input class="form-control" type="number" name="price" />
 							</div>
 							<div class="col-5">
 								<label class="form-label">할인가격</label>
-								<input class="form-control" type="text" name="discount-price" />
+								<input class="form-control" type="number" name="discount-price" />
 								
 							</div>
 							<div class="col-2">
 								<label class="form-label">재고</label>
-								<input class="form-control" type="text" name="stock" />
+								<input class="form-control" type="number" name="stock" />
 							</div>
 							
 							<div class="col-12">
@@ -144,10 +152,22 @@
 			titleField.focus();
 			return false;
 		}
-		let contentField = document.querySelector("input[name=price]");
-		if (contentField.value === '') {
+		let authorField = document.querySelector("input[name=author]");
+		if (authorField.value === '') {
+			alert("도서 저자는 필수입력값입니다.");
+			authorField.focus();
+			return false;
+		}
+		let publisherField = document.querySelector("input[name=publisher]");
+		if (publisherField.value === '') {
+			alert("도서 저자는 필수입력값입니다.");
+			publisherField.focus();
+			return false;
+		}
+		let priceField = document.querySelector("input[name=price]");
+		if (priceField.value === '') {
 			alert("도서 가격은 필수입력값입니다.");
-			contentField.focus();
+			priceField.focus();
 			return false;
 		}
 		return true;
