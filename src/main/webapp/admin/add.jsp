@@ -1,3 +1,6 @@
+<%@page import="dao.BookDao"%>
+<%@page import="vo.Category"%>
+<%@page import="vo.Book"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.time.LocalDate"%>
 <%@page import="java.util.Date"%>
@@ -14,11 +17,27 @@
 	String title = mr.getParameter("title");
 	String author = mr.getParameter("author");
 	String publisher = mr.getParameter("publisher");
-	Date createdDate = DateFormat.parse(mr.getParameter("created-date"));
 	int price = StringUtil.stringToInt(mr.getParameter("price"));
 	int discountPrice = StringUtil.stringToInt(mr.getParameter("discount-price"));
 	int stock = StringUtil.stringToInt(mr.getParameter("stock"));
 	String discription = mr.getParameter("discription");
-			
+	
+	// book객체를 생성해서 도서 정보를 저장한다.
+	Book book = new Book();
+	book.setCategoryNo(categoryNo);
+	book.setTitle(title);
+	book.setAuthor(author);
+	book.setPublisher(publisher);
+	book.setPrice(price);
+	book.setDiscountPrice(discountPrice);
+	book.setStock(stock);
+	book.setDiscountPrice(discountPrice);
+	
+	// 도서 정보를 데이터베이스에 저장시킨다.
+	BookDao bookDao = BookDao.getInstance();
+	bookDao.insertbook(book);
+	
+	// 재요청 URL을 응답으로 보낸다.
+	response.sendRedirect("home.jsp");
 	
 %>

@@ -129,6 +129,9 @@
 				 				</tr>
 				 				<tr scope="row">
 				 					<th style="font-size:14px">주소</th>
+				 				<%
+				 					if (user.getAddress() != null) {
+				 				%>
 				 					<td colspan=3 class="text-start">[ <%=user.getAddress().getPostalCode() %> ] <%=user.getAddress().getAddress() %>
 				 				<%
 				 						if(user.getAddress().getDetailAddress() != null) {
@@ -138,6 +141,13 @@
 				 						} else {	}
 				 				%>
 				 					</td>
+				 				<%
+				 					} else {
+				 				%>
+				 					<td colspan=3 class="text-start"></td>				 				
+				 				<%		
+				 					}
+				 				%>
 				 				</tr>
 				 				<tr scope="row">
 				 					<th style="font-size:14px">가입일</th>

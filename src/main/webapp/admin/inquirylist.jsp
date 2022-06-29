@@ -1,7 +1,16 @@
+<%@page import="vo.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
     
     <!-- 관리자만 접속할 수 있게 합니다. -->
+<%     
+	// 세션에 저장된 사용자정보를 조회한다.
+	User logineduser = null;
+	if((logineduser = (User) session.getAttribute("LOGINED_USER")) != null) {
+		if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+			throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+		} else {
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -212,3 +221,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<%			
+		}
+	} else {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+%> 
