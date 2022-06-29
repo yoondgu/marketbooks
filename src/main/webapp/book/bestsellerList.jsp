@@ -20,24 +20,43 @@
 	bookList = bookDao.getBooks(0, totalRows);
 %>
 	<div class="row">
+	<div class="row">
 	<%
+		double dc = 0.0;
 		for (Book book : bookList) {
+			// 할인률 구하기
+			dc = Math.floor(100-(book.getDiscountPrice()*100/book.getPrice()));			
+			
+			// 책 제목, 부제목 나누기
+			String title = book.getTitle();
+			String maintitle;
+			String subtitle;
+			if (title.contains("-")) {
+				maintitle = title.substring(0, title.lastIndexOf(" - "));
+				subtitle = title.substring(title.lastIndexOf(" - ")+1);
+			} else {
+				maintitle = title;
+			}
+			
+			// 할인하는 책만 출력
+			if (dc != 0.0) {		
 	%>
-		<div class="col mb-5">
-			<div class="card m-2 border-white" style="width:280px;">
+		<div class="col mb-2 book-card" >
+			<div class="image-box mb-2">
 				<img src="/marketbooks/images/bookcover/book-<%=book.getNo()%>.jpg"
-					class="card-img-top .img-fluid" id="book-cover-img" />
-				<div class="card-body">
-					<h5 id="book-title" class="card-title lh-sm mb-4"><%=book.getTitle()%></h5>
-					<span class="bookAuthor card-text lh-sm float-start" ><%=book.getAuthor()%></span>
-					<span class="fw-semibold lh-sm float-end fw-bold"><%=book.getDiscountPrice()%></span>
-					<span class="text-decoration-line-through lh-sm float-end me-3"><%=book.getPrice()%></span>			
-					<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class="stretched-link"></a>
-				</div>
+				class="image-thumbnail" id="book-cover-img" />
+			</div>
+			<div class="text-box mb-5">
+				<h5 class="row px-4"><%=maintitle%></h5>
+				<span class="fs-6 ps-3 float-start text-danger"><%=dc%>%</span>
+				<span class="fs-6 fw-semibold fw-bold ms-3"><%=book.getDiscountPrice()%>원</span>
+				<span class="text-decoration-line-through ps-1"><%=book.getPrice()%>원</span>
+				<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class=""></a>
 			</div>
 		</div>
 	<%
-		}
+			}
+		} 
 	%>
 	</div>
 </div>

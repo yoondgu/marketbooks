@@ -20,7 +20,7 @@ public class Pagination {
 	
 	public Pagination(int rows, int totalRows, int currentPage) {
 		this.rows = rows;
-		this.pages = 5;
+		this.pages = 10;
 		this.totalRows = totalRows;
 		this.currentPage = currentPage;
 		init();

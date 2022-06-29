@@ -98,30 +98,30 @@
 									<span class="txt">전체 카테고리</span>
 								</a>
 								<ul class="gnb_sub">
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=인문학'">인문학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=사회과학'">사회과학</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=소설'">소설</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=역사'">역사</span></li>
-									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=예술/대중문화'">예술/대중문화</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=인문학&page=1'">인문학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=사회과학&page=1'">사회과학</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=소설&page=1'">소설</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=역사&page=1'">역사</span></li>
+									<li><span class="txt" onclick="location.href='/marketbooks/book/list.jsp?category=예술/대중문화&page=1'">예술/대중문화</span></li>
 								</ul>
 							</li>
 							<li class="menu2">
-							 	<a href="/marketbooks/book/newlist.jsp" class="link new ">
-							 		<span class="txt">신상품</span>
+							 	<a href="/marketbooks/book/list.jsp?tab=신작&page=1" class="link ">
+							 		<span class="txt">신작</span>
 								</a>
 							 </li>
 							 <li class="menu3">
-							 	<a href="/marketbooks/book/bestseller.jsp" class="link best ">
+							 	<a href="/marketbooks/book/list.jsp?tab=베스트셀러&page=1" class="link ">
 							 		<span class="txt">베스트셀러</span>
 							 	</a>
 					 		</li> 
 							<li class="menu4">
-							 	<a href="" class="link bargain ">
+							 	<a href="/marketbooks/book/list.jsp?tab=알뜰쇼핑&page=1" class="link ">
 							 		<span class="txt">알뜰쇼핑</span>
 							 	</a>
 						 	</li>
 						 	<li class="lst">
-						 		<a href="" class="link event ">
+						 		<a href="/marketbooks/book/specialBenefits.jsp" class="link ">
 						 			<span class="txt">특가/혜택</span>
 					 			</a>
 				 			</li>
@@ -129,12 +129,9 @@
 			 			
 			 			<!-- 검색창 -->
 		 				<div id="side_search" class="gnb_search">
-			 				<form action="/marketbooks/book/list.jsp?page=1" onsubmit="">
-				 				<input name="keyword" type="text" value="" required="required" label="검색어" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
+			 				<form id="search-form" action="/marketbooks/book/list.jsp?page=1" method="get">
+				 				<input name="keyword" type="text" required="required" placeholder="검색어를 입력해주세요." autocomplete="off" class="inp_search">
 				 				<input type="image" src="https://res.kurly.com/pc/service/common/1908/ico_search_x2.png" class="btn_search">
-				 				<div class="init">
-				 					<button type="button" id="searchInit" class="btn_delete">검색어 삭제하기</button>
-			 					</div>
 	 						</form>
 						</div>
 						
@@ -234,7 +231,4 @@ function goLoginPage() {
 function goAddressPage() {
 	window.open("/marketbooks/cart/addressList.jsp?location=mypage", 'addressForm', 'width=500,height=750');
 }
-
-
-
 </script>

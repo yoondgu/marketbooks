@@ -1,9 +1,3 @@
-<%@page import="util.StringUtil"%>
-<%@page import="vo.User"%>
-<%@page import="dao.BookDao"%>
-<%@page import="vo.Book"%>
-<%@page import="java.util.List"%>
-<%@page import="vo.Pagination"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -19,8 +13,8 @@
 
 <!-- header include -->
 <jsp:include page="/common/header.jsp"></jsp:include>
-<!-- bestsellerList include -->
-<jsp:include page="/book/bestsellerList.jsp"></jsp:include>
+<!-- specialBenefitslist include -->
+<jsp:include page="/book/specialBenefitslist.jsp"></jsp:include>
 <!-- footer include -->
 <jsp:include page="/common/footer.jsp"></jsp:include>
 

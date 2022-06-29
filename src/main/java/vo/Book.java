@@ -23,7 +23,7 @@ public class Book {
 	}
 
 	public Book(int no, String title, int categoryNo, String author, String publisher, String description, int price,
-			int discountPrice, String onSell, int stock, Date createdDate, Date updatedDate, String deleted) {
+			int discountPrice, String onSell, int stock, Date createdDate, Date updatedDate, String deleted, double discountRate) {
 		super();
 		this.no = no;
 		this.title = title;
@@ -38,6 +38,7 @@ public class Book {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.deleted = deleted;
+		this.discountRate = discountRate;
 	}
 
 	public int getNo() {
@@ -143,7 +144,7 @@ public class Book {
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
-
+	
 	public Category getCategory() {
 		return category;
 	}
