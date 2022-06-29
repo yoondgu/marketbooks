@@ -117,7 +117,7 @@
 							<td class="align-middle text-center">
 								<a href="#" class="btn btn-sm w-100 mb-1" style="background-color:#5f0080; color:#fff;" data-bs-toggle="modal">후기쓰기</a>
 								<a href="#addCart" class="btn btn-sm w-100" style="color:#5f0080; border-color:#5f0080;" 
-								onclick="saveBookInfo(<%=item.getBook().getNo() %>, '<%=item.getBook().getTitle() %>', '<%=item.getBook().getAuthor() %>');">
+								onclick="saveBookInfo(<%=item.getBook().getNo() %>, '<%=item.getBook().getTitle() %>', '<%=item.getBook().getAuthor() %>', <%=item.getBook().getDiscountPrice() %>);">
 									장바구니담기
 								</a>
 							</td>
@@ -228,7 +228,7 @@
 							<td><strong>주소</strong></td>
 							<%
 								UserAddressDao userAddressDao = UserAddressDao.getInstance();
-								UserAddress address = userAddressDao.getAddressByNo(order.getAddressNo());
+								UserAddress address = userAddressDao.getAddressWithHistoryByNo(order.getAddressNo());
 							%>
 							<td class="align-middle text-end p-3"><span><%=address.getAddress() %> <%=StringUtil.nullToBlank(address.getDetailAddress()) %></span></td>
 						</tr>
@@ -286,22 +286,28 @@
 <jsp:include page="../common/footer.jsp"></jsp:include>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
+
 	let cancelResultModal = new bootstrap.Modal(document.getElementById("cancelOrderResult"));
 	
 	/*
 		'장바구니 담기' 버튼을 누르면 해당 도서정보를 전달받고, addCartModal 모달 창 태그에 정보를 출력한 뒤, 모달을 연다.
 		해당 모달은 수량을 입력받기 위한 창이다.
 	*/
-	function saveBookInfo(bookNo, bookTitle, bookAuthor) {
+	function saveBookInfo(bookNo, bookTitle, bookAuthor, discountPrice) {
 		
 		let bookNoElement = document.querySelector("input[name=addBookNo]");
 		bookNoElement.value = bookNo;
+		let bookPriceElement = document.querySelector("input[name=discountPrice]");
+		bookPriceElement.value = discountPrice;
 		
-		
+		let img = document.getElementById("addBookImg");
+		img.src = "/marketbooks/images/bookcover/book-" + bookNo + ".jpg";
 		let bookTitleElement = document.getElementById("addBookTitle");
 		bookTitleElement.textContent = bookTitle;
 		let bookAuthorElement = document.getElementById("addBookAuthor");
 		bookAuthorElement.textContent = bookAuthor;
+		let totalPriceElement = document.getElementById("totalPrice");
+		totalPriceElement.textContent = discountPrice.toLocaleString();
 		
 		addCartModal.show();
 	}

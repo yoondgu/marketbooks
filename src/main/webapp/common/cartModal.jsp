@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="../css/home.css" rel="stylesheet">
-
+<style type="text/css">
+	
+	.modalimage { display: block; margin: 0 auto; width: 200px; object-fit: contain }
+	
+</style>
    	<!-- 전체 상품 다시 담기 모달 -->
 	<div class="modal fade" id="addAllCarts" tabindex="-1" aria-labelledby="addAllCartsModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
@@ -38,19 +41,24 @@
 				<div class="modal-body border-bottom">
 		      		<div id="bookInfo" class="m-3">
 			      		<input type="hidden" name="addBookNo"/>
-		      			<p class="fs-6"><span id="addBookTitle"></span></p>
-		      			<p class="fs-6 text-muted"><span id="addBookAuthor"></span></p>
+			      		<input type="hidden" name="discountPrice"/>
+			      		<div class="mb-3">
+				      		<img alt="cover image" class="modalimage img-thumbnail rounded" src="" id="addBookImg">
+			      		</div>
+		      			<p class="fs-6 text-center"><span id="addBookTitle"></span></p>
+		      			<p class="fs-6 text-center text-muted"><span id="addBookAuthor"></span></p>
+		      			<p class="fs-4 text-center text-muted fw-bold"><span id="totalPrice"></span> 원</p>
 		      		</div>
 					<div class="row d-flex justify-content-center">
 						<div class="col-6 hstack gap-3">
-							<button class="form-control btn btn-sm fs-4" style="color:#5f0080;" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-</button>
-							<input class="form-control form-control-lg fs-6 mx-auto" min="1" name="quantity" value="1" type="number">
-							<button class="form-control btn btn-sm fs-4" style="color:#5f0080;" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">+</button>
+							<button class="form-control btn btn-sm btn-light fs-4" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); changeTotalPrice();">-</button>
+							<input class="form-control form-control-lg fs-6 mx-auto" min="1" name="quantity" value="1" type="number" disabled>
+							<button class="form-control btn btn-sm btn-light fs-4" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); changeTotalPrice();">+</button>						
 						</div>
 					</div>
 		      </div>
 		      <div class="modal-footer border-0 m-auto">
-		        <button type="button" class="btn" data-bs-dismiss="modal" onclick="addCart();">담기</button>
+		        <button type="button" class="btn btn-lg" data-bs-dismiss="modal" style="background-color:#5f0080; color:#fff;" onclick="addCart();">담기</button>
 		      </div>
 		    </div>
 		  </div>
@@ -77,7 +85,7 @@
 	let addAllCartsModal = new bootstrap.Modal(document.getElementById("addAllCarts"));
 	let addCartModal = new bootstrap.Modal(document.getElementById("addCart"));	
 	let addResultModal = new bootstrap.Modal(document.getElementById("addCartResult"));
-
+	
 	/*
 	특정 주문아이템을 저장하기 위해 모달창을 띄운다.
 	a태그를 클릭하면 모달창 input 태그에 도서번호를 저장하는 함수가 실행된다.
@@ -158,5 +166,15 @@
 		xhr.open("GET", "../cart/add.jsp?" + queryString);
 		xhr.send();
 		
+	}
+	
+	// 수량에 대한 input태그에 onchange 이벤트가 발생하면 총 금액을 새로 출력한다.
+	function changeTotalPrice() {
+		
+		// 한권의 가격과 수량을 획득한다.
+		let bookPrice = document.querySelector("input[name=discountPrice]").value;
+		let quantity = document.querySelector("input[name=quantity]").value;
+		
+		document.getElementById("totalPrice").textContent = (bookPrice*quantity).toLocaleString();
 	}
 </script>

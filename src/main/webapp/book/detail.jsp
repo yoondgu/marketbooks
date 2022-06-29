@@ -170,7 +170,7 @@
   			<!-- 장바구니, 구매버튼 -->
 			<div class="m-3 float-end">
 				<!-- 장바구니 담기 : cartModal.jsp로 임포트한 #addCart 모달을 열고, 책 정보를 전달한다. 모달에서 수량 입력 후 담기 누르면 cart/add.jsp로 이동 -->
-				<button class="btn btn-primary me-2" href="#addCart" onclick="saveBookInfo(<%=book.getNo() %>, '<%=book.getTitle() %>', '<%=book.getAuthor() %>');">장바구니 담기</button>
+				<button class="btn btn-primary me-2" href="#addCart" onclick="saveBookInfo(<%=book.getNo() %>, '<%=book.getTitle() %>', '<%=book.getAuthor() %>', <%=book.getDiscountPrice() %>);">장바구니 담기</button>
 				<!-- 바로구매 기능은 제공하지 않는다. -->
 				<button class="btn btn-primary" href="" onclick="">바로구매</button>
 			</div>
@@ -206,16 +206,21 @@
 	'장바구니 담기' 버튼을 누르면 해당 도서정보를 전달받고, addCartModal 모달 창 태그에 정보를 출력한 뒤, 모달을 연다.
 	해당 모달은 수량을 입력받기 위한 창이다.
 	*/
-	function saveBookInfo(bookNo, bookTitle, bookAuthor) {
+	function saveBookInfo(bookNo, bookTitle, bookAuthor, discountPrice) {
 	
 		let bookNoElement = document.querySelector("input[name=addBookNo]");
 		bookNoElement.value = bookNo;
+		let bookPriceElement = document.querySelector("input[name=discountPrice]");
+		bookPriceElement.value = discountPrice;
 		
-		
+		let img = document.getElementById("addBookImg");
+		img.src = "/marketbooks/images/bookcover/book-" + bookNo + ".jpg";
 		let bookTitleElement = document.getElementById("addBookTitle");
 		bookTitleElement.textContent = bookTitle;
 		let bookAuthorElement = document.getElementById("addBookAuthor");
 		bookAuthorElement.textContent = bookAuthor;
+		let totalPriceElement = document.getElementById("totalPrice");
+		totalPriceElement.textContent = discountPrice.toLocaleString();
 		
 		addCartModal.show();
 	}
