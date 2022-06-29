@@ -52,8 +52,8 @@
 							<h2 class="tit_snb">고객센터</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li><a href="/marketbooks/board/list.jsp">공지사항</a></li>
-									<li><a href="/marketbooks/board/faq.jsp">자주하는 질문</a></li>
+									<li><a href="/marketbooks/board/list.jsp?page=1">공지사항</a></li>
+									<li><a href="/marketbooks/board/faq.jsp?page=1">자주하는 질문</a></li>
 									<li class="on"><a
 										href="/marketbooks/board/inquiry.jsp?page=1">1:1 문의</a></li>
 								</ul>
@@ -61,30 +61,70 @@
 							<a href="/marketbooks/board/form.jsp" class="link_inquire"><span
 								class="emph">도움이 필요하신가요 ?</span> 1:1 문의하기</a>
 						</div>
+						<%
+						User user=(User) session.getAttribute("LOGINED_USER");
+						if (user == null) {
+							response.sendRedirect("../loginform.jsp?fail=deny");
+							return;
+						}
+							
+						InquiryDao inquiryDao = InquiryDao.getInstance();
+
+						int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
+						int rows = StringUtil.stringToInt(request.getParameter("rows"), 10);
+						String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
+						String status = StringUtil.nullToBlank(request.getParameter("status"));
+						// 전체 데이터 갯수 조회
+						int totalRows = 0;
+						if ("admin@gmail.com".equals(user.getEmail())) {
+							if (status == "") {
+							totalRows = inquiryDao.getTotalRows();
+							} else if (status != null) {
+							totalRows = inquiryDao.getTotalRows(status);	
+							}
+						} else if (keyword.isEmpty()) {
+							if (status == "") {
+							totalRows = inquiryDao.getTotalRows(user.getNo());
+							} else if (status != null) {
+							totalRows = inquiryDao.getTotalRows(user.getNo(),status);	
+							}
+						} else {
+							totalRows = inquiryDao.getTotalRows(keyword, user.getNo());
+						}
+						
+						// 페이징처리에 필요한 정보를 제공하는 객체 생성
+						Pagination pagination = new Pagination(rows, totalRows, currentPage);
+						
+						// 요청한 페이지번호에 맞는 데이터 조회하기
+						List<InquiryDto> inquiryList = null;
+						if("admin@gmail.com".equals(user.getEmail())) {
+							if (status == "") {
+							inquiryList = inquiryDao.getAllInquiries(pagination.getBeginIndex(), pagination.getEndIndex());
+							} else if (status != null){
+							inquiryList = inquiryDao.getAllInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), status);
+							}
+						} else if (keyword.isEmpty()) {
+							if (status == "") {
+							inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), user.getNo());
+							} else if (status != null){
+							inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), user.getNo(), status);	
+							}
+						}
+						%>
+						
 						<div class="page_section">
 							<div class="head_aticle">
-								<h2 class="tit">1:1 문의</h2>
+								<h2 class="tit">1:1 문의
+								<select class="form-select mb-3 w-25 float-end" name="status" onchange="changeStatus();">
+									<option value ="" <%="".equals(status) ? "selected" : "" %>> 모두보기 </option>
+									<option value ="Y" <%="Y".equals(status) ? "selected" : "" %>> 답변완료 </option>
+									<option value ="N" <%="N".equals(status) ? "selected" : "" %>> 답변대기 </option>
+								</select>
+								</h2>
 							</div>
-							<form name="frmList" action="" onsubmit="">
-								<input type="hidden" name="id" value="notice">
-								
-								<div class="modal" tabindex="-1">
-								  <div class="modal-dialog">
-								    <div class="modal-content">
-								      <div class="modal-header">
-								        <h5 class="modal-title">Modal title</h5>
-								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								      </div>
-								      <div class="modal-body">
-								        <p>Modal body text goes here.</p>
-								      </div>
-								      <div class="modal-footer">
-								        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								        <button type="button" class="btn btn-primary">Save changes</button>
-								      </div>
-								    </div>
-								  </div>
-								</div>
+							<form id="frmList" name="frmList" method ="get" action="inquiry.jsp">
+								<input type="hidden" name="page" />
+								<input type="hidden" name="status" />
 								<table width="100%" align="center" cellpadding="0"
 									cellspacing="0">
 									<tbody>
@@ -94,42 +134,6 @@
 													class="xans-element- xans-myshop xans-myshop-couponserial ">
 													<table width="100%" class="xans-board-listheader"
 														cellpadding="0" cellspacing="0">
-														<%
-														User user=(User) session.getAttribute("LOGINED_USER");
-														if (user == null) {
-															response.sendRedirect("../loginform.jsp?fail=deny");
-															return;
-														}
-															
-														InquiryDao inquiryDao = InquiryDao.getInstance();
-
-														int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
-														int rows = StringUtil.stringToInt(request.getParameter("rows"), 10);
-														String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
-
-														// 전체 데이터 갯수 조회
-														int totalRows = 0;
-														if ("admin@gmail.com".equals(user.getEmail())) {
-															totalRows = inquiryDao.getTotalRows();
-														} else if (keyword.isEmpty()) {
-															totalRows = inquiryDao.getTotalRows(user.getNo());
-														} else {
-															totalRows = inquiryDao.getTotalRows(keyword, user.getNo());
-														}
-														// 페이징처리에 필요한 정보를 제공하는 객체 생성
-														Pagination pagination = new Pagination(rows, totalRows, currentPage);
-
-														// 요청한 페이지번호에 맞는 데이터 조회하기
-														List<InquiryDto> inquiryList = null;
-														if("admin@gmail.com".equals(user.getEmail())) {
-															inquiryList = inquiryDao.getAllInquiries(pagination.getBeginIndex(), pagination.getEndIndex());
-														} else if (keyword.isEmpty()) {
-															inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), user.getNo());
-														} else {
-															inquiryList = inquiryDao.getInquiries(pagination.getBeginIndex(), pagination.getEndIndex(), keyword, user.getNo());
-														}
-														
-														%>
 														<thead>
 															<tr>
 																<th width="620px">제목</th>
@@ -141,13 +145,13 @@
 														<tbody>
 															<%
 															for (InquiryDto inq : inquiryList) {
-																String status = null;
+																String answerStatus = null;
 																String cl = null;
 																if("Y".equals(inq.getAnswerStatus())) {
-																	status = "답변완료";
+																	answerStatus = "답변완료";
 																	cl = "seccess";
 																} else if ("N".equals(inq.getAnswerStatus())) {
-																	status = "답변대기";
+																	answerStatus = "답변대기";
 																	cl = "Nonseccess";
 																}
 															%>
@@ -156,7 +160,7 @@
 																		href="detail.jsp?no=<%=inq.getNo()%>&page=<%=pagination.getCurrentPage()%>"><%=inq.getTitle()%></a></b></td>
 																<td width="50" nowrap="" align="center"><b><%=inq.getUserName()%></b></td>
 																<td width="100" nowrap="" align="center" class="eng2"><%=inq.getCreatedDate()%></td>
-																<td class=<%=cl%> width="30" nowrap="" align="center" class="eng2"><%=status%></td>
+																<td class=<%=cl%> width="30" nowrap="" align="center" class="eng2"><%=answerStatus%></td>
 															</tr>
 															<%
 															}
@@ -168,26 +172,6 @@
 										</tr>
 									</tbody>
 								</table>
-								
-								<div class="layout-pagination">
-									<div class="pagediv">
-										<a href="inquiry.jsp?page=<%=pagination.getCurrentPage() - 1%>"
-											class="layout-pagination-button layout-pagination-prev-page">
-											</a>
-										<%
-										for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
-										%>
-										<a href="inquiry.jsp?page=<%=num%>"
-											class="layout-pagination-button layout-pagination-number <%=pagination.getCurrentPage() == num ? "__active" : ""%>"><%=num %>
-											</a>
-										<%
-										}
-										%>
-										<a href="inquiry.jsp?page=<%=pagination.getCurrentPage() + 1%>"
-											class="layout-pagination-button layout-pagination-next-page">
-										</a>
-									</div>
-								</div>
 								<table width="100%">
 									<tbody>
 										<tr>
@@ -197,6 +181,26 @@
 										</tr>
 									</tbody>
 								</table>
+								<div class="layout-pagination">
+									<div class="pagediv">
+										<a href="javascript:clickPageNo(<%=pagination.getCurrentPage() - 1%>)"
+											class="layout-pagination-button layout-pagination-prev-page">
+										</a>
+										<%
+										for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
+										%>
+										<a href="javascript:clickPageNo(<%=num%>)"
+											class="layout-pagination-button layout-pagination-number <%=pagination.getCurrentPage() == num ? "__active" : ""%>"><%=num %>
+										</a>
+										<%
+										}
+										%>
+										<a href="javascript:clickPageNo(<%=pagination.getCurrentPage() + 1%>)"
+											class="layout-pagination-button layout-pagination-next-page">
+										</a>
+									</div>
+								</div>
+								
 
 							</form>
 						</div>
@@ -216,4 +220,17 @@
 <!-- footer include -->
 <jsp:include page="../common/footer.jsp"></jsp:include>
 </body>
+<script>
+function changeStatus() {
+	document.querySelector("input[name=page]").value =1;
+	document.querySelector("input[name=status]").value = document.querySelector("select[name=status]").value;
+	document.getElementById("frmList").submit();
+}
+
+function clickPageNo(pageNo) {
+	document.querySelector("input[name=page]").value = pageNo;
+	document.querySelector("input[name=status]").value = document.querySelector("select[name=status]").value;
+	document.getElementById("frmList").submit();
+}
+</script>
 </html>

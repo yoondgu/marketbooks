@@ -32,6 +32,9 @@
 	if (user.getAddress() != null) {
 		defAddressNo = user.getAddress().getNo();
 	}
+	
+	// input태그에 저장해 폼제출시 전달
+	String location = StringUtil.nullToBlank(request.getParameter("location"));
 %>
 <div class="container" style="min-width: 300px; max-width: 500px">
    <div class="title p-3 text-center">
@@ -48,7 +51,8 @@
    		%>
    			<input type="hidden" name="selectedAddressNo" id="hidden-selectedAddressNo" value="<%=selectedAddressNo %>" />
    			<input type="hidden" name="defAddressNo" id="hidden-defAddressNo" value="<%=defAddressNo %>" />
-   			
+   			<!-- 재요청 시 마이페이지, 장바구니 중 어디로 보낼지 결정하는 값 -->
+   			<input type="hidden" name="location" id="hidden-location" value="<%=location %>" />
 			<!-- addressList.jsp에 전달하기 위한, list.jsp의 체크된 아이템 번호 input태그에 저장 -->
 	 	<%
 	 		// list.jsp페이지에서 체크된 아이템번호 값을 getParameters로 꺼내서 반복문으로 hidden타입의 input태그를 만든다.
@@ -165,6 +169,7 @@
 		저장 버튼을 누르면 실행되는 이벤트핸들러 함수.
 		'기본 배송지로 저장' 체크박스에 체크되어있고, 현재 선택 배송지번호가 기본 배송지번호와 같다면 부모창으로 폼을 제출하고, 현재 창을 닫는다.
 		'기본 배송지로 저장' 체크박스에 체크되어있지 않다면 현재 창으로 폼을 제출한다. (새로 저장하는 것이므로 저장 배송지 번호 = 기본 배송지 번호 일 경우는 없다.)
+		여러 경로에서 사용하므로 절대경로로 제출할 것.
 	*/
 	function addAddress() {
 		
@@ -179,16 +184,26 @@
 		let isCheckedStatus = document.querySelector("input[name=isChecked]").checked;
 		let wasDefAddressSelected = selectedAddressNo === defAddressNo;
 		
-		if (isCheckedStatus && wasDefAddressSelected) {
+		let location = document.querySelector("input[name=location]").value;
+		if (location === "mypage") {
+			// 마이페이지에서 연 창이면 무조건 부모창으로 폼을 제출한다.
+			window.opener.name = 'parentName'
+				form.setAttribute("target", 'parentName');
+				form.setAttribute("action", '/marketbooks/cart/addAddress.jsp');
+
+				form.submit();
+				window.close();
+			
+		} else if (isCheckedStatus && wasDefAddressSelected) {
 			// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 			window.opener.name = 'parentName'
 			form.setAttribute("target", 'parentName');
-			form.setAttribute("action", 'addAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/addAddress.jsp');
 
 			form.submit();
 			window.close();
 		} else {
-			form.setAttribute("action", 'addAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/addAddress.jsp');
 			form.submit();
 		}
 	}

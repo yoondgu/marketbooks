@@ -32,21 +32,14 @@
 					<%
 							}
 					%>
-						<li class="menu lst"><a href="" class="link_menu"><%=user.getName() %>님</a>
+						<li class="menu lst"><a href="" class="link_menu"><%=user.getName() %>님 환영합니다.</a>
 							<ul class="sub">
-								<li><a href="/marketbooks/mypage/orderlist.jsp" onclick="">주문 내역</a></li>
-								<li><a href="/marketbooks/mypage/addressList.jsp" onclick="">선문 내역</a></li>
-								<li><a href="" onclick="">찜한 상품</a></li>
-								<li><a href="" onclick="">배송지 관리</a></li>
-								<li><a href="" onclick="">상품 후기</a></li>
-								<li><a href="" onclick="">상품 문의</a></li>
-								<li><a href="" onclick="">적립금</a></li>
-								<li><a href="" onclick="">쿠폰</a></li>
-								<li><a href="" onclick="">개인 정보 수정</a></li>
-								<li><a href="/marketbooks/logout.jsp" onclick="">로그아웃</a></li>
+								<li><a href="/marketbooks/mypage/orderlist.jsp" onclick="">주문내역</a></li>
+								<li><a href="/marketbooks/mypage/addressList.jsp" onclick="">배송지 관리</a></li>
+								<li><a href="" onclick="">상품 리뷰</a></li>
+								<li><a href="" onclick="">개인정보 수정</a></li>
 							</ul>
 						</li>
-						
 						<li class="menu none_sub menu_login"><a href="/marketbooks/logout.jsp"
 						class="link_menu">로그아웃</a></li>
 					<% 
@@ -169,14 +162,45 @@
 							<button type="button" class="btn_location on">배송지 설정하기</button>
 							<div class="layer_location">
 								<div class="no_address">
+								
+								<%
+									if (user == null) {
+										// 안내메시지, 로그인 버튼
+								%>
 									<span class="emph">배송지를 등록</span>
 									하고<br> 구매 가능한 상품을 확인하세요! 
-									<div class="group_button double">
+									<div class="group_button">
 										<button type="button" class="btn default login" style="padding:0px;" onclick="goLoginPage()">로그인</button>
-										<button type="button" class="btn active searchAddress" style="padding:0px;">
+									</div>
+								<%
+									} else {
+										if (user.getAddress() == null) {
+											//안내 메시지, 배송지등록 버튼
+								%>
+									<span class="emph">배송지를 등록</span>
+									하고<br> 구매 가능한 상품을 확인하세요! 
+									<div class="group_button">
+										<button type="button" class="btn active searchAddress" style="padding:0px;" onclick="goAddressPage()">
 											<span class="ico"></span>주소검색
 										</button>
 									</div>
+								<%
+										} else {
+											//배송지 주소 태그, 배송지등록 버튼
+								%>
+									<span class="emph">기본 배송지</span>
+									<div><%=user.getAddress().getAddress() %> <br/> <%=user.getAddress().getDetailAddress() %></div> 
+									<div class="group_button">
+										<button type="button" class="btn active searchAddress" style="padding:0px;" onclick="goAddressPage()">
+											<span class="ico"></span>배송지변경
+										</button>
+									</div>
+								
+								<%
+										}
+									}
+							
+								%>
 								</div>
 							</div>
 						</div>
@@ -204,9 +228,7 @@ function goLoginPage() {
 	location.href="/marketbooks/loginform.jsp";
 }
 
-function searchKeyword() {
-	document.querySelector("input[name=page]").value = 1;
-	document.querySelector("input[name=rows]").value = document.querySelector("select[name=rows]").value;
-	document.getElementById("search-form").submit();
+function goAddressPage() {
+	window.open("/marketbooks/cart/addressList.jsp?location=mypage", 'addressForm', 'width=500,height=750');
 }
 </script>

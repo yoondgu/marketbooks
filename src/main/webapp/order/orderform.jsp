@@ -21,7 +21,6 @@
 <link href="../css/home.css" rel="stylesheet">
 <style type="text/css">
 	.coverimage { display: block; margin: 0 auto; width: 70px; object-fit: contain }
-
 	.td-definition {
 		padding: 8px;
 	}
@@ -30,7 +29,7 @@
 		box-shadow: none;
 		border: none;
 		color: black;
-		background-color: white;
+		background-color: #fff;
 	}
 	
 	.btn-group input:checked + label, .btn-group input:hover + label {
@@ -42,7 +41,6 @@
 		color: black!important;
 		background-color: #f6e500!important;
 	}
-
 </style>
 </head>
 <body>
@@ -65,6 +63,7 @@
 	6. 결제수단 중 카카오페이를 선택하고 결제하기 버튼을 누르면, 카카오페이 결제 팝업이 뜬다. 그 외 결제수단은 order.jsp로 바로 이동한다.
 	7. (추가 작업) 상세정보 수정하기를 누르면 입력폼이 표현된 모달창이 뜬다. 
 -->
+
 <%
 	CartItemDao cartItemDao = CartItemDao.getInstance();
 	UserAddressDao userAddressDao = UserAddressDao.getInstance();
@@ -107,12 +106,14 @@
 	if (cartItemList.size() == 1) {
 		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "]";
 	} else {
+
 		orderTitle = "[" + cartItemList.get(0).getBook().getTitle() + "] 외 " + (cartItemList.size() - 1) + "건";
 	}
 	
 %>
 <jsp:include page="../common/header.jsp"></jsp:include>
 <div class="container mb-5" style="min-width: 1200px; max-width: 1200px">
+
    	<div class="row">
 		<div class="col">
 			<h1 class="fs-3 p-5 mb-3 text-center"><strong>주문서</strong></h1>
@@ -139,6 +140,7 @@
 				    	onclick="displaySummary(event);">
 				    		<h5><strong>주문상품</strong></h5>
 				    	</button>
+
 				    </div>
 				    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlush">
 					    <div class="accordion-body">
@@ -172,6 +174,7 @@
 					     	</table>
 					    </div>
 				    </div>
+
 				</div>
 			</div>
 			<!-- 주문상품 버튼을 누르면 아래 태그가 숨겨진다. -->
@@ -204,8 +207,10 @@
 						<td><strong>이메일</strong></td>
 						<td class="td-definition">
 							<div class="mt-3 mb-3"><%=user.getEmail() %></div>
+
 							<span class="text-muted lh-base"><strong>이메일을 통해 주문처리과정을 보내드립니다.</strong></span><br/>
 							<span class="text-muted lh-base"><strong>정보 변경은 마이페이지 > 개인정보 수정 메뉴에서 가능합니다.</strong></span>
+
 						</td>
 					</tr>
 				</tbody>
@@ -230,8 +235,10 @@
 						<td><strong>상세정보</strong></td>
 						<td class="td-definition">
 							<div class="mt-3 mb-3"><%=user.getName() %>, <%=user.getTel() %></div>
+
 							<span class="text-muted lh-base"><strong class="pe-2 border-end border-gray">문 앞</strong><strong class="ps-2">공동현관 비밀번호</strong></span><br/>
 							<span class="text-muted lh-base"><strong class="pe-2 border-end border-gray">배송 완료 메시지</strong><strong class="ps-2">배송직후</strong></span><br/>
+
 							<!-- 추후 구현 시 모달 기능 추가-->
 							<button type="button" class="btn btn-sm btn-outline-secondary px-3 my-3" data-bs-toggle="modal">수정</button>
 						</td>
@@ -271,8 +278,10 @@
 						<!-- 위 라디오버튼 선택에 따라 다른 html 내용이 출력된다. -->
 						<div id="payment-method-info">
 							<div class="d-none" id="kakaopay">
+
 									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, 결제하신 수단으로만</span><br/>
 									<span class="fw-bold p-3 text-muted">환불되는 점 양해부탁드립니다.</span>
+
 							</div>
 							<div id="creditcard">
 								<select class="form-select mb-3">
@@ -298,9 +307,11 @@
 									<option>11개월</option>
 									<option>12개월</option>
 								</select>
+
 								<span class="fw-bold p-3 text-muted">무이자 할부 유의사항: 은행계열/체크/기프트/선불/법인/개인사업자 기업카드는 제외</span>
 							</div>
 							<div class="d-none text-center lh-base" id="simplepay">
+
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" id="simplepay-1">
 										<label class="form-check-label" for="inlineRadio1">차이</label>
@@ -317,7 +328,8 @@
 										<input class="form-check-input" type="radio" id="simplepay-4">
 										<label class="form-check-label" for="inlineRadio4">페이코</label>
 									</div><br/>
-									<span class="fw-bold p-3 text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
+
+									<span class="fw-bold p-3 text-center text-muted">※ 카카오페이, 차이, 토스, 네이버페이, 페이코 결제 시, </span><br/>
 									<span class="fw-bold p-3 text-muted">결제하신 수단으로만 환불되는 점 양해부탁드립니다.</span>
 							</div>
 							<div class="d-none text-center lh-base" id="mobilepay">
@@ -347,6 +359,7 @@
 									<span>ㄴ 상품할인금액</span>
 								</div>
 								<div class="col text-end"><span><strong id="info-discount-amount">0</strong> 원</span></div>
+
 							</div>
 							<div class="row mt-3 mb-3">
 								<div class="col">배송비</div>
@@ -382,7 +395,9 @@
 							<input type="checkbox" id="agree-checkbox"/>
 						</td>
 						<td>
+            
 							<div class="fs-5 fw-bold mb-1">결제 진행 필수 동의</div>
+
 						</td>
 					</tr>
 					<tr>
@@ -411,7 +426,7 @@
 		<!-- 6. %%원 결제하기 버튼, 안내 텍스트 -->
 		<div class="row mb-5" id="order-button-row">
 			<div class="col-5 mx-auto text-center">
-				<button class="btn fs-6 fw-bold" style="background-color:#5f0080; color:white; --bs-btn-padding-y: 1em; --bs-btn-padding-x: 4em;"><span id="button-pay-price">0</span> 원 결제하기</button>	
+				<button class="btn fs-6 fw-bold" style="background-color:#5f0080; color:#fff; --bs-btn-padding-y: 1em; --bs-btn-padding-x: 4em;"><span id="button-pay-price">0</span> 원 결제하기</button>	
 				<p class="text-muted my-3 fw-bold lh-base">
 					<span>[배송준비중] 이전까지 주문취소 가능합니다.</span><br>
 					<span>미성년자가 결제 시 법정대리인이 그 거래를 취소할 수 있습니다.</span><br>
@@ -489,7 +504,6 @@
 		
 		return true;
 	}
-
 	/*
 		주문상품 아코디언을 클릭하면 실행되는 이벤트핸들러함수
 		아코디언이 닫혀있을 때는 주문정보 요약 텍스트가 보이고, 열려있을 때는 보이지 않도록 한다.
@@ -518,3 +532,16 @@
 </script>
 </body>
 </html>
+© 2022 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+Loading complete

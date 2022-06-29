@@ -28,8 +28,7 @@
 	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
 	User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
-		response.sendRedirect("../loginform.jsp?fail=deny");
-		return;
+		throw new RuntimeException("결제 실패: 요청 정보가 올바르지 않습니다.");
 	}
 	int userNo = user.getNo();
 	
@@ -151,6 +150,8 @@
 		book.setStock(updateStock);
 		bookDao.updateBook(book);
 	}
+	
+	// payMethod의 값이 kakaopay일 경우 카카오페이 결제를 실행한다 ?
 	
 	// 결제가 정상적으로 완료된 장바구니아이템을 DB에서 삭제한다.
 	for (String value : cartItemNos) {

@@ -46,9 +46,9 @@
 				
 				List<Notice> noticeList = null;
 				if (keyword.isEmpty()) {
-					noticeList = noticeDao.getAllNotices(pagination.getBeginIndex(), pagination.getEndIndex(), keyword);
-				} else {
 					noticeList = noticeDao.getAllNotices(pagination.getBeginIndex(), pagination.getEndIndex());
+				} else {
+					noticeList = noticeDao.getAllNotices(pagination.getBeginIndex(), pagination.getEndIndex(),keyword);
 				}
 		%>
 	<div id="wrap">
@@ -60,10 +60,10 @@
 							<h2 class="tit_snb">고객센터</h2>
 							<div class="inner_snb">
 								<ul class="list_menu">
-									<li class="on"><a href="/marketbooks/board/list.jsp">공지사항</a>
+									<li class="on"><a href="/marketbooks/board/list.jsp?page=1">공지사항</a>
 									</li>
-									<li><a href="/marketbooks/board/faq.jsp">자주하는 질문</a></li>
-									<li><a href="/marketbooks/board/inquiry.jsp">1:1 문의</a></li>
+									<li><a href="/marketbooks/board/faq.jsp?page=1">자주하는 질문</a></li>
+									<li><a href="/marketbooks/board/inquiry.jsp?page=1">1:1 문의</a></li>
 								</ul>
 							</div>
 							<a href="/marketbooks/board/form.jsp" class="link_inquire"><span
@@ -72,24 +72,15 @@
 						<div class="page_section">
 							<div class="head_aticle">
 								<h2 class="tit">
-									공지사항 <span class="tit_sub">컬리의 새로운 소식들과 유용한 정보들을 한곳에서
-										확인하세요.</span>
+									공지사항 <span class="tit_sub">마켓북스의 새로운 소식들과 유용한 정보들을 한곳에서 확인하세요.</span>
 								</h2>
 							</div>
-							<form name="frmList" action="" onsubmit="">
-								<input type="hidden" name="id" value="notice">
+							<form id="frmList" name="frmList" method="get" action="list.jsp" onsubmit="">
+								<input type="hidden" name="page" value="<%=currentPage %>" />
 								<style>
-								.notice .layout-pagination {
-									margin: 0
-								}
-								
-								.eng2 {
-									color: #939393
-								}
-								
-								.xans-board-listheader {
-									font-size: 12px
-								}
+								.notice .layout-pagination {margin: 0}
+								.eng2 {color: #939393}
+								.xans-board-listheader {font-size: 12px}
 								</style>
 								<table width="100%" align="center" cellpadding="0"
 									cellspacing="0">
@@ -156,22 +147,22 @@
 								<%
 									}
 								%>
-								<input type="hidden" name="page" value="<%=currentPage %>" />
+								
 								<div class="layout-pagination">
 									<div class="pagediv">
-										<a href="list.jsp?page=<%=pagination.getCurrentPage() - 1%>"
+										<a href="javascript:clickPageNo(<%=pagination.getCurrentPage() - 1%>)"
 											class="layout-pagination-button layout-pagination-prev-page">
 											</a>
 										<%
 										for (int num = pagination.getBeginPage(); num <= pagination.getEndPage(); num++) {
 										%>
-										<a href="list.jsp?page=<%=num%>"
+										<a href="javascript:clickPageNo(<%=num%>)"
 											class="layout-pagination-button layout-pagination-number <%=pagination.getCurrentPage() == num ? "__active" : ""%>"><%=num %>
 											</a>
 										<%
 										}
 										%>
-										<a href="list.jsp?page=<%=pagination.getCurrentPage() + 1%>"
+										<a href="javascript:clickPageNo(<%=pagination.getCurrentPage() + 1%>)"
 											class="layout-pagination-button layout-pagination-next-page">
 										</a>
 									</div>
@@ -180,17 +171,17 @@
 								<table class="xans-board-search xans-board-search2">
 									<tbody>
 										<tr>
+											<!-- 미구현
 											<td class="input_txt">검색어</td>
-											<td class="stxt"><input type="checkbox"
-												name="search[name]">이름 <input type="checkbox"
-												name="search[subject]">제목 <input type="checkbox"
-												name="search[contents]">내용&nbsp;</td>
-											<td class="input_txt">&nbsp;</td>
+											<td class="stxt">
+											<input type="checkbox" name="search[subject]">제목 
+											<input type="checkbox" name="search[contents]">내용</td>
+											-->
 											<td>
 												<div class="search_bt">
-													<a href="javascript:document.frmList.submit()"><img
+													<a href="javascript:searchKeyword();"><img
 														src="../images/search.jpeg" align="absmiddle"></a> <input
-														type="text" name="search[word]" value="" required="">
+														type="text" name="keyword" value="<%=keyword %>" placeholder="검색어를 입력해주세요">
 												</div>
 											</td>
 										</tr>
@@ -207,5 +198,17 @@
 </body>
 <!-- footer include -->
 <jsp:include page="../common/footer.jsp"></jsp:include>
+<script>
+function clickPageNo(pageNo) {
+	document.querySelector("input[name=page]").value = pageNo;
+	document.getElementById("frmList").submit();
+}
+
+function searchKeyword () {
+	document.querySelector("input[name=page]").value =1;
+	document.getElementById("frmList").submit();
+	
+}
+</script>
 </html>
 

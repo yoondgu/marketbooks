@@ -17,7 +17,7 @@ public class Book {
 	private Date createdDate;
 	private Date updatedDate;
 	private String deleted;
-	private double discountRate;
+	private Category category;
 
 	public Book() {
 	}
@@ -144,13 +144,13 @@ public class Book {
 	public void setDeleted(String deleted) {
 		this.deleted = deleted;
 	}
-
-	public double getDiscountRate() {
-		return discountRate;
-	}
 	
-	public void setDiscountRate(double discountRate) {
-		this.discountRate = discountPrice / price * 100;
-	}	
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
 }

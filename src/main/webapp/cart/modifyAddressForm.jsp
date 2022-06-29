@@ -4,7 +4,7 @@
 <%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,23 +37,26 @@
 		}
 		int userNo = user.getNo();
 		
-		// 수정할 배송지 번호 획득
-		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
-		
 		// 사용자의 기본 배송지 번호 획득
 		int defAddressNo = 0;
 		if (user.getAddress() != null) {
 			defAddressNo = user.getAddress().getNo();
 		}
 		
-   		// addressNo로 배송지 객체 획득하기
+		
+		// 수정할 배송지 번호 획득
+		int addressNo = StringUtil.stringToInt(request.getParameter("modifyAddressNo"));
+
+		// addressNo로 배송지 객체 획득하기
   		UserAddressDao userAddressDao = UserAddressDao.getInstance();
    		UserAddress userAddr = userAddressDao.getAddressByNo(addressNo);
    		
    		if (userAddr == null) {
    			throw new RuntimeException("배송지 정보가 존재하지 않습니다.");
    		}
-
+   		
+   		// input태그에 저장해 폼제출시 전달
+   		String location = StringUtil.nullToBlank(request.getParameter("location"));
    %>
    <div class="formwrapper p-3">
 		<form id="address-form" method="post" action="">
@@ -62,7 +65,9 @@
    		<%
 			int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
    		%>
-   			<input type="hidden" name="selectedAddressNo" id="hidden-selectedAddressNo" value="<%=selectedAddressNo %>" />   			
+   			<input type="hidden" name="selectedAddressNo" id="hidden-selectedAddressNo" value="<%=selectedAddressNo %>" />   	
+   			<!-- 재요청 시 마이페이지, 장바구니 중 어디로 보낼지 결정하는 값 -->
+   			<input type="hidden" name="location" id="hidden-location" value="<%=location %>" />		
 			<!-- addressList.jsp에 전달하기 위한, list.jsp의 체크된 아이템 번호 전달받기 -->
 	 	<%
 	 		// list.jsp페이지에서 체크된 아이템번호 값을 getParameters로 꺼내서 반복문으로 hidden타입의 input태그를 만든다.
@@ -124,7 +129,6 @@
 		-'기본 배송지로 저장' 체크박스에 체크되어있지 않고, 수정하려는 배송지가 선택된 배송지가 아닐 경우 현재 창으로 폼을 제출한다.
 	*/
 	function modifyAddress() {
-		// 왜 onsubmit으로 안되지?
 		if (!checkInputValue()) {
 			return;
 		}
@@ -138,16 +142,26 @@
 		
 		let isCheckedStatus = document.querySelector("input[name=isChecked]").checked;
 		
-		if (modifyAddressNo == selectedAddressNo || (isCheckedStatus && defAddressNo === selectedAddressNo)) {
+		let location = document.querySelector("input[name=location]").value;
+		if (location === "mypage") {
+			// 마이페이지에서 연 창이면 무조건 부모창으로 폼을 제출한다.
+			window.opener.name = 'parentName'
+			form.setAttribute("target", 'parentName');
+			form.setAttribute("action", '/marketbooks/cart/modifyAddress.jsp');
+
+			form.submit();
+			window.close();
+				
+		} else if (modifyAddressNo == selectedAddressNo || (isCheckedStatus && defAddressNo === selectedAddressNo)) {
 			// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 			window.opener.name = 'parentName'
 			form.setAttribute("target", 'parentName');
-			form.setAttribute("action", 'modifyAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/modifyAddress.jsp');
 
 			form.submit();
 			window.close();
 		} else {
-			form.setAttribute("action", 'modifyAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/modifyAddress.jsp');
 			form.submit();
 		}
 	}
@@ -163,17 +177,27 @@
 		
 		let selectedAddressNo = document.getElementById("hidden-selectedAddressNo").value;
 		let deleteAddressNo = document.getElementById("addressNo").value;
+		
+		let location = document.querySelector("input[name=location]").value;
+		if (location === "mypage") {
+			// 마이페이지에서 연 창이면 무조건 부모창으로 폼을 제출한다.
+			window.opener.name = 'parentName'
+			form.setAttribute("target", 'parentName');
+			form.setAttribute("action", '/marketbooks/cart/deleteAddress.jsp');
+
+			form.submit();
+			window.close();
 			
-		if (selectedAddressNo === deleteAddressNo) {
+		} else if (selectedAddressNo === deleteAddressNo) {
 			// 부모창(list.jsp페이지를 보고있던 브라우저)으로 폼을 제출한다.
 			window.opener.name = 'parentName'
 			form.setAttribute("target", 'parentName');
-			form.setAttribute("action", 'deleteAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/deleteAddress.jsp');
 
 			form.submit();
 			window.close();
 		} else {
-			form.setAttribute("action", 'deleteAddress.jsp');
+			form.setAttribute("action", '/marketbooks/cart/deleteAddress.jsp');
 			form.submit();
 		}
 	}
