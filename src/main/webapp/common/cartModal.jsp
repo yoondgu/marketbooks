@@ -124,7 +124,11 @@
 					span.textContent = result.quantity;
 				} else {
 					let message = document.getElementById("addCartResult-message");
-					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					if (result.logined) {
+						message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					} else {
+						message.innerHTML = "로그아웃 상태입니다. 로그인 후 시도해주세요.";
+					}
 				}
 				addResultModal.show();
 			}
@@ -165,8 +169,14 @@
 					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
+					
 					let message = document.getElementById("addCartResult-message");
-					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					if (result.logined) {
+						message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					} else {
+						message.innerHTML = "로그아웃 상태입니다. 로그인 후 시도해주세요.";
+					}
+					
 				}
 				addResultModal.show();
 			}
