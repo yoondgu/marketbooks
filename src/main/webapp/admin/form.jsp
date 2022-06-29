@@ -109,16 +109,16 @@
 							
 							<div class="col-5">
 								<label class="form-label">정가</label>
-								<input class="form-control" type="text" name="price" />
+								<input class="form-control" type="number" name="price" />
 							</div>
 							<div class="col-5">
 								<label class="form-label">할인가격</label>
-								<input class="form-control" type="text" name="discount-price" />
+								<input class="form-control" type="number" name="discount-price" />
 								
 							</div>
 							<div class="col-2">
 								<label class="form-label">재고</label>
-								<input class="form-control" type="text" name="stock" />
+								<input class="form-control" type="number" name="stock" />
 							</div>
 							
 							<div class="col-12">

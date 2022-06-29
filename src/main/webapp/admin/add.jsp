@@ -7,7 +7,7 @@
 <%@page import="util.StringUtil"%>
 <%@page import="util.MultipartRequest"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="error/500.jsp"%>
 <%
 	//	multipart/form-data 요청을 처리하는 MultipartRequest 객체 생성하기
 	MultipartRequest mr = new MultipartRequest(request, "C:\\eclipse\\workspace-web\\atteched-file");
@@ -38,6 +38,6 @@
 	bookDao.insertbook(book);
 	
 	// 재요청 URL을 응답으로 보낸다.
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("../home.jsp");
 	
 %>

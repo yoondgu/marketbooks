@@ -119,8 +119,8 @@ public class BookDao {
 	public void insertbook(Book book) throws SQLException {
 		String sql = "insert into hta_books "
 				+ "(book_no, category_no, book_title, book_author, book_publisher, book_description, book_price, "
-				+ "book_discount_price, book_on_sell, book_stock, book_createdDate, book_updatedDate, book_deleted) "
-				+ "values " + "(sample_books_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "book_discount_price, book_on_sell, book_stock, book_created_date, book_updated_date, book_deleted) "
+				+ "values " + "(sample_books_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)";
 
 		helper.insert(sql, book.getCategoryNo(), book.getTitle(), book.getAuthor(), book.getPublisher(),
 				book.getDescription(), book.getPrice(), book.getDiscountPrice(), book.getOnSell(), book.getStock(),
