@@ -138,6 +138,9 @@
     let address = document.querySelector('#address');
 
     let error = document.querySelectorAll('.error_next_box');
+    
+    /*이메일 유효성 및 중복검사 체크여부를 저장하는 변수*/
+    let isEmailChecked = false;
 
     /*이벤트 핸들러 연결*/
     email.addEventListener("focusout", checkEmail);
@@ -153,14 +156,36 @@
         if(email.value === "") {
             error[0].innerHTML = "필수 정보입니다.";
             error[0].style.display = "block";
-        } else if(!emailPattern.test(email.value)) {
+            isEmailChecked = false;
+            return;
+        } 
+        if(!emailPattern.test(email.value)) {
             error[0].innerHTML = "이메일 형식으로 입력해주세요";
             error[0].style.display = "block";
-        } else {
-            error[0].innerHTML = "사용 가능한 이메일입니다.";
-            error[0].style.color = "#08A600";
-            error[0].style.display = "block";
+            isEmailChecked = false;
+            return;
         }
+        
+        /*XHR객체로 서버와 HTTP 통신하기*/
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        	if (xhr.readyState === 4 && xhr.status === 200) {
+        		let jsonText = xhr.responseText;
+        		let result = JSON.parse(jsonText);
+        		if (result.exist) {
+        			error[0].innerHTML = "사용할 수 없는 이메일입니다.";
+                    error[0].style.display = "block";
+                    isEmailChecked = false;
+        		} else {
+        			error[0].innerHTML = "사용 가능한 이메일입니다.";
+                    error[0].style.color = "#08A600";
+                    error[0].style.display = "block";
+                    isEmailChecked = true;
+        		}
+        	}
+        }
+        xhr.open("GET", 'emailcheck.jsp?email=' + (email.value));
+        xhr.send();
     }
 
     function checkPw() {
