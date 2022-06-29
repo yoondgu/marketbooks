@@ -116,7 +116,7 @@
 																		<td class="board_view_content"
 																			style="word-wrap: break-word; word-break: break-all"
 																			id="contents_1650" valign="top">
-																			<%=notice.getContent() %>
+																			<%=notice.getHtmlContent() %>
 																		</td>
 																	</tr>
 																</tbody>

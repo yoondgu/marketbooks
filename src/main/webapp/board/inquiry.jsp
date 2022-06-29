@@ -172,6 +172,15 @@
 										</tr>
 									</tbody>
 								</table>
+								<table width="100%">
+									<tbody>
+										<tr>
+											<td align="right"><a href="/marketbooks/board/form.jsp">
+													<span class="bhs_button yb" style="float: none;">문의하기</span>
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
 								<div class="layout-pagination">
 									<div class="pagediv">
 										<a href="javascript:clickPageNo(<%=pagination.getCurrentPage() - 1%>)"
@@ -191,15 +200,7 @@
 										</a>
 									</div>
 								</div>
-								<table width="100%">
-									<tbody>
-										<tr>
-											<td align="right"><a href="/marketbooks/board/form.jsp">
-													<span class="bhs_button yb" style="float: none;">문의하기</span>
-											</a></td>
-										</tr>
-									</tbody>
-								</table>
+								
 
 							</form>
 						</div>

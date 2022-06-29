@@ -87,6 +87,7 @@ public class OrderDao {
 	 * @throws SQLException
 	 * @throws ParseException 
 	 */
+	
 	public int getTotalRowsByPeriod(int periodYear, int userNo) throws SQLException, ParseException {
 		
 		if (periodYear < 0) {
