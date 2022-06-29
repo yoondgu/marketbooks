@@ -4,7 +4,7 @@
 <%@page import="dao.UserAddressDao"%>
 <%@page import="util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" errorPage="../error/500.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -134,74 +134,65 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">	
 
-	// 모든 체크박스의 클래스 중 checked를 모두 false로 만든다. 
-	let checkboxElements = document.querySelectorAll("input[id^='item-checkbox-']");
-	if (checkboxElements != null) {
-		for (let element of checkboxElements) {
-			element.checked = false;
-		}
-		
-		// 로컬스토리지에 선택배송지 번호가 존재한다면, 그 번호를 선택배송지로 설정한다.
-		// 배송지 번호에 해당하는 체크박스만 checked 클래스를 추가한다.
-		let selectedAddrNo = localStorage.getItem('selectedAddressNo');
-		if (selectedAddrNo != null) {
-			let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
-			selectedCheckboxElement.checked = true;
-		} else {
-			// 로컬스토리지에 선택배송지 번호가 없을 경우 기본배송지를 로컬스토리지에 저장하고 checked 클래스를 추가한다.
-			let defAddressNo = document.getElementById("defAddressNo").value;
-			if (defAddressNo != 0) {
-				
-				selectedAddrNo = defAddressNo;
-				localStorage.setItem('selectedAddressNo', selectedAddrNo);
-				
-				let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
-				selectedCheckboxElement.checked = true;
-				
-				// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
-				document.querySelector("input[name=selectedAddressNo]").value = selectedAddressNo;
-			}
-		}
+// 로컬스토리지에 저장된 선택배송지번호를 전역변수로 선언 
+let selectedAddrNo = localStorage.getItem('selectedAddressNo');
+
+// 모든 체크박스의 클래스 중 checked를 모두 false로 만든다. 
+let checkboxElements = document.querySelectorAll("input[id^='item-checkbox-']");
+if (checkboxElements != null) {
+	for (let element of checkboxElements) {
+		element.checked = false;
 	}
 	
+	// 로컬스토리지에 선택배송지 번호가 존재한다면, 그 번호를 선택배송지로 설정한다.
+	// 배송지 번호에 해당하는 체크박스만 checked 클래스를 추가한다.
+	if (selectedAddrNo != null) {
+		let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
+		selectedCheckboxElement.checked = true;
+		
+		// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
+		document.querySelector("input[name=selectedAddressNo]").value = selectedAddrNo;
+	} else {
+		// 로컬스토리지에 선택배송지 번호가 없을 경우 기본배송지를 로컬스토리지에 저장하고 checked 클래스를 추가한다.
+		let defAddressNo = document.getElementById("defAddressNo").value;
+		if (defAddressNo != 0) {
+			
+			selectedAddrNo = defAddressNo;
+			localStorage.setItem('selectedAddressNo', selectedAddrNo);
+			
+			let selectedCheckboxElement = document.getElementById("item-checkbox-" + selectedAddrNo);
+			selectedCheckboxElement.checked = true;
+			
+			// 로컬스토리지를 이용해 조회한 선택배송지를 input태그에도 저장한다.
+			document.querySelector("input[name=selectedAddressNo]").value = selectedAddrNo;
+		} else {
+			// 기본배송지도 존재하지 않을 경우 이 변수에는 null 대신 0을 저장한다.
+			selectedAddrNo = 0;
+		}
+	}
+}
 
-	// 주문 폼에 제출할 선택 배송지를 변경한다. 
+	// 주문 폼에 제출할 선택 배송지를 변경해 로컬스토리지에 저장한다.
+	// 로컬스토리지에 저장함에 따라 장바구니 조회 페이지에서도 동일한 선택 배송지를 획득할 수 있다.
 	function changeSelectedAddress(addressNo) {
 		// 선택 배송지를 로컬스토리지에 저장하고 새로고침한다. 
 		localStorage.setItem('selectedAddressNo', addressNo);
 		location.reload(true);
 	}
 	
-	
 	// 수정, 추가, 삭제는 새 창을 띄워 폼입력값으로 정보를 전달한다.
-	// mypage=yes 파라미터를 전달해서 재요청 시 마이페이지 내 배송지리스트로 오도록 한다.
-	function submitFormNewWindow(requestURL, windowname) {
-		window.open(requestURL, windowname, 'width=500,height=750'); 
-		
-		let form = document.getElementById("address-form");
-		
-		form.setAttribute("target", windowname);
-		form.setAttribute("action", requestURL);
-		
-		form.submit();
-	}
-	
+	// 전달할 값: modifyAddressNo=변경할 배송지 번호 , selectedAddressNo=선택한 배송지번호 , loacation=mypage
+	// location=mypage 파라미터를 전달해서 재요청 시 마이페이지 내 배송지리스트로 오도록 한다.
 	function openModifyForm(addressNo) {		
-		// 히든태그 값 수정
-		document.getElementById("hidden-modifyAddressNo").value = addressNo;
-		document.getElementById("hidden-location").value = "mypage";
-		
-		// 새 창을 띄워 제출한다.
-		
-		submitFormNewWindow("../cart/modifyAddressForm.jsp", "modify");
-		
+		// 요청파라미터를 쿼리스트링으로 붙인 URL을 새로 여는 창에 요청한다. (새 창을 열고, 폼을 제출하면 다른 url로 두 번 요청하는 것임)
+		requestURL = "../cart/modifyAddressForm.jsp?modifyAddressNo=" + addressNo + "&selectedAddressNo=" + selectedAddrNo + "&location=mypage";
+		window.open(requestURL, 'modifyForm', 'width=500,height=750');
 	}
 	
 	function openAddForm() {
-		// 히든태그 값 수정
-		document.getElementById("hidden-location").value = "mypage";
-		// 새 창을 띄워 제출한다.
-		submitFormNewWindow("../cart/addAddressForm.jsp", "add");
+		// 요청파라미터를 쿼리스트링으로 붙인 URL을 새로 여는 창에 요청한다. (새 창을 열고, 폼을 제출하면 다른 url로 두 번 요청하는 것임)
+		requestURL = "../cart/addAddressForm.jsp?selectedAddressNo=" + selectedAddrNo + "&location=mypage";
+		window.open(requestURL, 'addForm', 'width=500,height=750');
 	}
 	
 </script></body>

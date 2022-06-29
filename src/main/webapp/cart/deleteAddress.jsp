@@ -50,7 +50,7 @@
 	if ("mypage".equals(location)) {
 		response.sendRedirect("/marketbooks/mypage/addressList.jsp" + queryString);
 	} else {
-		response.sendRedirect((addrNo == selectedAddressNo? "/marketbooks/cart/ist.jsp" : "/marketbooks/cart/addressList.jsp") + queryString);
+		response.sendRedirect((addrNo == selectedAddressNo? "/marketbooks/cart/list.jsp" : "/marketbooks/cart/addressList.jsp") + queryString);
 	}
 	
 %>

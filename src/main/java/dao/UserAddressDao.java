@@ -64,6 +64,24 @@ public class UserAddressDao {
 		return userAddr;
 		}, addrNo);
 	}
+
+	// 삭제된 배송지를 포함해서 배송지 번호로 등록된 배송지 조회
+	public UserAddress getAddressWithHistoryByNo(int addrNo) throws SQLException {
+		String sql = "SELECT ADDRESS_NO, USER_NO, USER_ADDRESS, USER_DETAIL_ADDRESS, POSTAL_CODE, USER_ADDRESS_DELETED "
+				+ "FROM HTA_USER_ADDRESSES "
+				+ "WHERE ADDRESS_NO = ? ";
+		
+		return helper.selectOne(sql, rs -> {
+			UserAddress userAddr = new UserAddress();
+			userAddr.setNo(rs.getInt("address_no"));
+			userAddr.setUserNo(rs.getInt("user_no"));
+			userAddr.setAddress(rs.getString("user_address"));
+			userAddr.setDetailAddress(rs.getString("user_detail_address"));
+			userAddr.setPostalCode(rs.getInt("postal_code"));
+			userAddr.setDeleted(rs.getString("user_address_deleted"));
+			return userAddr;
+		}, addrNo);
+	}
 	
 	// 사용자정보로 모든 등록된 배송지 조회
 	public List<UserAddress> getAllAddressesByUser(int userNo) throws SQLException {
