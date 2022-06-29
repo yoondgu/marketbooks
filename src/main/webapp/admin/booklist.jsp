@@ -9,12 +9,14 @@
     
    <!-- 관리자만 접속할 수 있게 합니다. -->
 <%     
-	// 세션에 저장된 사용자정보를 조회한다.
-	User logineduser = null;
-	if((logineduser = (User) session.getAttribute("LOGINED_USER")) != null) {
-		if(!"admin@gmail.com".equals(logineduser.getEmail())) {
-			throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
-		} else {
+	//세션에 저장된 사용자정보를 조회한다.
+	User logineduser = (User) session.getAttribute("LOGINED_USER");
+	if(logineduser == null) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	}
+	if(!"admin@gmail.com".equals(logineduser.getEmail())) {
+		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
+	} 
 %>
 <!DOCTYPE html>
 <html>
@@ -159,9 +161,8 @@
 					   				<td><strong><%=book.getDiscountPrice() %>원</strong><div><small><%=book.getPrice() %>원</small></div></td>
 					   				<td>
 						   				<div id="button" class="">
-						   				
-						   				<!--  도서 수정은 추가구현으로 남겨두겠습니다.
-						   					<div><a href="modifyform.jsp" class="btn btn-outline-secondary btn-sm mb-1" style="width:41px">수정</a></div>
+						   				<!--  
+						   					<div><a href="modifyform.jsp?bookNo=" class="btn btn-outline-secondary btn-sm mb-1" style="width:41px">수정</a></div>
 						   				-->
 						 					<div><a href="bookdelete.jsp?no=<%=book.getNo() %>" class="btn btn-outline-danger btn-sm" style="width:41px">삭제</a></div>
 						   				</div>
@@ -216,9 +217,3 @@
 	</div>
 </body>
 </html>
-<%			
-		}
-	} else {
-		throw new RuntimeException("관리자 홈페이지에 접속하실 수 없습니다.");
-	}
-%> 

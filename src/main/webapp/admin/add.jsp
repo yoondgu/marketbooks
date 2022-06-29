@@ -38,6 +38,6 @@
 	bookDao.insertbook(book);
 	
 	// 재요청 URL을 응답으로 보낸다.
-	response.sendRedirect("../home.jsp");
+	response.sendRedirect("booklist.jsp");
 	
 %>
