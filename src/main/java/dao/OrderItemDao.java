@@ -27,7 +27,10 @@ public class OrderItemDao {
 	}
 	
 	public List<OrderItem> getOrderItemsByOrderNo(int orderNo) throws SQLException {
-		String sql = "SELECT O.ORDER_ITEM_NO, O.ORDER_NO, B.BOOK_NO, B.BOOK_TITLE, B.BOOK_AUTHOR, B.BOOK_PUBLISHER, B.BOOK_PRICE, B.BOOK_DISCOUNT_PRICE, "
+		String sql = "SELECT O.ORDER_ITEM_NO, O.ORDER_NO, "
+					+ "B.BOOK_NO, B.CATEGORY_NO, B.BOOK_TITLE, B.BOOK_AUTHOR, B.BOOK_PUBLISHER, "
+					+ "B.BOOK_DESCRIPTION, B.BOOK_PRICE, B.BOOK_DISCOUNT_PRICE, "
+					+ "B.BOOK_ON_SELL, B.BOOK_STOCK, B.BOOK_DELETED, "
 					+ "O.ORDER_ITEM_PRICE, O.ORDER_ITEM_QUANTITY, O.ORDER_ITEM_CREATED_DATE "
 					+ "FROM HTA_ORDER_ITEMS O, HTA_BOOKS B "
 					+ "WHERE O.ORDER_NO = ? "
@@ -40,11 +43,16 @@ public class OrderItemDao {
 			
 			Book book = new Book();
 			book.setNo(rs.getInt("book_no"));
+			book.setCategoryNo(rs.getInt("category_no"));
 			book.setTitle(rs.getString("book_title"));
 			book.setAuthor(rs.getString("book_author"));
 			book.setPublisher(rs.getString("book_publisher"));
+			book.setDescription(rs.getString("book_description"));
 			book.setPrice(rs.getInt("book_price"));
 			book.setDiscountPrice(rs.getInt("book_discount_price"));
+			book.setOnSell(rs.getString("book_on_sell"));
+			book.setStock(rs.getInt("book_stock"));
+			book.setDeleted(rs.getString("book_deleted"));
 			
 			orderItem.setBook(book);
 			orderItem.setPrice(rs.getInt("order_item_price"));
