@@ -123,12 +123,12 @@
 							 	</a>
 					 		</li> 
 							<li class="menu4">
-							 	<a href="" class="link bargain ">
+							 	<a href="/marketbooks/book/frugalshopping.jsp" class="link bargain ">
 							 		<span class="txt">알뜰쇼핑</span>
 							 	</a>
 						 	</li>
 						 	<li class="lst">
-						 		<a href="" class="link event ">
+						 		<a href="/marketbooks/book/specialBenefits.jsp" class="link event ">
 						 			<span class="txt">특가/혜택</span>
 					 			</a>
 				 			</li>

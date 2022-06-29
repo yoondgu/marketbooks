@@ -22,86 +22,86 @@
 </jsp:include>
 
 <div class="container">
+<%
+	int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
+	int rows = StringUtil.stringToInt(request.getParameter("rows"), 12);
+	String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
+	String categoryName = StringUtil.nullToBlank(request.getParameter("category"));
+
+	BookDao bookDao = BookDao.getInstance();
+	// 전체 데이터 갯수 조회
+	int totalRows = 0;
+	if (keyword.isEmpty()) {
+		totalRows = bookDao.getTotalRows();
+	} else {
+		totalRows = bookDao.getTotalRows(keyword);
+	}
+	// 페이징처리에 필요한 정보를 제공하는 객체 생성
+	Pagination pagination = new Pagination(rows, totalRows, currentPage);
+
+	// 요청한 페이지번호에 맞는 데이터 조회하기
+	List<Book> bookList = null;
+	if (!categoryName.isEmpty()) {
+		bookList = bookDao.getBooksByCategory(pagination.getBeginIndex(), pagination.getEndIndex(), categoryName);
+	} else if (!keyword.isEmpty()) {
+		bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex(), keyword);
+	} else {
+		bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
+	}
+%>
+
+	<div class="row m-5">
+		<span class="text-center fs-2"><%=categoryName %></span>
 	<%
-		int currentPage = StringUtil.stringToInt(request.getParameter("page"), 1);
-		int rows = StringUtil.stringToInt(request.getParameter("rows"), 12);
-		String keyword = StringUtil.nullToBlank(request.getParameter("keyword"));
-		String categoryName = StringUtil.nullToBlank(request.getParameter("category"));
-	
-		BookDao bookDao = BookDao.getInstance();
-		// 전체 데이터 갯수 조회
-		int totalRows = 0;
-		if (keyword.isEmpty()) {
-			totalRows = bookDao.getTotalRows();
-		} else {
-			totalRows = bookDao.getTotalRows(keyword);
-		}
-		// 페이징처리에 필요한 정보를 제공하는 객체 생성
-		Pagination pagination = new Pagination(rows, totalRows, currentPage);
-	
-		// 요청한 페이지번호에 맞는 데이터 조회하기
-		List<Book> bookList = null;
-		if (!categoryName.isEmpty()) {
-			bookList = bookDao.getBooksByCategory(pagination.getBeginIndex(), pagination.getEndIndex(), categoryName);
-		} else if (!keyword.isEmpty()) {
-			bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex(), keyword);
-		} else {
-			bookList = bookDao.getBooks(pagination.getBeginIndex(), pagination.getEndIndex());
+		if (!keyword.isEmpty()) {
+	%>
+		<span class="text-end">"<%=keyword %>" 총 <%=bookDao.getTotalRows(keyword) %> 개가 검색되었습니다.</span>
+	<%
 		}
 	%>
-
-	<div class="">
-		<div class="row m-5">
-			<span class="text-center fs-2"><%=categoryName %></span>
-		<%
-			if (!keyword.isEmpty()) {
-		%>
-			<span class="text-end">"<%=keyword %>" 총 <%=bookDao.getTotalRows(keyword) %> 개가 검색되었습니다.</span>
-		<%
-			}
-		%>
-			<div class="">
-				
-			</div>
+		<div class="">
+			
 		</div>
+	</div>
 	
-		<div class="row">
-		<%
-			for (Book book : bookList) {
-		%>
-			<div class="col-3">
-				<div class="card border-white" style="width:267px;">
-					<img src="/marketbooks/images/bookcover/book-<%=book.getNo()%>.jpg"
-						class="card-img-top .img-fluid" id="book-cover-img" />
-					<div class="cartImageDiv">
-						<button class="cartImageBtn" >
-							<img class="cartImage" src="https://s3.ap-northeast-2.amazonaws.com/res.kurly.com/kurly/ico/2021/cart_white_45_45.svg" alt="상품 카트에 담기 아이콘">
-						</button>
-					</div>
-					<div class="card-body">
-					<%
-						String title = book.getTitle();
-						String maintitle;
-						String subtitle;
-						if (title.contains("-")) {
-							maintitle = title.substring(0, title.lastIndexOf(" - "));
-							subtitle = title.substring(title.lastIndexOf(" - ")+1);
-						} else {
-							maintitle = title;
-						}
-					%>
-						<h5 id="book-title" class="card-title lh-sm mb-4"><%=maintitle%></h5>					
-						<span class="bookAuthor card-text lh-sm float-start" ><%=book.getAuthor()%></span>
-						<span class="fw-semibold lh-sm float-end fw-bold"><%=book.getDiscountPrice()%></span>
-						<span class="text-decoration-line-through lh-sm float-end me-3"><%=book.getPrice()%></span>			
-						<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class="stretched-link"></a>
-					</div>
-				</div>
-			</div>
-		<%
+	<div class="row">
+	<%
+		double dc = 0.0;
+		for (Book book : bookList) {
+			// 할인률 구하기
+			dc = Math.floor(100-(book.getDiscountPrice()*100/book.getPrice()));			
+			
+			// 책 제목, 부제목 나누기
+			String title = book.getTitle();
+			String maintitle;
+			String subtitle;
+			if (title.contains("-")) {
+				maintitle = title.substring(0, title.lastIndexOf(" - "));
+				subtitle = title.substring(title.lastIndexOf(" - ")+1);
+			} else {
+				maintitle = title;
 			}
-		%>
+			
+			// 할인하는 책만 출력
+			if (dc != 0.0) {		
+	%>
+		<div class="col mb-2 book-card" >
+			<div class="image-box mb-2">
+				<img src="/marketbooks/images/bookcover/book-<%=book.getNo()%>.jpg"
+				class="image-thumbnail" id="book-cover-img" />
+			</div>
+			<div class="text-box mb-5">
+				<h5 class="row px-4"><%=maintitle%></h5>
+				<span class="fs-6 ps-3 float-start text-danger"><%=dc%>%</span>
+				<span class="fs-6 fw-semibold fw-bold ms-3"><%=book.getDiscountPrice()%>원</span>
+				<span class="text-decoration-line-through ps-1"><%=book.getPrice()%>원</span>
+				<a href="/marketbooks/book/detail.jsp?bookNo=<%=book.getNo() %>" class=""></a>
+			</div>
 		</div>
+	<%
+			}
+		} 
+	%>
 	</div>	
 
 <!-- footer include -->

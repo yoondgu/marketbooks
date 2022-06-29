@@ -23,8 +23,7 @@
 <div class="layout-wrapper">
    <!-- 제목,부제,저자,출판사,출간일 -->
    <div class="row m-3">
-   		<div class="mt-3 mb-3">
-   		
+   		<div class="mt-3 mb-3">   		
    		
 		<!--
 			요청파라미터에서 게시글 번호를 조회하고, 게시글 번호에 맞는 글 정보를 조회해서 출력한다.
@@ -128,44 +127,6 @@
 	  				<span class="m-3"><%=book.getCreatedDate() %></span>
   				</div>		
   			</div>
-  			
-
-  			
-  			<!-- 할인,할부,소득공제버튼 -->
-  			<!-- 
-			<div class="">
-				<div class="m-2"> 			
-				    <ul>
-				        <li><a href="" class=""> 카드/간편결제 할인<img src="" class=""></a></li>
-				        <li><a href="" class=""> 무이자 할부<img src="" class=""></a>
-				            <div style="position:absolute; right:0; z-index:1; display:none;">
-				                <div class="" style="background-color:white;height:290px;">
-				                    <h3 class=" "> 무이자 할부 안내 </h3>
-				                    <div class=""><a href=""><img src="//image.aladin.co.kr/img/shop/2018/btn_top_close1.png"></a></div>
-				                    <div class=""></div>
-				                    <div class="">
-				                        <ul>
-				                            <li>
-				                                * 2~4개월 무이자 : 롯데 <br>
-				                                * 2~6개월 무이자 : 삼성 <br>
-				                                * 2~7개월 무이자 : 우리(BC아님), 국민, 비씨, 신한, 현대 <br>
-				                                * 2~8개월 무이자 : 하나, 농협 <br><br>
-				                                ※ 제휴 신용카드 결제시 무이자+제휴카드 혜택 가능합니다.<br>
-				                                ※ 오프라인결제/Non ActiveX 결제(간편결제)/카카오페이/네이버페이/페이코 등 간편결제/법인/체크/선불/기프트/문화누리/은행계열카드/ 알라딘 캐시와
-				                                같은 정기과금 결제 등은 행사대상에서 제외됩니다.<br>
-				                                ※ 무이자할부 결제 시 카드사 포인트 적립에서 제외될 수 있습니다.<br>
-				                                ※ 본 행사는 카드사 사정에 따라 변경 또는 중단될 수 있습니다.<br>
-				                            </li>
-				                        </ul>
-				                    </div>
-				                </div>
-				            </div>
-				        </li>
-				        <li><a href="" class="Ere_sub_blue">소득공제 230원 <img src="//image.aladin.co.kr/img/shop/2022/p_arrow_down.gif" class=""></a></li>
-				    </ul>
-		    	</div>
-			</div>		
-			 -->			
 			
   			<!-- 장바구니, 구매버튼 -->
 			<div class="m-3 float-end">
@@ -180,17 +141,6 @@
    <div class="row m-3">
    		<span class="ms-3 mt-2 book-description"><%=book.getDescription() %></span>
    </div>
-   
-   <!-- 리뷰 -->   
-   <!-- 기본정보 -->
-   <!-- 이벤트 -->
-   <!-- 책소개 -->
-   <!-- 목차 -->
-   <!-- 책속에서 -->
-   <!-- 저자 및 역자소개 -->
-   <!-- 출판사 제공 책소개 -->
-   <!-- 관련상품 -->
-   <!-- 반품/교환안내 -->
 </div>
 
 <!-- footer -->
