@@ -52,7 +52,7 @@
 					<div class="row d-flex justify-content-center">
 						<div class="col-6 hstack gap-3">
 							<button class="form-control btn btn-sm btn-light fs-4" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); changeTotalPrice();">-</button>
-							<input class="form-control form-control-lg fs-6 mx-auto" min="1" name="quantity" value="1" type="number" disabled>
+							<input class="form-control form-control-lg fs-6 mx-auto" min="1" name="quantity" id="modal-quantity" value="1" type="number" onchange="changeTotalPrice();">
 							<button class="form-control btn btn-sm btn-light fs-4" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); changeTotalPrice();">+</button>						
 						</div>
 					</div>
@@ -86,6 +86,15 @@
 	let addCartModal = new bootstrap.Modal(document.getElementById("addCart"));	
 	let addResultModal = new bootstrap.Modal(document.getElementById("addCartResult"));
 	
+	
+	// 수량 입력태그에 엔터키를 누르면 브라우저 기본 이벤트로 submit이 발생된다.
+	// 이를 방지하기 위해 해당 수량 입력태그 엘리먼트에 keydown이벤트에 아래 함수 등록
+	document.getElementById("modal-quantity").addEventListener('keydown', function(event) {
+	  if (event.keyCode === 13) {
+	    event.preventDefault();
+	  };
+	}, true);
+	
 	/*
 	특정 주문아이템을 저장하기 위해 모달창을 띄운다.
 	a태그를 클릭하면 모달창 input 태그에 도서번호를 저장하는 함수가 실행된다.
@@ -115,7 +124,11 @@
 					span.textContent = result.quantity;
 				} else {
 					let message = document.getElementById("addCartResult-message");
-					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					if (result.logined) {
+						message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					} else {
+						message.innerHTML = "로그아웃 상태입니다. 로그인 후 시도해주세요.";
+					}
 				}
 				addResultModal.show();
 			}
@@ -156,8 +169,14 @@
 					let span = document.getElementById("result-quantity");
 					span.textContent = result.quantity;
 				} else {
+					
 					let message = document.getElementById("addCartResult-message");
-					message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					if (result.logined) {
+						message.innerHTML = "장바구니 담기에 실패했습니다.<br/> 입력하신 수량보다 재고가 부족합니다.";
+					} else {
+						message.innerHTML = "로그아웃 상태입니다. 로그인 후 시도해주세요.";
+					}
+					
 				}
 				addResultModal.show();
 			}
@@ -170,7 +189,6 @@
 	
 	// 수량에 대한 input태그에 onchange 이벤트가 발생하면 총 금액을 새로 출력한다.
 	function changeTotalPrice() {
-		
 		// 한권의 가격과 수량을 획득한다.
 		let bookPrice = document.querySelector("input[name=discountPrice]").value;
 		let quantity = document.querySelector("input[name=quantity]").value;

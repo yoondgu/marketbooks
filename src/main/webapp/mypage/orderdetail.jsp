@@ -328,6 +328,9 @@
 				let result = JSON.parse(jsonText);
 				// 성공이면 resultModal 보여주기
 				if (!result.success) {
+					// 실패면 실패메시지 출력
+					let message = document.getElementById("cancelResult-message");
+					message.textContent = "취소가 정상적으로 이루어지지 않았습니다. 관리자에게 문의하세요.";
 					return;
 				} 
 				// 재요청 대신 html 변경하고 모달 띄움..

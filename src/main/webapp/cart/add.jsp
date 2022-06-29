@@ -14,14 +14,25 @@
 <%
 	BookDao bookDao = BookDao.getInstance();
 	CartItemDao cartItemDao = CartItemDao.getInstance();
-
+	Gson gson = new Gson();
+	
+	// 응답정보로 보낼 맵 객체
+	// key: success, value: 성공하면 true, 실패하면 false
+	// key: quantity, value: 저장한 장바구니 건수
+	Map<String, Object> result = new HashMap<>();
+	
 	// 세션객체에 저장된 로그인 사용자 정보 획득: 사용자 정보가 NULL일 경우 로그인페이지로 이동하고, 관련 메시지를 띄우는 fail=deny값을 전달한다.
 	User user = (User) session.getAttribute("LOGINED_USER");
 	if (user == null) {
-		response.sendRedirect("../loginform.jsp?fail=deny");
+		result.put("success", false);
+		result.put("logined", false);
+		String jsonText = gson.toJson(result);
+		out.write(jsonText);
 		return;
 	}
+	
 	int userNo = user.getNo();
+	result.put("logined", true);
 
 	// '전체 상품 다시 담기' 기능을 사용할 경우 bookNo는 여러 개가 올 수 있다.
 	// 전달받은 도서번호를 이용해 장바구니 객체를 만들어 HTA_CART_ITEMS에 저장한다.
@@ -33,10 +44,6 @@
 	// 한 개의 도서를 담을 시에는 quantity값이 그대로 반영된다.
 	int quantity = StringUtil.stringToInt(request.getParameter("quantity"), 1);
 		
-	// 응답정보로 보낼 맵 객체
-	// key: success, value: 성공하면 true, 실패하면 false
-	// key: quantity, value: 저장한 장바구니 건수
-	Map<String, Object> result = new HashMap<>();
 	if (bookNoValues != null) {
 		result.put("success", true);
 		
@@ -81,7 +88,7 @@
 		throw new RuntimeException("요청 정보가 올바르지 않습니다.");
 	}
 	
-	Gson gson = new Gson();
+
 	String jsonText = gson.toJson(result);
 	out.write(jsonText); // 이 페이지에 요청을 보낸 곳으로 응답정보를 보낸다.
 %>

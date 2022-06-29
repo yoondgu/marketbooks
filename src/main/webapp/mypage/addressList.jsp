@@ -47,7 +47,6 @@
 					<jsp:param name="menu" value="address"/>
 				</jsp:include>
 	   		</div>
-	   		<!-- TO DO : ../cart/addressList.jsp 복사해온 부분. include로 처리할 수 있는지 보기, 복사해온 링크(add,delete,modify포함) 절대경로로 수정 -->
 	   		<div class="col-9 p-3">
 		   			<!-- 해당 메뉴 HTML 들어갈 곳 -->
 		  			<div class=" py-3 border-bottom border-2 border-dark mb-3">

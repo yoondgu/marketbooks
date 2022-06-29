@@ -181,12 +181,12 @@
 							 -->
 								<div class="col d-flex flex-start">
 									<button class="form-control btn btn-sm btn-light" onclick="this.parentNode.querySelector('input[type=number]').stepDown(); updateQuantity(<%=item.getNo() %>);">-</button>
-									<input class="form-control form-control-lg mx-1" min="1" name="quantity" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" type="number" >
+									<input type="number" class="form-control form-control-lg mx-1" min="1" name="quantity" value="<%=item.getQuantity() %>" id="item-quantity-<%=item.getNo() %>" onchange="updateQuantity(<%=item.getNo() %>);">
 									<button class="form-control btn btn-sm btn-light" onclick="this.parentNode.querySelector('input[type=number]').stepUp(); updateQuantity(<%=item.getNo() %>);">+</button>						
 								</div>
 							</td>
 							
-							<td class="align-middle">
+							<td class="align-middle text-center">
 							<%
 								int totalDiscountPrice = item.getBook().getDiscountPrice() * item.getQuantity();
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
@@ -239,6 +239,7 @@
 					</div>
 				</div>
 				<div class="d-grid gap-2">
+					<div class="row p-1"><div class="col text-center"><strong>20,000원 이상 주문 시 무료 배송 !</strong></div></div>
 					<!-- 아래 버튼을 누르면 체크된 카트아이템 번호, 선택된 배송지 번호가 orderform.jsp로 전달된다. -->
 				    <button type="button" class="btn" style="background-color:#5f0080; color:#fff;" onclick="submitOrderForm();">주문하기</button>
 				</div>
