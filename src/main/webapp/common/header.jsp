@@ -167,11 +167,20 @@
 								<div class="no_address">
 									<span class="emph">배송지를 등록</span>
 									하고<br> 구매 가능한 상품을 확인하세요! 
-									<div class="group_button double">
+									<div class="group_button">
+									<%
+										if (user == null) {
+									%>
 										<button type="button" class="btn default login" style="padding:0px;" onclick="goLoginPage()">로그인</button>
-										<button type="button" class="btn active searchAddress" style="padding:0px;">
+									<%
+										} else {
+									%>
+										<button type="button" class="btn active searchAddress" style="padding:0px;" onclick="goAddressPage()">
 											<span class="ico"></span>주소검색
 										</button>
+									<%
+										}
+									%>
 									</div>
 								</div>
 							</div>
@@ -199,4 +208,11 @@ function bnrHeaderClose() {
 function goLoginPage() {
 	location.href="/marketbooks/loginform.jsp";
 }
+
+function goAddressPage() {
+	location.href="/marketbooks/mypage/addressList.jsp";
+}
+
+
+
 </script>
