@@ -23,12 +23,22 @@ public class Notice {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
 	public String getContent() {
 		return content;
 	}
+	
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	public String getHtmlContent() {
+		if (content == null) {
+			return "";
+		}
+		return content.replace(System.lineSeparator(), "<br />");
+	}
+	
 	public String getDeleted() {
 		return deleted;
 	}

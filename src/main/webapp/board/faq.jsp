@@ -48,8 +48,7 @@
 						<div class="page_section">
 							<div class="head_aticle">
 								<h2 class="tit">
-									자주하는 질문 <span class="tit_sub">고객님들께서 가장 자주하시는 질문을 모두
-										모았습니다.</span>
+									자주하는 질문 <span class="tit_sub">고객님들께서 가장 자주하시는 질문을 모두 모았습니다.</span>
 								</h2>
 							</div>
 							<form name="frmList" action="" onsubmit="">
@@ -65,7 +64,6 @@
 														cellpadding="0" cellspacing="0">
 														<tbody>
 															<tr>
-																<th width="70" class="input-txt">번호</th>
 																<th width="135" class="input_txt">카테고리</th>
 																<th class="input_txt">제목</th>
 															</tr>
@@ -77,9 +75,8 @@
 																onclick="view_content(this)" id="faq_67">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">129</td>
 																		<td width="135" align="center">서비스 이용</td>
-																		<td style="cursor: pointer">마켓컬리는 어떤 회사인가요?</td>
+																		<td style="cursor: pointer">마켓북스는 어떤 회사인가요?</td>
 																	</tr>
 																</tbody>
 															</table>
@@ -90,9 +87,9 @@
 																		<tr valign="top">
 																			<th
 																				style="color: #0000bf; width: 40px; padding-top: 1px;"></th>
-																			<td>■ About 마켓컬리<br> <br> 마켓컬리에서는 사람을
-																				소중히 하는 마음으로, 산지에서 친환경 혹은 유기농 인증을 받은 제품들을 꼼꼼히 선택하여
-																				판매합니다. <br> <br> 제품을 최대한 신선하게 배송해 드리기 위해,
+																			<td>■ About 마켓북스<br> <br> 마켓북스에서는 사람을
+																				소중히 하는 마음으로 책들을 꼼꼼히 선택하여
+																				판매합니다. <br> <br> 제품을 최대한 빠르게 배송해 드리기 위해,
 																				<br> <br> 샛별배송지역은 밤 11시 전까지 주문하신 경우 다음날 아침
 																				7시까지 (대구/부산/울산 샛별배송 지역은 밤 8시 전까지 주문하신 경우 다음날 아침 8시
 																				까지), <br> <br> 택배지역은 밤 10시까지 주문한 경우 택배
@@ -113,7 +110,6 @@
 																onclick="view_content(this)" id="faq_166">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">128</td>
 																		<td width="135" align="center">취소/교환/환불</td>
 																		<td style="cursor: pointer">교환(반품) 진행 시, 배송비가 부과
 																			되나요?</td>
@@ -130,7 +126,7 @@
 																			<td>■ 교환(반품) 진행 시, 배송비 안내<br> <br> <br>
 																				- 단순변심에 의한 교환/반품 시 배송비 6,000원 (주문건 배송비를 낸 경우
 																				3,000원)을 고객님께서 부담하셔야합니다. <br> <br> <br>
-																				▶ 가공식품 및 일부 비식품류에 한해서만 반품 가능<br> <br> ①
+																				▶ 포장한 책들 한해서만 반품 가능<br> <br> ①
 																				상품에 이상이 없거나 상품의 특성적인 부분인 경우<br> <br> ② 단순
 																				변심에 의해 교환 및 반품하는 경우<br> <br> ③ 옵션 및 상품을 잘못
 																				선택하여 잘못 주문했을 경우<br> <br> <br> ▶ 판매자
@@ -149,7 +145,6 @@
 																onclick="view_content(this)" id="faq_168">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">127</td>
 																		<td width="135" align="center">선물하기</td>
 																		<td style="cursor: pointer">PC에서 선물하기 주문을 할 수는
 																			없나요?</td>
@@ -177,7 +172,6 @@
 																onclick="view_content(this)" id="faq_199">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">126</td>
 																		<td width="135" align="center">배송/포장</td>
 																		<td style="cursor: pointer">종이포장재 회수는 어떻게 요청하나요?</td>
 																	</tr>
@@ -215,7 +209,6 @@
 																onclick="view_content(this)" id="faq_213">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">125</td>
 																		<td width="135" align="center">이벤트/쿠폰/적립금</td>
 																		<td style="cursor: pointer">제세공과금이 무엇인가요?</td>
 																	</tr>
@@ -245,7 +238,6 @@
 																onclick="view_content(this)" id="faq_226">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">124</td>
 																		<td width="135" align="center">셀프픽업</td>
 																		<td style="cursor: pointer">셀프픽업 서비스는 무엇인가요?</td>
 																	</tr>
@@ -272,7 +264,6 @@
 																onclick="view_content(this)" id="faq_229">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">123</td>
 																		<td width="135" align="center">주문/결제/대량주문</td>
 																		<td style="cursor: pointer">구매 영수증은 어떻게 발급 받나요?</td>
 																	</tr>
@@ -307,7 +298,6 @@
 																onclick="view_content(this)" id="faq_230">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">122</td>
 																		<td width="135" align="center">상품</td>
 																		<td style="cursor: pointer">컬리패스 주문내역은 어디서 확인하나요?</td>
 																	</tr>
@@ -334,7 +324,6 @@
 																onclick="view_content(this)" id="faq_231">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">121</td>
 																		<td width="135" align="center">회원</td>
 																		<td style="cursor: pointer">개명을 하여 회원정보의 이름을 바꾸고
 																			싶습니다.</td>
@@ -364,7 +353,6 @@
 																onclick="view_content(this)" id="faq_7">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">120</td>
 																		<td width="135" align="center">회원</td>
 																		<td style="cursor: pointer">아이디, 비밀번호를 잊어버렸습니다.</td>
 																	</tr>
@@ -398,7 +386,6 @@
 																onclick="view_content(this)" id="faq_27">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">119</td>
 																		<td width="135" align="center">서비스 이용</td>
 																		<td style="cursor: pointer">상품 후기는 어떻게 작성하나요?</td>
 																	</tr>
@@ -433,7 +420,6 @@
 																onclick="view_content(this)" id="faq_45">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">118</td>
 																		<td width="135" align="center">이벤트/쿠폰/적립금</td>
 																		<td style="cursor: pointer">적립금은 어떻게 누적하나요?</td>
 																	</tr>
@@ -460,47 +446,9 @@
 														</div>
 														<div>
 															<table width="100%" class="table_faq"
-																onclick="view_content(this)" id="faq_156">
-																<tbody>
-																	<tr>
-																		<td width="70" align="center">117</td>
-																		<td width="135" align="center">상품</td>
-																		<td style="cursor: pointer">친환경/유기농/무농약이 어떻게
-																			다른가요?</td>
-																	</tr>
-																</tbody>
-															</table>
-															<div
-																style="display: none; padding: 30px; border-top: 1px solid #e6e6e6">
-																<table cellpadding="0" cellspacing="0" border="0">
-																	<tbody>
-																		<tr valign="top">
-																			<th
-																				style="color: #0000bf; width: 40px; padding-top: 1px;"></th>
-																			<td>■ 친환경 인증이란?<br> <br> <br> 친환경
-																				농산물은 인체와 생태환경에 해로운 화학비료, 농약, 제초제 등을 최대한 사용하지 않고 재매한
-																				농산물을 일컬으며 이 중, 화학비료와 농약 사용량에 따라 저농약, 무농약, 유기농으로
-																				구분됩니다.<br> <br> <br> - 저농약 : 일반 농산물
-																				대비 적은 양의 농약을 사용한 농산물<br> <br> - 무농약 : 농약은
-																				사용하지 않되, 화학비료를 사용한 농산물<br> <br> - 유기농 :
-																				화학비료와 농약을 일체 사용하지 않고 재배한 농산물<br> <br> <br>
-																				[참고]<br> <br> ▣ 인증서와 관련 된 다양한 정보는 아래 경로로
-																				상세히 확인 할 수 있습니다.<br> <br> (웹) 컬리홈 &gt; 메인
-																				페이지 맨 마지막 하단 &gt; "컬리소개" 클릭 &gt; "1. 컬리의 품질기준" 조회<br>
-																				<br> (모바일) 컬리APP &gt; 하단 오른쪽 마이컬리 &gt; "컬리소개"
-																				클릭 &gt; "1. 컬리의 품질기준" 조회
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-														<div>
-															<table width="100%" class="table_faq"
 																onclick="view_content(this)" id="faq_165">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">116</td>
 																		<td width="135" align="center">취소/교환/환불</td>
 																		<td style="cursor: pointer">교환(반품) 어떻게 진행 되나요?</td>
 																	</tr>
@@ -531,7 +479,6 @@
 																onclick="view_content(this)" id="faq_169">
 																<tbody>
 																	<tr>
-																		<td width="70" align="center">115</td>
 																		<td width="135" align="center">선물하기</td>
 																		<td style="cursor: pointer">선물하기 주문을 취소하고 싶어요</td>
 																	</tr>

@@ -68,6 +68,7 @@ public class InquiryDao {
 	      }, userNo);
 	   }
 	
+	// 답변상태 구분하여 Rows 조회
 	public int getTotalRows(int userNo, String status) throws SQLException {
 	      String sql = "select count(*) cnt "
 	               + "from hta_inquiries "
