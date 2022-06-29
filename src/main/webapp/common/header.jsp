@@ -165,23 +165,45 @@
 							<button type="button" class="btn_location on">배송지 설정하기</button>
 							<div class="layer_location">
 								<div class="no_address">
+								
+								<%
+									if (user == null) {
+										// 안내메시지, 로그인 버튼
+								%>
 									<span class="emph">배송지를 등록</span>
 									하고<br> 구매 가능한 상품을 확인하세요! 
 									<div class="group_button">
-									<%
-										if (user == null) {
-									%>
 										<button type="button" class="btn default login" style="padding:0px;" onclick="goLoginPage()">로그인</button>
-									<%
-										} else {
-									%>
+									</div>
+								<%
+									} else {
+										if (user.getAddress() == null) {
+											//안내 메시지, 배송지등록 버튼
+								%>
+									<span class="emph">배송지를 등록</span>
+									하고<br> 구매 가능한 상품을 확인하세요! 
+									<div class="group_button">
 										<button type="button" class="btn active searchAddress" style="padding:0px;" onclick="goAddressPage()">
 											<span class="ico"></span>주소검색
 										</button>
-									<%
-										}
-									%>
 									</div>
+								<%
+										} else {
+											//배송지 주소 태그, 배송지등록 버튼
+								%>
+									<span class="emph">기본 배송지</span>
+									<div><%=user.getAddress().getAddress() %> <br/> <%=user.getAddress().getDetailAddress() %></div> 
+									<div class="group_button">
+										<button type="button" class="btn active searchAddress" style="padding:0px;" onclick="goAddressPage()">
+											<span class="ico"></span>배송지변경
+										</button>
+									</div>
+								
+								<%
+										}
+									}
+							
+								%>
 								</div>
 							</div>
 						</div>
