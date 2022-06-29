@@ -78,7 +78,7 @@ public class OrderDao {
       }, beginIndex, endIndex);
     }
 			
-/**
+	/**
 	 * 사용자번호와 해당 연도를 전달받아 해당하는 연도의 사용자 주문정보 행 수를 반환한다.
 	 * -1을 전달받으면 전체 기간의 데이터 개수를 반환한다.
 	 * 0을 전달받으면 현재 연도의 데이터 개수를 반환한다.
@@ -177,20 +177,13 @@ public class OrderDao {
 			order.setTotalPayPrice(rs.getInt("order_total_pay_price"));
 			order.setTotalQuantity(rs.getInt("order_total_quantity"));
 			order.setCreatedDate(rs.getDate("order_created_date"));
-			order.setUpdatedDate(rs.getDate("order_updated_date"));
 			order.setStatus(rs.getString("order_status"));
 			order.setPayMethod(rs.getString("order_pay_method"));
 			order.setAddressNo(rs.getInt("address_no"));
 			order.setIsFreeShipping(rs.getString("is_free_shipping"));
 			
-			User user = new User();
-			user.setName(rs.getString("user_name"));
-			user.setEmail(rs.getString("user_email"));
-			order.setUser(user);
-			
 			return order;
-			
-		}, beginIndex, endIndex);
+		}, beginDate, endDate, userNo, beginIndex, endIndex);		
 	}
 	
 	/**
