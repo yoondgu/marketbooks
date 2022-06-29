@@ -186,7 +186,7 @@
 								</div>
 							</td>
 							
-							<td class="align-middle">
+							<td class="align-middle text-center">
 							<%
 								int totalDiscountPrice = item.getBook().getDiscountPrice() * item.getQuantity();
 								int totalPrice = item.getBook().getPrice() * item.getQuantity();
