@@ -22,6 +22,8 @@
 	
 	// 선택된 배송지번호를 전달받아서 재요청URL에 반영해둔다.
 	int selectedAddressNo = StringUtil.stringToInt(request.getParameter("selectedAddressNo"));
+	queryString += (queryString.isEmpty()? "?" : "&") + "selectedAddressNo=" + selectedAddressNo;
+	
 	// 선택된 배송지가 현재 기본배송지인지 확인한다.
 	int defaultAddressNo = 0;
 	if (user.getAddress() !=null) {

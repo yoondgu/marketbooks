@@ -51,10 +51,6 @@
   		UserAddressDao userAddressDao = UserAddressDao.getInstance();
    		UserAddress userAddr = userAddressDao.getAddressByNo(addressNo);
    		
-   		System.out.println(request.getParameter("modifyAddressNo"));
-   		System.out.println(addressNo);
-   		System.out.println(userAddr);
-   		
    		if (userAddr == null) {
    			throw new RuntimeException("배송지 정보가 존재하지 않습니다.");
    		}

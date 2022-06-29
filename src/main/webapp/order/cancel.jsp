@@ -20,12 +20,21 @@
 	
 	int orderNo = StringUtil.stringToInt(request.getParameter("orderNo"));
 	Order order = orderDao.getOrderByNo(orderNo);
-	if (order != null && order.getUserNo() == userNo) {
-		order.setStatus("주문취소");
-		orderDao.updateOrder(order);
-	} else {
+	
+	if (order == null) {
 		throw new RuntimeException("요청 정보가 올바르지 않습니다.");
 	}
+	
+	if (order.getUserNo() != userNo) {
+		throw new RuntimeException("요청 정보가 올바르지 않습니다.");
+	}
+
+	if ("주문취소".equals(order.getStatus()) || "배송준비중".equals(order.getStatus()) || "배송중".equals(order.getStatus()) || "배송완료".equals(order.getStatus())) {
+		throw new RuntimeException("요청 정보가 올바르지 않습니다.");
+	}
+
+	order.setStatus("주문취소");
+	orderDao.updateOrder(order);
 	
 	Map<String, Object> result = new HashMap<>();
 	result.put("success", true);
