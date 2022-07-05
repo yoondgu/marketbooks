@@ -38,7 +38,6 @@ public class Book {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 		this.deleted = deleted;
-		this.discountRate = discountRate;
 	}
 
 	public int getNo() {
